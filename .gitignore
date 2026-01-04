@@ -1,0 +1,9 @@
+# Ignore EVERYTHING by default
+*
+
+# Except the out folder (production build)
+!out/
+!out/**
+
+# Keep the .gitignore itself
+!.gitignore
