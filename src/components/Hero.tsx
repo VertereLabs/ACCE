@@ -1,0 +1,123 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Sparkles, GraduationCap, BookOpen } from "lucide-react";
+import Image from "next/image";
+
+const Hero = () => {
+    return (
+        <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0 -z-10">
+                <div className="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float" />
+                <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float-delayed" />
+            </div>
+
+            <div className="container mx-auto px-6">
+                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                    {/* Content */}
+                    <div className="animate-fade-up">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6">
+                            <Sparkles className="w-4 h-4 text-accent" />
+                            <span className="text-sm font-medium text-primary-foreground/80">
+                                PGDA & BCom Accounting Tutoring
+                            </span>
+                        </div>
+
+                        <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-primary-foreground">
+                            Your Path to{" "}
+                            <span className="text-accent">CA(SA)</span>
+                            {" "}Success
+                        </h1>
+
+                        <p className="text-xl text-primary-foreground/70 mb-8 max-w-lg leading-relaxed">
+                            Using my journey to encourage and mentor others through a challenging but rewarding journey. Expert guidance in Financial Accounting, Taxation, Management Accounting & Auditing.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Button
+                                variant="hero"
+                                size="lg"
+                                asChild
+                            >
+                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
+                                    Get Started
+                                    <ArrowRight className="w-5 h-5" />
+                                </a>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="border-white/30 text-primary-foreground hover:bg-white/10 bg-transparent"
+                                asChild
+                            >
+                                <a href="#services">
+                                    View Subjects
+                                </a>
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Visual - Priyanka Card */}
+                    <div className="relative animate-fade-up-delayed hidden lg:block">
+                        <div className="relative">
+                            {/* Main Card */}
+                            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
+                                <div className="flex items-center gap-6 mb-6">
+                                    <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-accent/30">
+                                        <Image
+                                            src="/images/priyanka.png"
+                                            alt="Priyanka Govender"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-display text-xl font-semibold text-primary-foreground">Priyanka Govender</h3>
+                                        <p className="text-sm text-primary-foreground/60">PGDA Graduate | ACCE Tutors Founder</p>
+                                    </div>
+                                </div>
+                                <blockquote className="text-primary-foreground/80 italic leading-relaxed border-l-2 border-accent pl-4">
+                                    &quot;I am living proof that anything is possible. Short-term sacrifices do pay off in the long term.&quot;
+                                </blockquote>
+                                <div className="mt-6 flex flex-wrap gap-2">
+                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Financial Accounting</span>
+                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Taxation</span>
+                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Management Accounting</span>
+                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Auditing</span>
+                                </div>
+                            </div>
+
+                            {/* Floating Elements */}
+                            <div className="absolute -top-6 -right-6 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 animate-float">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
+                                        <GraduationCap className="w-5 h-5 text-accent" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold text-primary-foreground">PGDA Complete</p>
+                                        <p className="text-xs text-primary-foreground/60">Milpark Education</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="absolute -bottom-4 -left-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 animate-float-delayed">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
+                                        <BookOpen className="w-5 h-5 text-accent" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold text-primary-foreground">25% Improvement</p>
+                                        <p className="text-xs text-primary-foreground/60">Financial Accounting</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Hero;

@@ -1,7 +1,0 @@
-1:"$Sreact.fragment"
-2:I[22016,["/_next/static/chunks/d5ad5c2950dd868b.js","/_next/static/chunks/5e0e22a6625feba0.js","/_next/static/chunks/fb74df2923a27d85.js","/_next/static/chunks/06a88511f78ecc1f.js"],""]
-3:I[19455,["/_next/static/chunks/d5ad5c2950dd868b.js","/_next/static/chunks/5e0e22a6625feba0.js","/_next/static/chunks/fb74df2923a27d85.js","/_next/static/chunks/06a88511f78ecc1f.js"],"Button"]
-4:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/7340adf74ff47ec0.js"],"OutletBoundary"]
-5:"$Sreact.suspense"
-0:{"buildId":"N-uAn_ZrWheqrAR_OioK2","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"min-h-screen flex items-center justify-center","children":["$","div",null,{"className":"text-center","children":[["$","h1",null,{"className":"font-display text-8xl font-bold text-primary-foreground mb-4","children":"404"}],["$","p",null,{"className":"text-xl text-primary-foreground/70 mb-8","children":"Oops! The page you're looking for doesn't exist."}],["$","$L2",null,{"href":"/","children":["$","$L3",null,{"variant":"hero","children":"Return Home"}]}]]}]}],[["$","script","script-0",{"src":"/_next/static/chunks/06a88511f78ecc1f.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"loading":null,"isPartial":false}
-6:null
