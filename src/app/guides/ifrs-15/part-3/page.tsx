@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 3: Variable Consideration & Financing | ACCE Tutors",
     description: "Learn how to handle complex transaction prices in IFRS 15, including discounts, rebates, performance bonuses, and the time value of money.",
     keywords: "IFRS 15 variable consideration, expected value method, most likely amount, constraint on variable consideration, significant financing component",
+    alternates: {
+        canonical: "/guides/ifrs-15/part-3/",
+    },
 };
 
 export default function IFRS15Part3Page() {
@@ -20,7 +23,7 @@ export default function IFRS15Part3Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-15"
+                            href="/guides/ifrs-15/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

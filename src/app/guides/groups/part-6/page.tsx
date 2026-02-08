@@ -6,9 +6,12 @@ import { ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Lightbulb, Users, Net
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-    title: "Part 6: Associates & Joint Ventures (IAS 28 & IFRS 11) | ACCE Tutors",
+    title: "Part 6: Associates & Joint Ventures | ACCE Tutors",
     description: "Learn how to account for associates and joint ventures using the equity method. Understand significant influence and joint control.",
     keywords: "IAS 28, IFRS 11, associates, joint ventures, equity method, significant influence, joint control, group accounting, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/groups/part-6/",
+    },
 };
 
 export default function GroupsPart6Page() {
@@ -20,7 +23,7 @@ export default function GroupsPart6Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/groups"
+                            href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

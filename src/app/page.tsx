@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
@@ -9,6 +10,22 @@ import Resources from "@/components/Resources";
 import Blog from "@/components/Blog";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "ACCE Tutors | Expert CA(SA) & CTA Support",
+  description: "Expert tutoring for Undergraduate and PGDA/CTA students. Master Accounting, Tax, Management Accounts & Finance, and Auditing.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "ACCE Tutors | Expert CA(SA) & CTA Support",
+    description: "Expert tutoring for Undergraduate and PGDA/CTA students. Master Accounting, Tax, Management Accounts & Finance, and Auditing.",
+  },
+  twitter: {
+    title: "ACCE Tutors | Expert CA(SA) & CTA Support",
+    description: "Expert tutoring for Undergraduate and PGDA/CTA students. Master Accounting, Tax, Management Accounts & Finance, and Auditing.",
+  },
+};
 
 export default function HomePage() {
   return (

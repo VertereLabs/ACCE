@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Part 1: Intro to IFRS 16 & Key Changes | ACCE Tutors",
-    description: "Understand the monumental shift from IAS 17 to IFRS 16, specifically the new 'Single Lessee Model' and why off-balance sheet financing is a thing of the past.",
+    description: "Learn the shift from IAS 17 to IFRS 16, the single lessee model, and why leases now sit on the balance sheet.",
     keywords: "IFRS 16, leases, IAS 17 vs IFRS 16, single lessee model, right-of-use asset, lease liability, accounting standards",
+    alternates: {
+        canonical: "/guides/ifrs-16/part-1/",
+    },
 };
 
 export default function IFRS16Part1Page() {
@@ -20,7 +23,7 @@ export default function IFRS16Part1Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-16"
+                            href="/guides/ifrs-16/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

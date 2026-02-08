@@ -26,11 +26,11 @@ const Hero = () => {
 
                         <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-primary-foreground">
                             Your Path to{" "}
-                            <span className="text-accent">CA(SA)</span>
+                            <span className="text-accent-light">CA(SA)</span>
                             {" "}Success
                         </h1>
 
-                        <p className="text-xl text-primary-foreground/70 mb-8 max-w-lg leading-relaxed">
+                        <p className="text-xl text-primary-foreground mb-8 max-w-lg leading-relaxed">
                             Using my journey to encourage and mentor others through a challenging but rewarding journey. Expert guidance in Financial Accounting, Taxation, Management Accounting & Auditing.
                         </p>
 
@@ -62,14 +62,16 @@ const Hero = () => {
                     <div className="relative animate-fade-up-delayed hidden lg:block">
                         <div className="relative">
                             {/* Main Card */}
-                            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
+                            <div className="bg-primary/35 backdrop-blur-md rounded-3xl p-8 border border-primary/40 shadow-elevated">
                                 <div className="flex items-center gap-6 mb-6">
                                     <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-accent/30">
                                         <Image
                                             src="/images/priyanka.png"
                                             alt="Priyanka Govender"
-                                            fill
-                                            className="object-cover"
+                                            width={96}
+                                            height={96}
+                                            className="object-cover w-full h-full"
+                                            sizes="96px"
                                         />
                                     </div>
                                     <div>
@@ -81,15 +83,15 @@ const Hero = () => {
                                     &quot;I am living proof that anything is possible. Short-term sacrifices do pay off in the long term.&quot;
                                 </blockquote>
                                 <div className="mt-6 flex flex-wrap gap-2">
-                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Financial Accounting</span>
-                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Taxation</span>
-                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Management Accounting</span>
-                                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Auditing</span>
+                                    <span className="px-3 py-1 rounded-full hero-tag text-sm">Financial Accounting</span>
+                                    <span className="px-3 py-1 rounded-full hero-tag text-sm">Taxation</span>
+                                    <span className="px-3 py-1 rounded-full hero-tag text-sm">Management Accounting</span>
+                                    <span className="px-3 py-1 rounded-full hero-tag text-sm">Auditing</span>
                                 </div>
                             </div>
 
                             {/* Floating Elements */}
-                            <div className="absolute -top-6 -right-6 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 animate-float">
+                            <div className="absolute -top-6 -right-6 bg-primary/35 backdrop-blur-md rounded-2xl p-4 border border-primary/40 animate-float">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
                                         <GraduationCap className="w-5 h-5 text-accent" />
@@ -101,17 +103,7 @@ const Hero = () => {
                                 </div>
                             </div>
 
-                            <div className="absolute -bottom-4 -left-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 animate-float-delayed">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
-                                        <BookOpen className="w-5 h-5 text-accent" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-semibold text-primary-foreground">25% Improvement</p>
-                                        <p className="text-xs text-primary-foreground/60">Financial Accounting</p>
-                                    </div>
-                                </div>
-                            </div>
+                            {/* Improvement badge removed per request */}
                         </div>
                     </div>
                 </div>

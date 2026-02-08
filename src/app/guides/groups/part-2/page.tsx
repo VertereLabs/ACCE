@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Part 2: The Acquisition Method (IFRS 3) | ACCE Tutors",
-    description: "Master IFRS 3 Business Combinations. Learn to identify the acquirer, determine the acquisition date, measure assets and liabilities at fair value, and calculate goodwill.",
+    description: "IFRS 3 acquisition method: identify the acquirer, set the acquisition date, measure net assets at fair value, and calculate goodwill.",
     keywords: "IFRS 3, business combinations, acquisition method, goodwill, NCI, fair value, contingent consideration",
+    alternates: {
+        canonical: "/guides/groups/part-2/",
+    },
 };
 
 export default function GroupsPart2Page() {
@@ -20,7 +23,7 @@ export default function GroupsPart2Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/groups"
+                            href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

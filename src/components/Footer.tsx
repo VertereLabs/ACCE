@@ -22,7 +22,7 @@ const footerLinks = {
 
 const Footer = () => {
     return (
-        <footer className="bg-black/20 backdrop-blur-md border-t border-white/10">
+        <footer className="bg-transparent backdrop-blur-md border-t border-white/10">
             <div className="container mx-auto px-6 py-16">
                 <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
                     {/* Brand */}

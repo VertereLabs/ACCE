@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Groups & Business Combinations | ACCE Tutors Study Guides",
-    description: "Master consolidated financial statements, IFRS 3 Business Combinations, IFRS 10 Consolidation, and the Analysis of Equity with our comprehensive guide for CA(SA) students.",
+    description: "Group accounting guide covering IFRS 3 and IFRS 10, consolidation mechanics, and the Analysis of Equity. Built for CA(SA) and CTA prep.",
     keywords: "IFRS 3, IFRS 10, group accounting, consolidation, NCI, goodwill, analysis of equity, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/groups/",
+    },
 };
 
 const parts = [
@@ -81,7 +84,7 @@ export default function GroupsGuidePage() {
                 <div className="container mx-auto px-6">
                     {/* Back Link */}
                     <Link
-                        href="/guides"
+                        href="/guides/"
                         className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors mb-8"
                     >
                         <ArrowLeft className="w-4 h-4" />
@@ -141,9 +144,9 @@ export default function GroupsGuidePage() {
                         <div className="mt-8 bg-gradient-to-r from-accent/20 to-accent/5 rounded-xl p-6 border border-accent/30">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div>
-                                    <h3 className="font-display text-lg font-semibold text-primary-foreground mb-1">
+                                    <h2 className="font-display text-lg font-semibold text-primary-foreground mb-1">
                                         Download Complete Guide
-                                    </h3>
+                                    </h2>
                                     <p className="text-primary-foreground/60 text-sm">
                                         Get the full 11-part guide with detailed examples, worked solutions, and exam tips (PDF, 183KB)
                                     </p>
@@ -246,7 +249,7 @@ export default function GroupsGuidePage() {
                                             {part.status === "available" && (
                                                 <Button asChild size="sm" variant="ghost" className="text-accent hover:text-accent hover:bg-accent/10">
                                                     <Link href={`/guides/groups/part-${part.id}`}>
-                                                        Start
+                                                        Start Part {part.id}
                                                         <ArrowRight className="w-4 h-4 ml-1" />
                                                     </Link>
                                                 </Button>

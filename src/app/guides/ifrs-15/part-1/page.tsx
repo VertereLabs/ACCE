@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 1: IFRS 15 Foundations & Core Principle | ACCE Tutors",
     description: "Understand why IFRS 15 was introduced, its scope, and the core principle that governs revenue recognition for all contracts with customers.",
     keywords: "IFRS 15, revenue recognition, core principle, scope, IAS 18, IAS 11, accounting standards, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/ifrs-15/part-1/",
+    },
 };
 
 export default function IFRS15Part1Page() {
@@ -20,7 +23,7 @@ export default function IFRS15Part1Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-15"
+                            href="/guides/ifrs-15/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 7: Group Financial Statements & Exam Prep | ACCE Tutors",
     description: "Finalize your group accounting mastery. Learn to draft Group SOFP, SOCI, SOCIE, and SOCF. Get expert exam tips for PGDA and CTA exams.",
     keywords: "Group SOFP, Group SOCI, Group SOCIE, Group SOCF, consolidation journals, accounting exam tips, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/groups/part-7/",
+    },
 };
 
 export default function GroupsPart7Page() {
@@ -20,7 +23,7 @@ export default function GroupsPart7Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/groups"
+                            href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -231,13 +234,13 @@ export default function GroupsPart7Page() {
                         {/* Navigation */}
                         <div className="flex items-center justify-between pt-8 border-t border-white/10">
                             <Button asChild variant="ghost" className="text-primary-foreground/60 hover:text-primary-foreground">
-                                <Link href="/guides/groups/part-6">
+                                <Link href="/guides/groups/part-6/">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Part 6: Associates & JVs
                                 </Link>
                             </Button>
                             <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white font-bold">
-                                <Link href="/guides">
+                                <Link href="/guides/">
                                     Explore Other Guides
                                 </Link>
                             </Button>
@@ -264,7 +267,7 @@ export default function GroupsPart7Page() {
                                     </a>
                                 </Button>
                                 <Button asChild variant="outline" size="lg" className="border-white/20 hover:bg-white/10 text-primary-foreground px-8">
-                                    <Link href="/services">
+                                    <Link href="/#services">
                                         View Our Services
                                     </Link>
                                 </Button>

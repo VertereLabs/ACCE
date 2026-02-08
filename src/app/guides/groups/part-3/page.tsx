@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Part 3: Consolidation Mechanics (IFRS 10) | ACCE Tutors",
-    description: "Master IFRS 10 consolidation mechanics. Learn the definition of control, consolidation procedures, uniform accounting policies, and intra-group eliminations.",
+    description: "IFRS 10 consolidation mechanics: control, consolidation steps, uniform policies, and intra-group eliminations.",
     keywords: "IFRS 10, consolidation, control, intra-group eliminations, uniform accounting policies, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/groups/part-3/",
+    },
 };
 
 export default function GroupsPart3Page() {
@@ -20,7 +23,7 @@ export default function GroupsPart3Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/groups"
+                            href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -61,7 +64,7 @@ export default function GroupsPart3Page() {
                             {/* Introduction */}
                             <div className="bg-white/5 rounded-2xl border border-white/10 p-8 mb-10">
                                 <p className="text-primary-foreground/80 text-lg leading-relaxed m-0">
-                                    IFRS 10 establishes the principles for presenting consolidated financial statements when an entity has <strong className="text-primary-foreground">control</strong> over one or more other entities. This part focuses on the mechanics — how to actually prepare consolidated statements once you&apos;ve determined control exists.
+                                    IFRS 10 sets the rules for consolidated financial statements when an entity has <strong className="text-primary-foreground">control</strong> over another entity. This part focuses on the mechanics — how to build the statements once control is clear.
                                 </p>
                             </div>
 
@@ -121,7 +124,7 @@ export default function GroupsPart3Page() {
                                     De Facto Control
                                 </h2>
                                 <p className="text-primary-foreground/80 leading-relaxed mb-6">
-                                    You don&apos;t always need &gt;50% of voting rights to have control. <strong className="text-primary-foreground">De facto control</strong> exists when an investor has practical ability to direct relevant activities despite owning less than a majority:
+                                    You don&apos;t always need &gt;50% of voting rights to have control. <strong className="text-primary-foreground">De facto control</strong> exists when an investor can direct relevant activities even without a majority stake:
                                 </p>
 
                                 <div className="bg-white/5 rounded-xl border border-white/10 p-6 mb-6">

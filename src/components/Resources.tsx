@@ -77,7 +77,7 @@ const Resources = () => {
                         asChild
                         variant="hero"
                     >
-                        <Link href="/guides">
+                        <Link href="/guides/">
                             View All Guides
                             <ArrowRight className="w-4 h-4 ml-2" />
                         </Link>

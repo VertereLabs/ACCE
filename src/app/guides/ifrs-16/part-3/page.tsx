@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 3: IFRS 16 Subsequent Measurement | ACCE Tutors",
     description: "Learn how to account for leases after the commencement date, including depreciation of ROU assets, interest on lease liabilities, and remeasurement.",
     keywords: "IFRS 16 subsequent measurement, lease liability amortization, ROU asset depreciation, lease remeasurement, lease modification",
+    alternates: {
+        canonical: "/guides/ifrs-16/part-3/",
+    },
 };
 
 export default function IFRS16Part3Page() {
@@ -20,7 +23,7 @@ export default function IFRS16Part3Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-16"
+                            href="/guides/ifrs-16/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

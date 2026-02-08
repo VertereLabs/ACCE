@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 4: Sale and Leaseback (IFRS 16) | ACCE Tutors",
     description: "Master the accounting for sale and leaseback transactions, including the 'Proportion' method for gains and handling 'failed sales'.",
     keywords: "IFRS 16 sale and leaseback, IFRS 15 sale criteria, ROU asset sale and leaseback, gain on sale and leaseback, failed sale accounting",
+    alternates: {
+        canonical: "/guides/ifrs-16/part-4/",
+    },
 };
 
 export default function IFRS16Part4Page() {
@@ -20,7 +23,7 @@ export default function IFRS16Part4Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-16"
+                            href="/guides/ifrs-16/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

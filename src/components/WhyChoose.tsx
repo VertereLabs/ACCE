@@ -4,7 +4,7 @@ const valueProps = [
     {
         icon: Heart,
         title: "Been There, Done That",
-        description: "I've walked the PGDA journey myself—through the struggles, the failures, and ultimately the success. I understand what you're going through.",
+        description: "I've walked the PGDA journey myself - through the struggles, the failures, and ultimately the success. I understand what you're going through.",
     },
     {
         icon: Target,
@@ -29,7 +29,7 @@ const valueProps = [
     {
         icon: Users,
         title: "Ongoing Support",
-        description: "From study planning to exam day—I'm here to guide, motivate, and support you throughout your entire academic journey.",
+        description: "From study planning to exam day - I'm here to guide, motivate, and support you throughout your entire academic journey.",
     },
 ];
 
@@ -45,7 +45,7 @@ const WhyChoose = () => {
                         What Makes Us Different
                     </h2>
                     <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
-                        More than just tutoring—it&apos;s mentorship from someone who truly understands the CA(SA) journey.
+                        More than just tutoring: it's mentorship from someone who truly understands the CA(SA) journey.
                     </p>
                 </div>
 

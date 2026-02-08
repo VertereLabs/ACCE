@@ -6,9 +6,12 @@ import { ArrowLeft, ArrowRight, ShieldCheck, UserCog, RefreshCcw, Info, Lightbul
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-    title: "Part 4: Complex Application Scenarios (IFRS 15) | ACCE Tutors",
+    title: "Part 4: IFRS 15 Complex Scenarios | ACCE Tutors",
     description: "Master the most challenging parts of IFRS 15: Warranties, Principal vs Agent, and Repurchase Agreements.",
     keywords: "IFRS 15 warranties, assurance type warranty, service type warranty, principal vs agent, repurchase agreements, call option, put option, forward contract",
+    alternates: {
+        canonical: "/guides/ifrs-15/part-4/",
+    },
 };
 
 export default function IFRS15Part4Page() {
@@ -20,7 +23,7 @@ export default function IFRS15Part4Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-15"
+                            href="/guides/ifrs-15/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

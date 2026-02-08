@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Part 2: The Five-Step Model (IFRS 15) | ACCE Tutors",
-    description: "A deep dive into the heart of IFRS 15. Learn the five steps to recognize revenue: Identify the contract, performance obligations, transaction price, allocation, and recognition.",
+    description: "Master IFRS 15's five-step model: identify the contract, performance obligations, transaction price, allocation, and recognition.",
     keywords: "IFRS 15 five step model, performance obligations, transaction price, relative standalone selling price, revenue recognition over time vs point in time",
+    alternates: {
+        canonical: "/guides/ifrs-15/part-2/",
+    },
 };
 
 export default function IFRS15Part2Page() {
@@ -20,7 +23,7 @@ export default function IFRS15Part2Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-15"
+                            href="/guides/ifrs-15/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "Part 4: Analysis of Equity (AOE) | ACCE Tutors",
-    description: "Master the Analysis of Equity (AOE), the heart of group accounting. Learn how to structure your working paper with at acquisition, since acquisition, and current year columns.",
+    description: "Master the Analysis of Equity (AOE). Learn how to structure working papers for at acquisition, since acquisition, and current year columns.",
     keywords: "Analysis of Equity, AOE, group accounting, consolidation journals, NCI allocation, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/groups/part-4/",
+    },
 };
 
 export default function GroupsPart4Page() {
@@ -20,7 +23,7 @@ export default function GroupsPart4Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/groups"
+                            href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

@@ -6,41 +6,42 @@
 
 @layer base {
   :root {
-    --background: 25 15% 95%;
-    --foreground: 220 30% 18%;
+    --background: 234 47% 8%;
+    --foreground: 40 33% 98%;
 
-    --card: 25 20% 97%;
-    --card-foreground: 220 30% 18%;
+    --card: 234 40% 12%;
+    --card-foreground: 40 33% 98%;
 
-    --popover: 25 20% 97%;
-    --popover-foreground: 220 30% 18%;
+    --popover: 234 40% 12%;
+    --popover-foreground: 40 33% 98%;
 
     --primary: 220 35% 25%;
     --primary-foreground: 38 30% 96%;
 
-    --secondary: 25 15% 90%;
-    --secondary-foreground: 220 30% 18%;
+    --secondary: 234 30% 18%;
+    --secondary-foreground: 40 33% 98%;
 
-    --muted: 25 10% 88%;
-    --muted-foreground: 220 15% 40%;
+    --muted: 234 30% 18%;
+    --muted-foreground: 40 20% 70%;
 
-    --accent: 25 70% 55%;
-    --accent-foreground: 38 30% 96%;
+    --accent: 25 80% 45%;
+    --accent-foreground: 38 30% 98%;
+    --accent-text: 25 85% 35%;
 
     --destructive: 0 65% 50%;
     --destructive-foreground: 38 30% 96%;
 
-    --border: 25 10% 85%;
-    --input: 25 10% 85%;
-    --ring: 220 35% 25%;
+    --border: 234 30% 20%;
+    --input: 234 30% 20%;
+    --ring: 40 33% 98%;
 
     --radius: 0.75rem;
 
     /* Custom tokens */
-    --gradient-hero: linear-gradient(135deg, hsl(220 35% 25%) 0%, hsl(240 25% 30%) 50%, hsl(25 70% 55%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220 35% 55%) 0%, hsl(240 25% 55%) 50%, hsl(25 70% 60%) 100%);
     --gradient-text: linear-gradient(135deg, hsl(220 35% 25%) 0%, hsl(25 70% 55%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(25 15% 95%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(25, 57%, 41%) 0%, hsl(25 70% 55%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(234 40% 12%) 0%, hsl(234 30% 18%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(25 65% 38%) 0%, hsl(25 80% 45%) 100%);
     
     --shadow-soft: 0 4px 24px -4px hsl(220 30% 18% / 0.1);
     --shadow-elevated: 0 12px 40px -12px hsl(220 30% 18% / 0.18);
@@ -139,6 +140,34 @@
 
   .gradient-accent {
     background: var(--gradient-accent);
+  }
+
+  .text-primary-foreground\/40,
+  .text-primary-foreground\/50,
+  .text-primary-foreground\/60,
+  .text-primary-foreground\/70,
+  .text-primary-foreground\/80 {
+    color: hsl(var(--primary-foreground));
+  }
+
+  .text-accent,
+  .text-accent\/70,
+  .text-accent\/80,
+  .text-accent\/90 {
+    color: hsl(var(--accent-text));
+  }
+
+  .text-accent-light {
+    color: hsl(25 85% 65%);
+  }
+
+  .hero-tag {
+    background-color: hsl(220 35% 25% / 0.7);
+    color: hsl(25, 97%, 71%);
+  }
+
+  .guides-shell .bg-primary {
+    background: transparent;
   }
 
   .shadow-soft {

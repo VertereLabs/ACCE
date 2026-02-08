@@ -11,7 +11,7 @@ const steps = [
         number: "02",
         icon: Users,
         title: "Free Consultation",
-        description: "We'll discuss your challenges, goals, and learning style. Every student learns differently—I adapt my approach to you.",
+        description: "We'll discuss your challenges, goals, and learning style. Every student learns differently; I adapt my approach to you.",
     },
     {
         number: "03",

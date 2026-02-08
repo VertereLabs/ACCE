@@ -6,9 +6,12 @@ import { FileText, Building2, Receipt, ArrowRight, BookOpen, Clock, Users } from
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-    title: "Study Guides | ACCE Tutors",
-    description: "Comprehensive study guides for CA(SA) students. Master IFRS 15 Revenue, IFRS 16 Leases, and Group Financial Accounting with our detailed, exam-focused guides.",
+    title: "CA(SA) Study Guides | ACCE Tutors",
+    description: "Exam-focused CA(SA) study guides for IFRS 15, IFRS 16, and Group Accounting. Clear summaries, worked steps, and practice tips.",
     keywords: "IFRS 15, IFRS 16, IFRS 3, IFRS 10, group accounting, CA(SA) study guides, CTA resources, PGDA notes",
+    alternates: {
+        canonical: "/guides/",
+    },
 };
 
 const guides = [
@@ -73,7 +76,19 @@ export default function GuidesPage() {
                             Master Complex Topics
                         </h1>
                         <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
-                            In-depth, exam-focused guides designed by qualified tutors who understand what it takes to succeed in CA(SA) exams.
+                            Exam-focused guides built for CA(SA) and CTA success. Each guide breaks complex standards into short,
+                            practical steps you can study quickly.
+                        </p>
+                    </div>
+
+                    <div className="max-w-3xl mx-auto mb-12 text-center text-primary-foreground/70 text-base leading-relaxed">
+                        <p>
+                            Use these notes to revise key standards, learn exam techniques, and build confidence before test day.
+                            We focus on clear explanations, worked examples, and common pitfalls.
+                        </p>
+                        <p>
+                            Start with the full guide, then move through each part for detail. If you need help, we also offer
+                            one-on-one tutoring for tricky sections.
                         </p>
                     </div>
 

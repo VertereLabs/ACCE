@@ -1,217 +1,114 @@
-# ACCE Tutors - Deployment Guide (VPS + Coolify)
+# ACCE Deployment Guide (Coolify + Nixpacks)
 
-This guide covers the GitHub + Coolify workflow for deploying the Next.js app to your VPS using Nixpacks. It replaces the old Hostking workflow.
-
----
-
-## Overview
-
-We use a single Git repo and let Coolify build and run the app on the VPS:
-
-| System | Location | Purpose |
-|--------|----------|---------|
-| **GitHub** | `acce-nextjs/` | Source code version control |
-| **Coolify** | VPS | Build + deploy + runtime |
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        WORKFLOW OVERVIEW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Developer Machine                                                 │
-│   ┌─────────────────────────────────────────────────────────────┐   │
-│   │                                                             │   │
-│   │   acce-nextjs/                                               │   │
-│   │   ├── src/                     ┐                            │   │
-│   │   ├── public/                  │  Source Code               │   │
-│   │   ├── package.json             ┘  → Push to GitHub           │   │
-│   │                                                             │   │
-│   └─────────────────────────────────────────────────────────────┘   │
-│                                                                     │
-│                    │                           │                    │
-│                    ▼                           ▼                    │
-│              ┌──────────┐              ┌──────────────┐             │
-│              │  GitHub  │              │   Coolify    │             │
-│              │  (code)  │              │  (build/run) │             │
-│              └──────────┘              └──────────────┘             │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+This guide defines the standard workflow for deploying the ACCE Next.js app
+to the VPS using Coolify and Nixpacks.
 
 ---
 
-## Part 1: Daily Development Workflow (GitHub)
+## 1 Project Assumptions
 
-### 1.1 Before You Start Coding
+- Framework: Next.js (App Router)
+- Deployment target: VPS via Coolify
+- Build pack: Nixpacks
+- Repo: GitHub
+
+---
+
+## 2 One-Time Coolify Setup
+
+1. Create a new Application in Coolify from the GitHub repo.
+2. Select Nixpacks as the build pack.
+3. Set commands (only if auto-detection does not set them):
+   - Build command: `npm run build`
+   - Start command: `npm run start`
+4. Set Node version if needed (match `package.json` engines).
+5. Add required Environment Variables.
+6. Attach domain and enable HTTPS.
+
+---
+
+## 3 Standard Operating Procedure (SOP)
+
+### 3.1 Pre-Deploy (Local)
 
 ```bash
 cd d:\Projects\ACCE - Copy\acce-nextjs
 git pull origin main
+npm run dev
 ```
 
-### 1.2 Making Code Changes
+Optional sanity build:
 
-1. Make changes in `src/`, `public/`, etc.
-2. Test locally:
-   ```bash
-   npm run dev
-   ```
-3. Open http://localhost:3000 to verify changes work
+```bash
+npm run build
+```
 
-### 1.3 Saving Changes to GitHub
+### 3.2 Deploy (GitHub + Coolify)
 
 ```bash
 git status
 git add .
-git commit -m "feat: Describe the change"
+git commit -m "feat: Describe change"
 git push origin main
 ```
 
-### 1.4 Commit Message Guidelines
-
-| Prefix | Use For | Example |
-|--------|---------|---------|
-| `feat:` | New features | `feat: Add user authentication` |
-| `fix:` | Bug fixes | `fix: Correct mobile menu alignment` |
-| `docs:` | Documentation | `docs: Update README` |
-| `style:` | Formatting/CSS | `style: Improve button hover states` |
-| `refactor:` | Code restructuring | `refactor: Split utils into modules` |
-
----
-
-## Part 2: VPS Deployment with Coolify (Nixpacks)
-
-> Only deploy to production when changes are tested and ready for the live site.
-
-### 2.1 One-Time Coolify App Setup
-
-1. Create a new **Application** in Coolify from the GitHub repo
-2. Choose **Nixpacks** as the build pack
-3. Set commands (only if auto-detection does not set them)
-   - **Build Command**: `npm run build`
-   - **Start Command**: `npm run start`
-4. Set the Node version (match `package.json` engines if present)
-5. Add required **Environment Variables**
-6. Attach domain and enable HTTPS
-
-### 2.2 Deploying Updates
-
-1. Push to GitHub (Part 1.3)
-2. In Coolify, trigger deploy (or let auto-deploy run)
-3. Check the build and runtime logs for errors
-
-### 2.3 Verify the Deployment
-
-1. Visit the production domain
-2. Check key pages and API routes
-3. Verify assets load correctly (`/_next/static`)
-
----
-
-## Part 3: SOP - Standard Operating Procedure (Nixpacks + Coolify)
-
-Use this SOP for all Next.js deployments on the VPS:
-
-### 3.1 Pre-Deploy (Local)
-
-1. Pull latest code:
-   ```bash
-   git pull origin main
-   ```
-2. Make changes and test locally:
-   ```bash
-   npm run dev
-   ```
-3. Optional sanity build:
-   ```bash
-   npm run build
-   ```
-
-### 3.2 Deploy (GitHub + Coolify)
-
-1. Commit and push:
-   ```bash
-   git add .
-   git commit -m "feat: Describe change"
-   git push origin main
-   ```
-2. In Coolify, confirm deploy started (auto or manual)
-3. Watch build logs for success
-4. Confirm runtime logs show app started
+In Coolify:
+1. Confirm deployment started (auto or manual).
+2. Watch build logs for success.
+3. Confirm runtime logs show the app started.
 
 ### 3.3 Post-Deploy Verification
 
-1. Visit the domain
-2. Test key routes and API endpoints
-3. Check assets (`/_next/static`)
-
-## Part 4: Complete Deployment Checklist
-
-```
-□ All changes committed to GitHub
-□ Changes tested locally (npm run dev)
-□ Coolify build succeeded
-□ App started successfully
-□ Domain + HTTPS configured
-□ Verify live site is working
-```
+1. Visit the domain.
+2. Verify key pages and any API routes.
+3. Confirm assets load (`/_next/static`).
 
 ---
 
-## Part 5: Important Notes
+## 4 Environment Variables
 
-### Environment Variables
-
-Store secrets in Coolify, not in the repo:
-- `.env` files are ignored by `.gitignore`
-- Set `NEXT_PUBLIC_*` variables in Coolify as needed
-
-### Node.js Restarts
-
-Coolify restarts the app automatically after deployment. If you change environment variables, redeploy or restart the app in Coolify.
-
-### Downtime
-
-Deployments can cause brief downtime during restart. Deploy during low-traffic windows if possible.
+- Store secrets in Coolify, not in the repo.
+- If you change env vars, restart or redeploy the app in Coolify.
 
 ---
 
-## Part 6: Troubleshooting
+## 5 Troubleshooting
 
-### Build fails
+### 5.1 Build fails
 
-1. Check the build logs in Coolify
-2. Fix the code error locally
-3. Push again to trigger a new build
+1. Check the build logs in Coolify.
+2. Fix the error locally.
+3. Push again to trigger a new build.
 
-### App starts but pages fail
+### 5.2 Bad Gateway (502)
 
-1. Check runtime logs for missing environment variables
-2. Ensure `output: 'standalone'` is set in `next.config.ts`
-3. Confirm start command is `npm run start`
+1. Confirm the app is running and listening on the expected port.
+2. Verify Coolify has the correct internal port (default 3000).
+3. Check proxy or healthcheck logs in Coolify.
 
-### Assets not loading
+### 5.3 Pages load but assets fail
 
-1. Ensure the build completed successfully
-2. Verify the domain is pointing to the Coolify app
-3. Check for mixed-content or CSP issues
+1. Ensure the build completed successfully.
+2. Verify the domain is mapped to the correct app.
+3. Check for CSP or mixed-content issues.
 
 ---
 
-## Quick Reference Commands
+## 6 Quick Reference
 
 ```bash
-# GITHUB (Source Code)
-cd d:\Projects\ACCE - Copy\acce-nextjs
+# Pull latest
 git pull origin main
+
+# Run dev
+npm run dev
+
+# Build
+npm run build
+
+# Commit + push
 git add .
 git commit -m "message"
 git push origin main
-
-# LOCAL BUILD (optional sanity check)
-npm run build
 ```
 
----
-
-*Last updated: February 2026*

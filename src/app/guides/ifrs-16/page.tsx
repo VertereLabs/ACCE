@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
     title: "IFRS 16: Leases | ACCE Tutors Study Guides",
-    description: "Master lease accounting with our comprehensive guide to IFRS 16. Learn lessee and lessor accounting, ROU assets, lease liabilities, and practical expedients.",
+    description: "IFRS 16 guide for lessee and lessor accounting, ROU assets, lease liabilities, and key exemptions. Clear, exam-focused explanations.",
     keywords: "IFRS 16, leases, right of use asset, lease liability, lessee accounting, lessor accounting, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/ifrs-16/",
+    },
 };
 
 const parts = [
@@ -62,7 +65,7 @@ export default function IFRS16GuidePage() {
                 <div className="container mx-auto px-6">
                     {/* Back Link */}
                     <Link
-                        href="/guides"
+                        href="/guides/"
                         className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors mb-8"
                     >
                         <ArrowLeft className="w-4 h-4" />
@@ -122,9 +125,9 @@ export default function IFRS16GuidePage() {
                         <div className="mt-8 bg-gradient-to-r from-accent/20 to-accent/5 rounded-xl p-6 border border-accent/30">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div>
-                                    <h3 className="font-display text-lg font-semibold text-primary-foreground mb-1">
+                                    <h2 className="font-display text-lg font-semibold text-primary-foreground mb-1">
                                         Download Complete Guide
-                                    </h3>
+                                    </h2>
                                     <p className="text-primary-foreground/60 text-sm">
                                         Get the full 6-part guide with detailed examples, worked solutions, and exam tips (PDF, 100KB)
                                     </p>
@@ -204,7 +207,7 @@ export default function IFRS16GuidePage() {
                                             {part.status === "available" && (
                                                 <Button asChild size="sm" variant="ghost" className="text-accent hover:text-accent hover:bg-accent/10">
                                                     <Link href={`/guides/ifrs-16/part-${part.id}`}>
-                                                        Start
+                                                        Start Part {part.id}
                                                         <ArrowRight className="w-4 h-4 ml-1" />
                                                     </Link>
                                                 </Button>

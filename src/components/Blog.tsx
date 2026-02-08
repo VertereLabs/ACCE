@@ -18,7 +18,7 @@ const blogPosts = [
     },
     {
         title: "5 Lessons I Learned While Teaching Accounting",
-        excerpt: "From adapting to different learning styles to the power of past papers—key insights from tutoring PGDA and BCom students.",
+        excerpt: "From adapting to different learning styles to the power of past paper; key insights from tutoring PGDA and BCom students.",
         category: "Study Tips",
         readTime: "6 min read",
         date: "Coming Soon",

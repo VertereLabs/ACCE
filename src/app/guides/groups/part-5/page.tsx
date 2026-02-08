@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 5: Complex Transactions | ACCE Tutors",
     description: "Master complex group transactions including goodwill impairment, intra-group transfers of assets, changes in ownership, and FCTR.",
     keywords: "goodwill impairment, intra-group transfers, ownership changes, step acquisitions, FCTR, IAS 21, group accounting, CA(SA), CTA, PGDA",
+    alternates: {
+        canonical: "/guides/groups/part-5/",
+    },
 };
 
 export default function GroupsPart5Page() {
@@ -20,7 +23,7 @@ export default function GroupsPart5Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/groups"
+                            href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

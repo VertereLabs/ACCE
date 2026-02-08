@@ -15,7 +15,7 @@ const milestones = [
     {
         icon: Heart,
         title: "Overcoming Challenges",
-        description: "Left a toxic work environment to focus fully on CTA—there was no plan B.",
+        description: "Left a toxic work environment to focus fully on CTA; there was no plan B.",
     },
     {
         icon: TrendingUp,
@@ -47,8 +47,10 @@ const About = () => {
                             <Image
                                 src="/images/priyanka.png"
                                 alt="Priyanka Govender"
-                                fill
-                                className="object-cover"
+                                width={800}
+                                height={1000}
+                                className="object-cover w-full h-full"
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                         </div>
                         <div className="absolute -bottom-6 -right-6 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
@@ -66,7 +68,7 @@ const About = () => {
 
                         <p className="text-primary-foreground/70 leading-relaxed mb-6">
                             After completing my undergraduate degree during COVID, I made the decision to commit fully to
-                            becoming a Chartered Accountant. The journey wasn&apos;t smooth—I faced toxic work environments,
+                            becoming a Chartered Accountant. The journey wasn&apos;t smooth - I faced toxic work environments,
                             failed modules, and moments where I genuinely lost hope.
                         </p>
 

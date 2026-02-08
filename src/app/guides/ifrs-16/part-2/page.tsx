@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 2: IFRS 16 Lessee Initial Measurement | ACCE Tutors",
     description: "Learn how to calculate the initial lease liability and right-of-use asset under IFRS 16, including PV of lease payments and discount rates.",
     keywords: "IFRS 16 initial measurement, lease liability calculation, right of use asset calculation, incremental borrowing rate, interest rate implicit in lease, lease payments",
+    alternates: {
+        canonical: "/guides/ifrs-16/part-2/",
+    },
 };
 
 export default function IFRS16Part2Page() {
@@ -20,7 +23,7 @@ export default function IFRS16Part2Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-16"
+                            href="/guides/ifrs-16/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

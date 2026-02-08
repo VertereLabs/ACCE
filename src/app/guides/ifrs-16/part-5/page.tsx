@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 5: IFRS 16 Lessor Accounting & Exam Prep | ACCE Tutors",
     description: "Learn how lessors classify and account for leases, and get a foolproof strategy for lease recognition exam questions.",
     keywords: "IFRS 16 lessor accounting, finance lease vs operating lease lessor, lease classification criteria, accounting exam strategy, CA(SA) leases",
+    alternates: {
+        canonical: "/guides/ifrs-16/part-5/",
+    },
 };
 
 export default function IFRS16Part5Page() {
@@ -20,7 +23,7 @@ export default function IFRS16Part5Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-16"
+                            href="/guides/ifrs-16/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -167,13 +170,13 @@ export default function IFRS16Part5Page() {
                         {/* Navigation */}
                         <div className="flex items-center justify-between pt-8 border-t border-white/10">
                             <Button asChild variant="ghost" className="text-primary-foreground/60 hover:text-primary-foreground">
-                                <Link href="/guides/ifrs-16/part-4">
+                                <Link href="/guides/ifrs-16/part-4/">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Part 4: Sale & Leaseback
                                 </Link>
                             </Button>
                             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
-                                <Link href="/guides">
+                                <Link href="/guides/">
                                     Master All Standards
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Link>

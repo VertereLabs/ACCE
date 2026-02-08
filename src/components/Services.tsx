@@ -4,7 +4,7 @@ const services = [
     {
         icon: BookOpen,
         title: "Financial Accounting",
-        description: "From IFRS fundamentals to advanced group consolidations. Master the Analysis of Equity, FCTRs, and complex scenarios. I improved my score by 25% by going back to basics—I'll show you how.",
+        description: "From IFRS fundamentals to advanced group consolidations. Master the Analysis of Equity, FCTRs, and complex scenarios. I improved my score by 25% by going back to basics; I'll show you how.",
     },
     {
         icon: Scale,
@@ -14,7 +14,7 @@ const services = [
     {
         icon: Coins,
         title: "Management Accounting",
-        description: "Excel in costing, budgeting, and financial strategy. Time management is key—I'll help you score marks efficiently within allocated time through smart exam techniques.",
+        description: "Excel in costing, budgeting, and financial strategy. Time management is key - I'll help you score marks efficiently within allocated time through smart exam techniques.",
     },
     {
         icon: Calculator,
@@ -36,7 +36,7 @@ const Services = () => {
                     </h2>
                     <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
                         Specialized tutoring for the four pillars of your CA(SA) qualification.
-                        Whether you&apos;re a full-time student or working while studying—I&apos;ve been there, and I can help.
+                        Whether you&apos;re a full-time student or working while studying - I&apos;ve been there, and I can help.
                     </p>
                 </div>
 

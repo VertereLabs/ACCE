@@ -6,9 +6,12 @@ import { ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Lightbulb, Download }
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-    title: "Part 1: Foundations of Group Financial Reporting | ACCE Tutors",
-    description: "Learn the fundamentals of group accounting. Understand when to consolidate vs equity account, control vs significant influence, and the key standards that govern group financial reporting.",
+    title: "Part 1: Group Reporting Foundations | ACCE Tutors",
+    description: "Group accounting basics: when to consolidate, when to use equity accounting, and the standards behind control and influence.",
     keywords: "group accounting foundations, control vs significant influence, IFRS 10, subsidiary vs associate, consolidation basics",
+    alternates: {
+        canonical: "/guides/groups/part-1/",
+    },
 };
 
 export default function GroupsPart1Page() {
@@ -20,7 +23,7 @@ export default function GroupsPart1Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/groups"
+                            href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

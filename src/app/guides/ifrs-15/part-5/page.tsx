@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Part 5: IFRS 15 Disclosures & Exam Prep | ACCE Tutors",
     description: "Wrap up your IFRS 15 journey with a guide to disclosure requirements and a strategy for tackling revenue recognition exam questions.",
     keywords: "IFRS 15 disclosures, contract assets, contract liabilities, revenue recognition exam strategy, accounting exam tips, CA(SA), CTA",
+    alternates: {
+        canonical: "/guides/ifrs-15/part-5/",
+    },
 };
 
 export default function IFRS15Part5Page() {
@@ -20,7 +23,7 @@ export default function IFRS15Part5Page() {
                     {/* Navigation */}
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
-                            href="/guides/ifrs-15"
+                            href="/guides/ifrs-15/"
                             className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -164,7 +167,7 @@ export default function IFRS15Part5Page() {
                                 </Link>
                             </Button>
                             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                                <Link href="/guides">
+                                <Link href="/guides/">
                                     Back to All Guides
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Link>
