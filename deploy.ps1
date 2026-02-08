@@ -1,5 +1,8 @@
-# ACCE Standalone Deployment Script
-# This script builds and assembles the deploy folder according to STANDALONE_BUILD_GUIDE.md
+# ACCE Standalone Deployment Script (Legacy)
+# This script builds and assembles the deploy folder for manual uploads.
+# For VPS deployments via Coolify, prefer Nixpacks with:
+#   Build: npm run build
+#   Start: node .next/standalone/server.js
 
 Write-Host "=== ACCE Standalone Deployment Script ===" -ForegroundColor Cyan
 Write-Host ""
