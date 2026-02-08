@@ -18,13 +18,13 @@ export default function Icon() {
           alignItems: "center",
           justifyContent: "center",
           background: "linear-gradient(135deg, #0f172a 0%, #111827 100%)",
-          color: "#f8fafc",
-          fontSize: 96,
-          fontWeight: 700,
-          letterSpacing: "0.08em",
         }}
       >
-        ACCE
+        <svg width="260" height="260" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <rect x="28" y="38" width="64" height="124" rx="8" stroke="#f59e0b" strokeWidth="10" />
+          <rect x="108" y="38" width="64" height="124" rx="8" stroke="#f59e0b" strokeWidth="10" />
+          <line x1="100" y1="42" x2="100" y2="162" stroke="#f8fafc" strokeWidth="6" />
+        </svg>
       </div>
     ),
     {
