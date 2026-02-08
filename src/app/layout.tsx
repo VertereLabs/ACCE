@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import Providers from "./providers";
@@ -31,6 +32,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          defer
+          src="https://stats.verterelabs.co.za/script.js"
+          data-website-id="6c7e46f6-fba8-40d3-80fa-79a00cedad07"
+        />
+      </head>
       <body>
         <Providers>
           {children}

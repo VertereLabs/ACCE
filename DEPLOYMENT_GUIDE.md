@@ -89,7 +89,7 @@ git push origin main
 2. Choose **Nixpacks** as the build pack
 3. Set commands (only if auto-detection does not set them)
    - **Build Command**: `npm run build`
-   - **Start Command**: `node .next/standalone/server.js`
+   - **Start Command**: `npm run start`
 4. Set the Node version (match `package.json` engines if present)
 5. Add required **Environment Variables**
 6. Attach domain and enable HTTPS
@@ -108,7 +108,44 @@ git push origin main
 
 ---
 
-## Part 3: Complete Deployment Checklist
+## Part 3: SOP - Standard Operating Procedure (Nixpacks + Coolify)
+
+Use this SOP for all Next.js deployments on the VPS:
+
+### 3.1 Pre-Deploy (Local)
+
+1. Pull latest code:
+   ```bash
+   git pull origin main
+   ```
+2. Make changes and test locally:
+   ```bash
+   npm run dev
+   ```
+3. Optional sanity build:
+   ```bash
+   npm run build
+   ```
+
+### 3.2 Deploy (GitHub + Coolify)
+
+1. Commit and push:
+   ```bash
+   git add .
+   git commit -m "feat: Describe change"
+   git push origin main
+   ```
+2. In Coolify, confirm deploy started (auto or manual)
+3. Watch build logs for success
+4. Confirm runtime logs show app started
+
+### 3.3 Post-Deploy Verification
+
+1. Visit the domain
+2. Test key routes and API endpoints
+3. Check assets (`/_next/static`)
+
+## Part 4: Complete Deployment Checklist
 
 ```
 □ All changes committed to GitHub
@@ -121,7 +158,7 @@ git push origin main
 
 ---
 
-## Part 4: Important Notes
+## Part 5: Important Notes
 
 ### Environment Variables
 
@@ -139,7 +176,7 @@ Deployments can cause brief downtime during restart. Deploy during low-traffic w
 
 ---
 
-## Part 5: Troubleshooting
+## Part 6: Troubleshooting
 
 ### Build fails
 
@@ -151,7 +188,7 @@ Deployments can cause brief downtime during restart. Deploy during low-traffic w
 
 1. Check runtime logs for missing environment variables
 2. Ensure `output: 'standalone'` is set in `next.config.ts`
-3. Confirm start command is `node .next/standalone/server.js`
+3. Confirm start command is `npm run start`
 
 ### Assets not loading
 
