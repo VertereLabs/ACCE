@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
     ],
   },
   // Trailing slashes help with static hosting routing
-  trailingSlash: true,
+  trailingSlash: false,
   async headers() {
     return [
       {

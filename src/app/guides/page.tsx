@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { FileText, Building2, Receipt, ArrowRight, BookOpen, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isGuidePublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "CA(SA) Study Guides | ACCE Tutors",
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     },
 };
 
-const guides = [
+const guidesData = [
     {
         id: "groups",
         title: "Groups & Business Combinations",
@@ -23,7 +24,6 @@ const guides = [
         topics: ["Analysis of Equity", "Goodwill & NCI", "Consolidation Mechanics", "Fair Value Adjustments"],
         parts: 7,
         difficulty: "Advanced",
-        status: "available",
         href: "/guides/groups",
     },
     {
@@ -34,7 +34,6 @@ const guides = [
         topics: ["Five-Step Model", "Variable Consideration", "Principal vs Agent", "Performance Obligations"],
         parts: 5,
         difficulty: "Intermediate",
-        status: "available",
         href: "/guides/ifrs-15",
     },
     {
@@ -45,10 +44,15 @@ const guides = [
         topics: ["Lessee Accounting", "Lessor Classification", "Sale and Leaseback", "Practical Expedients"],
         parts: 5,
         difficulty: "Intermediate",
-        status: "available",
         href: "/guides/ifrs-16",
     },
 ];
+
+// Derive status from the config — dev mode sees everything as available
+const guides = guidesData.map((g) => ({
+    ...g,
+    status: isGuidePublished(g.id) ? "available" : "coming-soon",
+}));
 
 const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
