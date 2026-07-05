@@ -72,6 +72,15 @@ test.describe("authenticated STUDENT routes → 200 (AC2)", () => {
         response!.status(),
         `${route.path} must return 200 for a valid STUDENT session (not a redirect or 500)`,
       ).toBe(200);
+
+      // AC2: "not a 3xx redirect to /sign-in". A failed guard issues redirect('/sign-in'),
+      // a 307 that Playwright auto-follows to /sign-in — which ALSO returns 200. So status
+      // alone is not enough; assert the final URL is still the guarded route (the session
+      // was genuinely honoured, we were not bounced to sign-in).
+      expect(
+        new URL(page.url()).pathname,
+        `${route.path} 200 must come from the route itself, not a redirect to /sign-in (broken/invalid STUDENT session)`,
+      ).toBe(route.path);
     });
   }
 });
@@ -94,6 +103,14 @@ test.describe("authenticated ADMIN routes → 200 (AC2)", () => {
         response!.status(),
         `${route.path} must return 200 for a valid ADMIN session (not a redirect or 500)`,
       ).toBe(200);
+
+      // AC2: a STUDENT-role or broken ADMIN session would be redirected (requireAdmin →
+      // /portal, or requireSession → /sign-in), both landing on a 200 page. Assert the
+      // final URL is still the admin route to prove the 200 is the admin page itself.
+      expect(
+        new URL(page.url()).pathname,
+        `${route.path} 200 must come from the admin route itself, not a redirect (broken/invalid ADMIN session)`,
+      ).toBe(route.path);
     });
   }
 });

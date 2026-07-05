@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-05T22:45:00Z
+last_updated: 2026-07-05T22:50:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -60,6 +60,9 @@ project: ACCE
 # 1-4 set review on 2026-07-05 (dev-story complete: seed-data.ts [pure constants], seed.ts [idempotent upserts], seed-data.test.ts [23 assertions]; 78/78 tests pass, prisma validate clean, build clean)
 # 1-4 set done on 2026-07-05 (code-review: CLEAN — no HIGH/MEDIUM; 2 LOW deferred [SAST-vs-UTC comment, flaky day-diff test]; independently re-verified prisma validate + tsc clean + 78/78 vitest incl 23 new seed assertions; AC1-AC4 & AD-2/5/9/13 all satisfied)
 # 1-5 set ready-for-dev on 2026-07-05 (create-story: deploy shell already in place [standalone/Dockerfile-Prisma-copy/headers-on-/(.*)] → story = verify + author authenticated route-200 Playwright smoke over (portal)/(admin); session provisioning via real Better Auth globalSetup storageState [no bypass route]; live DB run deferred to CI ephemeral Postgres [ties into 1.1 deferred item]; no schema/seed/config change)
+# 1-5 set in-progress on 2026-07-05 (dev-story)
+# 1-5 set review on 2026-07-05 (dev-story complete: header-assertion unit test [+5], authenticated-route manifest, globalSetup session provisioning, authenticated-smoke.spec.ts; 83/83 vitest, e2e 6 pass/3 skip [authenticated deferred, no sandbox DB])
+# 1-5 set done on 2026-07-05 (code-review: 1 HIGH patched [globalSetup wrote RAW token as cookie value, but Better Auth session cookies are HMAC-SIGNED via setSignedCookie/getSignedCookie → sessions never authenticated; now signs token w/ BETTER_AUTH_SECRET + fail-fast], 1 MEDIUM patched [positive smoke asserted only status 200 → a redirect-to-/sign-in also 200 = false-green; now asserts final pathname===route.path]; tsc clean, 83/83 vitest, e2e 6 pass/3 skip unchanged; authenticated live green + first signed-cookie verification deferred to CI ephemeral Postgres)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -71,7 +74,7 @@ development_status:
   1-2-passwordless-student-signup-login-magic-link: done
   1-3-roles-and-guarded-portal-admin-route-groups: done
   1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes: done
-  1-5-deployable-shell-with-authenticated-route-200-smoke-test: review
+  1-5-deployable-shell-with-authenticated-route-200-smoke-test: done
   epic-1-retrospective: optional
 
   # Epic 2: Admin Class Management

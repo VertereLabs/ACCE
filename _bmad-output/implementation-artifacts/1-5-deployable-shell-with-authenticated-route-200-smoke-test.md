@@ -4,7 +4,7 @@ baseline_commit: 0bedda60cf1f0be77413497b9193036199e524c8
 
 # Story 1.5: Deployable shell with authenticated route-200 smoke test
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -96,6 +96,15 @@ Then it does so in Playwright `globalSetup` through the genuine Better Auth sess
   - [x] `npm test` (vitest) — green, including the new header-assertion unit test if you chose the unit-test route for Task 1.
   - [x] `npm run test:e2e` — the **public** smoke should still pass locally (prod build on 3100); the **authenticated** specs are expected to be **skipped/deferred in the sandbox** (no Postgres) and are proven in CI. Record exactly what ran vs deferred in the Dev Agent Record. Do NOT stub 200s or disable guards to force a green.
   - [x] Add/adjust `.gitignore` for `tests/e2e/.auth/` (session state artifacts must never be committed).
+
+## Review Findings
+
+Adversarial code review (2026-07-05, fresh reasoning) — 2 findings, both `patch`, both fixed.
+
+- [x] [Review][Patch] **HIGH — global-setup wrote the RAW session token as the cookie value; Better Auth session cookies are HMAC-SIGNED** [acce-nextjs/tests/e2e/global-setup.ts:51-71]. Better Auth sets the cookie via `setSignedCookie(sessionToken.name, token, secret)` (better-auth/dist/cookies/index.mjs:123) and reads it via `getSignedCookie` (better-call/dist/context.mjs:44-49), which rejects any value that is not `encodeURIComponent(`${token}.${base64(HMAC_SHA256(token, secret))}`)` (signature must be 44 base64 chars ending `=`). A bare UUID token → `getSignedCookie` returns null → `getSession` returns null → the guard redirects to /sign-in, so the "authenticated" sessions never authenticate. In CI this would have silently degraded every AC2 200 into a sign-in redirect. **Fix:** replicate `signCookieValue` (Node `createHmac('sha256', BETTER_AUTH_SECRET).digest('base64')`, then `encodeURIComponent(`${token}.${sig}`)`); write the signed value into storageState; require `BETTER_AUTH_SECRET` (fail-fast, same as the DATABASE_URL guard) since it must equal the running server's secret. Live green run still deferred to CI + ephemeral Postgres (below).
+- [x] [Review][Patch] **MEDIUM — positive smoke false-greened a broken session: it asserted only `response.status()===200`** [acce-nextjs/tests/e2e/authenticated-smoke.spec.ts:62-99]. `requireSession()`/`requireAdmin()` issue `redirect('/sign-in')` / `redirect('/portal')` (a 307 Playwright auto-follows); the destination page also returns 200, so a rejected session still produced status 200 — exactly hiding the HIGH bug above. AC2 explicitly requires "not a 3xx redirect to /sign-in." **Fix:** after the 200 check, assert `new URL(page.url()).pathname === route.path` so the 200 must come from the guarded route itself, not a redirect. This makes the suite self-checking: if the signed-cookie mint is ever wrong, CI fails loudly instead of false-greening.
+
+**Deferred (pre-existing, tracked):** the DB-backed authenticated live green run stays deferred to a CI job with an ephemeral Postgres + `BETTER_AUTH_SECRET` set — see deferred-work.md. That job must confirm the signed-cookie session actually authenticates (the review fix is correct-by-construction from Better Auth source but was not runtime-verifiable in the credential-blocked sandbox).
 
 ## Dev Notes
 
