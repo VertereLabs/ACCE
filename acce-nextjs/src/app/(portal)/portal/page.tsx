@@ -22,7 +22,10 @@ export default async function PortalPage() {
   const { user } = session;
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-6 p-8">
+    // Story 1.3: the (portal) layout now owns the page's single <main> landmark.
+    // Use a plain <div> here to avoid nested/duplicate <main> (invalid HTML +
+    // duplicate landmark = a11y-floor violation, AC4/NFR10).
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 p-8">
       <div className="text-center space-y-2">
         <h1 className="text-2xl font-semibold">Welcome to ACCE Tutors</h1>
         <p className="text-muted-foreground">
@@ -31,6 +34,6 @@ export default async function PortalPage() {
       </div>
 
       <SignOutButton />
-    </main>
+    </div>
   );
 }

@@ -217,3 +217,33 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Matches the four ACs exactly, respects the 1.2 "leave /portal folder, 1.3 wraps it" handoff and the 1.4/1.5 boundaries, and avoids inventing scope. Testing floor is vitest render/guard tests (route-200 Playwright smoke is 1.5).
 - **Reversibility:** All additive (new layouts + shell components + config plugin line + middleware branch). Revert by removing the `(portal)`/`(admin)` layouts, the `admin()` plugin line, and the middleware portal/admin branch.
 - **Files touched:** _bmad-output/implementation-artifacts/1-3-roles-and-guarded-portal-admin-route-groups.md
+
+### [2026-07-05T21:54:00Z] 1-3-roles-and-guarded-portal-admin-route-groups — Review: fix middleware __Secure- cookie prefix prod lockout
+- **Risk:** critical
+- **Workflow / step:** code-review step 3 (triage) → step 4 (patch)
+- **Decision point:** Adversarial review found the coarse portal/admin middleware guard used `c.name.startsWith("better-auth")` to detect the session cookie. Better Auth prefixes the cookie with `__Secure-` in production (https baseURL) → real prod name `__Secure-better-auth.session_token`. `startsWith` returns false → authenticated users hitting `/portal` or `/admin` in production get redirected to `/sign-in` despite a valid session (fail-CLOSED lockout — the exact risk the story called out).
+- **Options considered:** A) leave as-is (breaks prod portal access); B) hardcode both exact cookie names; C) substring match `includes("better-auth")` resilient to `__Secure-`/`__Host-` prefixes and name changes.
+- **Chosen:** C — `.some((c) => c.name.includes("better-auth"))`.
+- **Rationale:** Verified against `node_modules/better-auth/dist/cookies/index.mjs` (line 221 cookie-name construction + `SECURE_COOKIE_PREFIX = "__Secure-"`, applied when baseURL is https / production). Substring match preserves the story's intended fail-open behaviour across secure/host prefixes without hardcoding a brittle name. Real trusted guard remains the Node-runtime layout/page `requireSession()`/`requireAdmin()` (AD-3); this only fixes the coarse UX pre-emption so it stops locking out valid sessions.
+- **Reversibility:** Revert the one-line predicate in `src/middleware.ts` back to `startsWith("better-auth")`. No schema/state change. To re-architect, replace the substring heuristic with Better Auth's own `getSessionCookie(request)` helper (reads the resolved cookie name from config).
+- **Files touched:** acce-nextjs/src/middleware.ts
+
+### [2026-07-05T21:54:10Z] 1-3-roles-and-guarded-portal-admin-route-groups — Review: fix nested <main> landmark (a11y)
+- **Risk:** low
+- **Workflow / step:** code-review step 3 (triage) → step 4 (patch)
+- **Decision point:** The new `(portal)/layout.tsx` renders `<main className="flex-1">{children}</main>`; the wrapped `(portal)/portal/page.tsx` (from 1.2) also rendered its own `<main>`. Nested `<main>` is invalid HTML and yields duplicate `main` landmarks → violates AC4/NFR10 a11y floor.
+- **Options considered:** A) drop `<main>` from the layout (but layout owning the landmark is the cleaner shell pattern, and admin page already relies on it); B) change the portal page's outer `<main>` to `<div>`.
+- **Chosen:** B — portal page outer element changed to `<div className="flex flex-1 flex-col …">`; layout keeps the single `<main>`.
+- **Rationale:** Layout-owned `<main>` is consistent with the admin page (which already used `<div>`). Minimal, in-scope for 1.3 (the story explicitly wraps this page in the shell). Page's own `getSession`+redirect guard (AC5) left untouched.
+- **Reversibility:** Restore the `<main>` wrapper in `src/app/(portal)/portal/page.tsx` and remove it from the layout. Purely presentational/markup; no logic change.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/page.tsx
+
+### [2026-07-05T21:54:20Z] 1-3-roles-and-guarded-portal-admin-route-groups — Review: defer Logo `priority` prop test-noise; accept CLI-added indexes
+- **Risk:** low
+- **Workflow / step:** code-review step 3 (triage) → step 4 (present)
+- **Decision point:** (1) React warns `Received true for non-boolean attribute priority` on `next/image` in `Logo.tsx` during jsdom tests — pre-existing, also in `render-smoke.test.tsx`, not caused by 1.3. (2) Better Auth CLI generate added 3 performance indexes (migration `20260705214058_better_auth_admin_indexes`) rather than the expected no-op.
+- **Options considered:** patch now vs defer vs accept.
+- **Chosen:** Defer the Logo warning to `deferred-work.md` (pre-existing, cosmetic test-env only). Accept the 3 indexes as-is.
+- **Rationale:** Logo warning is untouched pre-existing noise; Next's real `<Image>` consumes `priority` correctly. The 3 indexes are additive/non-destructive FK indexes (NFR5-aligned), not the "new column/table" escalation condition the story defined — reversible by dropping them. Story remains clean.
+- **Reversibility:** Logo — fix when `Logo.tsx` is next touched. Indexes — `DROP INDEX` if ever unwanted; migration is isolated.
+- **Files touched:** _bmad-output/implementation-artifacts/deferred-work.md

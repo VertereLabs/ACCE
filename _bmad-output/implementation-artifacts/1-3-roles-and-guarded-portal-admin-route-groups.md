@@ -4,7 +4,7 @@ baseline_commit: 5d2eed23a08bffd009aef7037e051c286d215e2e
 
 # Story 1.3: Roles and guarded portal / admin route groups
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -209,3 +209,15 @@ acce-nextjs/tests/unit/sitemap.test.ts (modified — exclude /(admin)/* from cov
 
 ### Change Log
 - 2026-07-05: Story 1.3 implemented — Better Auth admin plugin wired, auth-guards.ts created, middleware extended, (portal)/(admin) route groups + shells built, 15 new tests (9 guard-helper + 6 render smoke), all 55 tests green, build clean.
+- 2026-07-05: Code review — 1 HIGH + 1 MEDIUM patched, 1 LOW deferred. Status → done. 55/55 tests green, build clean post-fix.
+
+### Review Findings
+
+- [x] [Review][Patch] Middleware secure-cookie prefix lockout — `src/middleware.ts` — the coarse portal/admin guard checked `c.name.startsWith("better-auth")`, but in production (https baseURL) Better Auth names the session cookie `__Secure-better-auth.session_token` (verified in `node_modules/better-auth/dist/cookies/index.mjs` line 221 + `SECURE_COOKIE_PREFIX`). `startsWith` fails on that name → authenticated users hitting `/portal` or `/admin` in production would be redirected to `/sign-in` despite a valid session (fail-CLOSED lockout — the exact failure the story warned against). **FIXED**: switched to substring match `c.name.includes("better-auth")`, which survives the `__Secure-`/`__Host-` prefixes and future cookie-name changes. (HIGH — auth surface; verified via node_modules source; tests + build re-run green.)
+- [x] [Review][Patch] Nested/duplicate `<main>` landmark — `src/app/(portal)/portal/page.tsx` — the new `(portal)/layout.tsx` renders `<main className="flex-1">{children}</main>`, while the wrapped portal page also rendered its own `<main>`. Nested `<main>` is invalid HTML and produces two `main` landmarks → violates the AC4/NFR10 a11y floor. **FIXED**: changed the portal page's outer `<main>` to a `<div className="flex flex-1 …">`; the layout now owns the single `main` landmark. (MEDIUM — a11y; admin page already used `<div>`, so unaffected.)
+- [x] [Review][Defer] `priority` boolean prop warning on `next/image` in `Logo.tsx` — pre-existing render-test noise (also in `render-smoke.test.tsx`), not caused by this change. Logged to deferred-work.md. (LOW — pre-existing.)
+
+**Notes checked and cleared (no action):**
+- Better Auth CLI added 3 performance indexes (`session_userId_idx`, `account_userId_idx`, `verification_identifier_idx`), not columns/tables — additive, non-destructive, beneficial (NFR5 FK indexes). Migration `20260705214058_better_auth_admin_indexes` is reversible (drop indexes). Not the escalation condition (new column/table) the story defined. Accepted.
+- Schema comment relocations by the CLI (Enrollment/LedgerEntry inline `//` moved above directives) are cosmetic; the load-bearing partial-unique-index note on `LedgerEntry` is intact.
+- Middleware dev/preview early-return skips the portal/admin coarse redirect — by design and documented; the layout/page guards remain the trusted boundary. No leak (AC1/AC2 still hold).

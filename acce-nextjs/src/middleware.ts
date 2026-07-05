@@ -81,13 +81,17 @@ export function middleware(request: NextRequest) {
     // (AD-3). Do not gate on role here — role requires DB.
     //
     // Cookie detection: Better Auth v1 default session cookie is `better-auth.session_token`.
-    // To be resilient to cookie name changes, redirect only when NO cookie whose name
-    // starts with "better-auth" is present (fail-open to the layout guard rather than
-    // locking out a valid session on a cookie-name mismatch).
+    // In production (https baseURL) Better Auth prefixes cookies with `__Secure-`
+    // (and `__Host-` for host-scoped cookies), so the real prod cookie name is
+    // `__Secure-better-auth.session_token`. Match by SUBSTRING (`includes`) so the
+    // check survives the secure/host prefixes AND future cookie-name changes —
+    // matching only the bare `startsWith("better-auth")` would fail in production and
+    // redirect authenticated users to /sign-in (fail-closed lockout). Fail-open to the
+    // layout guard on any miss rather than locking out a valid session.
     if (pathname.startsWith("/portal") || pathname.startsWith("/admin")) {
         const hasBetterAuthCookie = request.cookies
             .getAll()
-            .some((c) => c.name.startsWith("better-auth"));
+            .some((c) => c.name.includes("better-auth"));
 
         if (!hasBetterAuthCookie) {
             return NextResponse.redirect(new URL("/sign-in", request.url));
