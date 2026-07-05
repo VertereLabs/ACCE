@@ -15,7 +15,7 @@ This document provides the complete epic and story breakdown for **ACCE Phase 1a
 
 **Scope reminder (definition of done):** A student can log in (magic link), browse upcoming classes showing **spaces left**, pay for a seat (Paystack or wallet balance), and receive a confirmation with the class's Meet link/location. A **full class cannot oversell** under concurrent buyers. Priyanka can create/edit classes and see who's enrolled per class in an admin area. Cancellations refund to wallet per the policy tiers. Everything is net-new — the existing app has no auth, DB, or payments yet.
 
-**Out of scope (later phases):** 1-on-1 booking wizard, availability windows, rate matrix, R2 uploads (1b); package/top-up purchase UI (balance still exists, fed by refunds); auto Google-Meet generation (MVP uses a manual link field); reminder emails via cron; content/forum/membership (Phases 2–4).
+**Out of scope (later phases):** 1-on-1 booking wizard, availability windows, rate matrix, R2 uploads (1b); package/top-up *purchase* UI (balance still exists, fed by refunds and admin adjustment credits); auto Google-Meet generation (MVP uses a manual link field); reminder emails via cron; content/forum/membership (Phases 2–4).
 
 > **UX note:** The bmad-ux `EXPERIENCE.md` spine covers the **Stage 1 marketing redesign only** — the portal (auth/booking/payments) is Stage 2 and gets its own future EXPERIENCE pass. So Phase 1a has no dedicated portal interaction contract yet; the **DESIGN.md visual system** (navy+gold tokens, shadcn components, dark/light modes) is reused, and the UX Design Requirements below are derived from that visual reuse plus the plan's UI mentions (§4, §8).
 
@@ -129,8 +129,8 @@ Priyanka can create, edit, and list group classes (subject, level, date/time, ca
 **FRs covered:** FR16
 
 ### Epic 3: Browse & Enroll with Wallet Balance
-A student browses upcoming classes with "N seats left", opens a detail/checkout page, and pays for a seat from wallet balance — confirmed instantly, Meet link/location revealed, ledger updated. Deliberate risk checkpoint: the full enroll flow end-to-end before Paystack.
-**FRs covered:** FR4, FR5, FR6, FR7, FR11, FR15
+A student browses upcoming classes with "N seats left", opens a detail/checkout page, and pays for a seat from wallet balance — confirmed instantly, Meet link/location revealed, ledger updated. Includes an admin wallet-credit action (Story 3.5) so real balance exists to pay from. Deliberate risk checkpoint: the full enroll flow end-to-end before Paystack.
+**FRs covered:** FR4, FR5, FR6, FR7, FR11, FR15 _(+ admin wallet credit, Story 3.5 — resolves readiness M1)_
 
 ### Epic 4: Online Payment & Guaranteed Seats
 A student without enough balance pays the seat price via Paystack; the seat is held during payment and confirmed by a verified, idempotent webhook; a full class cannot oversell under concurrent buyers. Isolated as the plan's explicit risk boundary (§9.5).
@@ -304,7 +304,7 @@ So that I can fix a time, adjust the price, or paste the Meet link after schedul
 
 ## Epic 3: Browse & Enroll with Wallet Balance
 
-A student browses upcoming classes with seats-left, opens a detail/checkout page, and pays for a seat from wallet balance — confirmed instantly, Meet link revealed, ledger updated. The full enroll flow end-to-end before Paystack. Covers FR4, FR5, FR6, FR7, FR11, FR15 and NFR4.
+A student browses upcoming classes with seats-left, opens a detail/checkout page, and pays for a seat from wallet balance — confirmed instantly, Meet link revealed, ledger updated. Includes an admin wallet-credit action (Story 3.5) so a real student can have balance to pay from. The full enroll flow end-to-end before Paystack. Covers FR4, FR5, FR6, FR7, FR11, FR15 and NFR4 (plus the admin credit / ADJUSTMENT path resolving readiness M1).
 
 ### Story 3.1: View wallet balance and ledger
 
@@ -390,6 +390,28 @@ So that I'm confirmed without an external payment step.
 **When** the action returns
 **Then** a success or error toast is shown. _(UX-DR5)_
 
+### Story 3.5: Admin credits a student's wallet (resolves the balance-origin gap)
+
+As Priyanka,
+I want to credit a student's wallet with a chosen amount,
+So that a student actually has balance to pay a seat from (goodwill credit, manual comp, offline top-up) — and the balance-pay path is a real, demonstrable capability, not just a test fixture.
+
+_Build note: depends on `src/lib/wallet.ts` from Story 3.1; built after it. This story exists because Phase 1a has no top-up UI and refunds only arrive after a Paystack purchase + cancel, so without it no real student could exercise the balance-pay path (Story 3.4). Resolves readiness finding M1._
+
+**Acceptance Criteria:**
+
+**Given** I am an authenticated ADMIN on a student's admin view
+**When** I enter a credit amount (in Rand) and submit
+**Then** a positive `ADJUSTMENT` ledger row is written for that student via the single per-student-locked `wallet.mutate` (ARCHITECTURE-SPINE AD-6), the student's balance increases by that amount, and the entry appears in their wallet ledger.
+
+**Given** an invalid amount (zero, negative, or non-numeric)
+**When** I submit
+**Then** the credit is rejected with a clear validation error and no ledger row is written.
+
+**Given** a credit is applied
+**When** the student opens their wallet or a class checkout
+**Then** the new balance is reflected and the "Pay with balance" path (Story 3.4) is available when balance ≥ price.
+
 ---
 
 ## Epic 4: Online Payment & Guaranteed Seats
@@ -434,7 +456,7 @@ So that I'm enrolled and never double-charged.
 
 **Given** the enrollment already expired/was released and the class has since filled
 **When** the successful charge arrives
-**Then** the payment is auto-refunded via Paystack and the student is notified (edge case).
+**Then** the captured amount is **credited to the student's wallet balance** (a `CANCELLATION_REFUND`-type ledger row, idempotent by `Payment.reference`) — never oversold and never silently kept — and the student is notified (edge case). _(ARCHITECTURE-SPINE AD-15; supersedes the earlier "auto-refunded via Paystack" — a card-refund adapter is deferred.)_
 
 ### Story 4.3: No-oversell under concurrent buyers
 
