@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-05T22:50:00Z
+last_updated: 2026-07-05T23:19:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -63,6 +63,9 @@ project: ACCE
 # 1-5 set in-progress on 2026-07-05 (dev-story)
 # 1-5 set review on 2026-07-05 (dev-story complete: header-assertion unit test [+5], authenticated-route manifest, globalSetup session provisioning, authenticated-smoke.spec.ts; 83/83 vitest, e2e 6 pass/3 skip [authenticated deferred, no sandbox DB])
 # 1-5 set done on 2026-07-05 (code-review: 1 HIGH patched [globalSetup wrote RAW token as cookie value, but Better Auth session cookies are HMAC-SIGNED via setSignedCookie/getSignedCookie → sessions never authenticated; now signs token w/ BETTER_AUTH_SECRET + fail-fast], 1 MEDIUM patched [positive smoke asserted only status 200 → a redirect-to-/sign-in also 200 = false-green; now asserts final pathname===route.path]; tsc clean, 83/83 vitest, e2e 6 pass/3 skip unchanged; authenticated live green + first signed-cookie verification deferred to CI ephemeral Postgres)
+# epic-2 marked in-progress and 2-1 set ready-for-dev on 2026-07-05 (create-story: first server mutation in app; new-class admin route [(admin)/admin/classes/new] = client form + colocated Zod-validated "use server" createClassAction + requireAdmin trusted guard [AD-3] + priceCents integer-cents [AD-9]; pure schema module unit-tested [mirrors 1.4 seed-data]; capacity floor >=1 not hard 4-6; meetingUrl optional at create [AD-13, edit is 2.3]; location required if IN_PERSON; NO schema/migration, NO transaction/FOR-UPDATE [AD-16 concurrency is 2.3], NO list/edit; live-DB create deferred to CI ephemeral Postgres)
+# 2-1 set in-progress on 2026-07-05T23:02:20Z (dev-story)
+# 2-1 set review on 2026-07-05 (dev-story complete: LEVELS constant, pure Zod schema + toCents, createClassAction [requireAdmin+safeParse+subjectCheck+priceCents+groupSession.create], admin page + client form [react-hook-form+zodResolver+sonner+gold CTA]; 119/119 vitest, build clean, prisma validate clean; live DB create deferred CI ephemeral-Postgres)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -78,8 +81,8 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: Admin Class Management
-  epic-2: backlog
-  2-1-create-a-group-class: backlog
+  epic-2: in-progress
+  2-1-create-a-group-class: review
   2-2-list-and-view-classes-in-admin: backlog
   2-3-edit-an-existing-class: backlog
   epic-2-retrospective: optional

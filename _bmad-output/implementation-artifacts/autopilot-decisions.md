@@ -387,3 +387,73 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** B is minimal, reads naturally against the page-navigation model, and directly encodes AC2's intent (the 200 came from the guarded route, not a bounce to sign-in). Makes the whole authenticated suite self-checking so the HIGH signed-cookie fix is validated (not masked) in CI.
 - **Reversibility:** remove the two added `expect(new URL(page.url()).pathname).toBe(route.path)` assertions in `acce-nextjs/tests/e2e/authenticated-smoke.spec.ts`. Test-only.
 - **Files touched:** acce-nextjs/tests/e2e/authenticated-smoke.spec.ts
+
+### [2026-07-05T22:57:02Z] 2-1-create-a-group-class — create-story: epic-2 branch bootstrap
+- **Risk:** low
+- **Workflow / step:** create-story pre-flight (VERSION CONTROL)
+- **Decision point:** Dispatch requires TARGET BRANCH `epic-2` (one branch per epic, chained off previous epic's work). HEAD was on `epic-1`; `epic-2` did not exist.
+- **Options considered:** A) branch epic-2 from current HEAD (tip of epic-1); B) branch from main; C) reuse epic-1.
+- **Chosen:** A — `git checkout -b epic-2` from the epic-1 tip (per dispatch: chain off the previous epic's work; never branch from main).
+- **Rationale:** Epic 2 builds directly on epic-1's schema/auth/guards; chaining preserves that context. Dispatch forbids branching from main.
+- **Reversibility:** `git branch -D epic-2` (no commits made this stage; create-story does not commit).
+- **Files touched:** (none — branch op only)
+
+### [2026-07-05T22:57:02Z] 2-1-create-a-group-class — create-story: server-entry shape, validation, and money/date handling
+- **Risk:** medium
+- **Workflow / step:** create-story step 3-5 (architecture guardrails → story authoring)
+- **Decision point:** Story 2.1 introduces the FIRST server-side mutation entry in the app (no prior server action exists). Needed to pin: (a) entry type, (b) where the Zod schema + action live, (c) Rand→cents conversion, (d) start/end input mechanism — all under-specified beyond the AC's "validated with Zod via a server action".
+- **Options considered:** (entry) server action colocated with the route vs an `/api` route handler; (schema home) colocate in the route folder vs a shared `src/lib` module; (money) float Rand stored as-is vs integer-cents via `Math.round(rand*100)`; (dates) shadcn `calendar` popover vs native `datetime-local` inputs.
+- **Chosen:** Next.js **server action** colocated at `src/app/(admin)/admin/classes/new/actions.ts` (matches ARCHITECTURE-SPINE "server actions colocated with routes" + Capability Map "Admin CRUD lives in (admin)/admin/**"); a **pure exported Zod schema** (in the same folder, e.g. `class-form-schema.ts`) so vitest can unit-test validation without a DB; **integer cents** via `Math.round(randValue*100)` at the action edge (AD-9, no floats in domain/DB); two native **`datetime-local`** inputs for start/end (accessible, zero-dep, meets NFR10 — the shadcn `calendar` popover is heavier and deferred unless UX demands it).
+- **Rationale:** A server action is exactly what the AC calls for and keeps the mutation server-side with `requireAdmin()` as the trusted entry guard (AD-3). Extracting the schema as a pure module mirrors the 1.4 seed-data pattern (testable without `DATABASE_URL`). Integer cents is a hard architecture invariant. Native datetime inputs satisfy the accessibility floor with no new dependency.
+- **Reversibility:** Swap the server action for an `/api/admin/classes` route handler without touching the Zod schema module; replace `datetime-local` with the shadcn calendar in the client form only. All local to the new `classes/new` folder.
+- **Files touched:** (story spec only) 2-1-create-a-group-class.md
+
+### [2026-07-05T22:57:02Z] 2-1-create-a-group-class — create-story: field-rule interpretation (capacity floor, conditional location/meetingUrl, level source)
+- **Risk:** medium
+- **Workflow / step:** create-story step 2-3 (AC interpretation vs architecture)
+- **Decision point:** ACs are ambiguous on three field rules: (1) capacity "(4–6)" vs the invalid example "capacity < 1"; (2) whether `meetingUrl` is required at create for online classes; (3) where the `level` option list comes from (no `Level` table in 1a).
+- **Options considered:** (capacity) hard-limit 4–6 vs floor ≥1 with 4–6 as guidance; (meetingUrl) required-if-online vs optional-at-create; (level) import `LEVELS` from `prisma/seed-data.ts` vs a new canonical constant in `src/lib`.
+- **Chosen:** (1) Zod enforces **integer capacity ≥ 1** (the only hard invalid boundary both 2.1 and 2.3 name is `< 1`); surface "4–6" as helper-text guidance, not a hard cap. (2) `meetingUrl` **optional at create** even for online — AD-13 + seed leave it null and Story 2.3 explicitly exists to "paste the Meet link after scheduling"; `location` **required when `mode = IN_PERSON`** via Zod `refine`. (3) Define a canonical `LEVELS = ["Undergrad","CTA/PGDA"]` constant in a **`src/lib`** module for the form to consume (do NOT import from `prisma/seed-data.ts` into app code, and do NOT add a `Level` table — 1.1 locked the 1a schema); accept the small, intentional duplication with the seed's LEVELS.
+- **Rationale:** Enforcing 4–6 as a hard cap would contradict 2.3's stated invalid boundary and needlessly block a valid 3- or 8-seat class; requiring a Meet link at create contradicts AD-13 and the whole reason Story 2.3 exists; pulling app constants from a seed file couples runtime UI to seed internals. Keeping level a two-value constant honors the "level is a String tag, Level model arrives in 1b" schema decision.
+- **Reversibility:** Tighten the capacity refine to `>=4 && <=6` if product later wants a hard cap; flip `meetingUrl` to required-if-online in one `refine`; collapse the duplicated LEVELS by having the seed import the `src/lib` constant (relative path) when the seed is next touched. All one-line schema edits.
+- **Files touched:** (story spec only) 2-1-create-a-group-class.md
+
+### [2026-07-05T23:02:20Z] 2-1-create-a-group-class — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit `1d96dabac5261fc8f54f35d42653eeb26b45c790` as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/2-1-create-a-group-class.md
+
+### [2026-07-05T23:02:20Z] 2-1-create-a-group-class — Zod schema: use z.string().optional() for description; empty→undefined handled in action
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — Zod schema authoring)
+- **Decision point:** Story says "description: optional string (trim; empty → undefined)". In Zod 4 with react-hook-form, an empty-string-to-undefined transform at schema level can conflict with the RHF controller (which passes empty string "" from the textarea). How to handle?
+- **Options considered:** A) `z.string().trim().optional().transform(v => v === '' ? undefined : v)` — schema-level transform, but produces complex types; B) `z.string().trim().optional()` and handle empty string in the action with `data.description || undefined` before the DB write; C) `z.preprocess(...)` with custom coercion.
+- **Chosen:** B — schema stays simple (`z.string().trim().optional()`); the action normalizes empty string to undefined before writing to Prisma. This is safe and correct: an empty description writes nothing (Prisma nullable field stays null).
+- **Rationale:** Avoids Zod 4 type-system gymnastics; keeps the schema clean for testing; the action is the correct place for "domain normalization" logic.
+- **Reversibility:** Move the `|| undefined` normalization into the schema's `.transform()` if a future story needs the schema itself to enforce it.
+- **Files touched:** src/app/(admin)/admin/classes/new/class-form-schema.ts
+
+### [2026-07-05T23:02:20Z] 2-1-create-a-group-class — Client form: use raw string types for datetime-local inputs to avoid RHF Date coercion mismatch
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 3 — client form)
+- **Decision point:** react-hook-form with `zodResolver(createClassSchema)` would type `start`/`end` as `Date` (schema output), but datetime-local HTML inputs produce strings. defaultValues for Date fields can't be empty string without TypeScript errors, and rendering a Date as an input value requires string conversion.
+- **Options considered:** A) Use `z.infer<typeof createClassSchema>` as form type, accept Date<→string casts at input render; B) Define a separate raw-string form-values type and call the server action with raw strings (server action re-runs schema validation via safeParse); C) Register start/end with `register()` instead of Controller, accepting untyped string values.
+- **Chosen:** A — use `z.infer<typeof createClassSchema>` as form type, render date inputs with explicit string coercion (`field.value instanceof Date ? toISOSlice : String(field.value ?? '')`). The server action independently calls `createClassSchema.safeParse(values)` which re-validates on the server (coercing Date→Date or string→Date as needed).
+- **Rationale:** Keeps client-side instant validation using the same schema (per story). The runtime behavior is correct: RHF stores strings in form state, zodResolver coerces to Date on validate/submit, onSubmit receives Date objects which the server action accepts.
+- **Reversibility:** Define a separate `ClassFormRawValues` type (all strings/numbers as strings) and update the useForm generic and input handlers.
+- **Files touched:** src/app/(admin)/admin/classes/new/class-form.tsx
+
+### [2026-07-05T23:02:20Z] 2-1-create-a-group-class — post-create navigation: push to /admin (not /admin/classes)
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 3 — AC3 navigation)
+- **Decision point:** Story says "router.push to /admin/classes (fallback /admin)" on success. Story 2.2 ships the /admin/classes list. Before 2.2 is done, /admin/classes would 404.
+- **Options considered:** A) Push to /admin/classes (will 404 until 2.2); B) Push to /admin (fallback — admin dashboard always exists); C) Try /admin/classes, catch 404, fallback (too complex).
+- **Chosen:** B — push to `/admin`. Story note says "(fallback /admin) so the redirect never 404s before 2.2 ships — or push /admin. Pick one and note it." Choosing /admin now; update to /admin/classes after Story 2.2 lands.
+- **Rationale:** Guarantees no 404 for Priyanka after creating a class. AC3 says "sensible admin destination" — the admin dashboard satisfies this until the list is available.
+- **Reversibility:** Change `router.push("/admin")` to `router.push("/admin/classes")` once Story 2.2 merges.
+- **Files touched:** src/app/(admin)/admin/classes/new/class-form.tsx
