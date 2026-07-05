@@ -47,3 +47,7 @@ next-env.d.ts
 /blob-report/
 /playwright/.cache/
 coverage/
+
+# Playwright per-role session state (contains real session cookies — never commit)
+# Written by tests/e2e/global-setup.ts; consumed by authenticated-smoke.spec.ts
+tests/e2e/.auth/

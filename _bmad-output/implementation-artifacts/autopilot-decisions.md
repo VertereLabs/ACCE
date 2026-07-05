@@ -307,3 +307,63 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Independently re-verified (did NOT trust dev record): `npx prisma validate` clean, `tsc --noEmit` clean, `vitest run` 78/78 green incl. 23 new seed-data assertions. AC1 (4 subjects/2 levels/Priyanka ADMIN/6 SCHEDULED classes w/ 2-2-1-1 subject mix, R290, cap 4-6), AC2 (upsert idempotency by @unique name/email + deterministic class ids, no deleteMany), AC3 (SCHEDULED, future start, +2h, subject FK, non-empty title, canonical level, mode ONLINE default, meetingUrl null), AC4 (validate/build/test green, no schema/migration change) all satisfied. AD-2/AD-5/AD-9/AD-13 honoured. LOW items don't block `done`.
 - **Reversibility:** Revert status to `review`/`in-progress` in the story + sprint-status.yaml and re-open the two deferred LOW items if a follow-up loop wants them fixed.
 - **Files touched:** 1-4-...-6-test-3-classes.md (Status + Review Findings), deferred-work.md, sprint-status.yaml
+
+### [2026-07-05T22:19:00Z] 1-5-deployable-shell-with-authenticated-route-200-smoke-test — create-story: scope split (deploy shell already exists → story = verify + author authenticated smoke)
+- **Risk:** medium
+- **Workflow / step:** create-story step 2-3 (analyze artifacts + scope the story)
+- **Decision point:** AC1 asks for `output:'standalone'` + Coolify base dir + portal headers, but ALL of that already shipped in earlier work (next.config `output:'standalone'` + headers on `/(.*)`, Dockerfile copies Prisma client into runner, host mapping `portal.accetutors.co.za`, base dir `/acce-nextjs`). What is the net-new deliverable of 1.5?
+- **Options considered:** A) Re-do/re-scaffold deploy config (redundant, risks regressing a working Dockerfile/next.config); B) Scope 1.5 as (i) VERIFY + document the already-satisfied deploy invariants and add a lightweight assertion that portal routes inherit the security headers, and (ii) author the NET-NEW authenticated route-200 Playwright smoke over `(portal)`/`(admin)` routes — the actual gap (existing `tests/e2e/smoke.spec.ts` only covers public sitemap routes).
+- **Chosen:** B. Story 1.5 = verify deploy shell invariants (no rebuild) + author the authenticated-route smoke suite. The authenticated smoke is the real work; deploy config is confirmation.
+- **Rationale:** epics.md Story 1.5 AC2 is explicit that the point is the Playwright authenticated smoke (guards against the RSC non-children-prop 500 trap from lessons-learned). The deploy artifacts already exist and are load-bearing — rebuilding them is scope invention (contract rule 4) and risks regression. Confirming + adding a header-inheritance assertion is the minimal reasonable interpretation.
+- **Reversibility:** If deploy config actually needs changes later, they are additive edits to next.config.ts/Dockerfile; the smoke suite is self-contained under tests/e2e.
+- **Files touched:** (story spec only) 1-5-deployable-shell-with-authenticated-route-200-smoke-test.md
+
+### [2026-07-05T22:30:00Z] 1-5-deployable-shell-with-authenticated-route-200-smoke-test — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/1-5-deployable-shell-with-authenticated-route-200-smoke-test.md
+
+### [2026-07-05T22:30:00Z] 1-5-deployable-shell-with-authenticated-route-200-smoke-test — Task 1: vitest unit test for header assertion (not e2e)
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — header assertion approach)
+- **Decision point:** Story says "preferably a small vitest unit test that imports `next.config.ts` `headers()` and asserts the `/(.*)` rule carries the 5 security headers, OR an e2e assertion." Which route?
+- **Options considered:** A) vitest unit test importing next.config.ts and calling `headers()` — no server needed, fast, pure static assertion; B) e2e assertion that a real portal route response includes the headers — requires a running server and DB.
+- **Chosen:** A — vitest unit test. `next.config.ts` is a pure TS object with an `async headers()` function; no Next.js runtime needed to call it. Type-only `NextConfig` import is stripped at runtime, so vitest can import the file cleanly.
+- **Rationale:** Fastest, no server or DB dependency, satisfies the story's preferred route, and is consistent with the sandbox-no-DB constraint.
+- **Reversibility:** Add an e2e assertion in the authenticated smoke spec if a live HTTP header check is later needed.
+- **Files touched:** acce-nextjs/tests/unit/next-config-headers.test.ts
+
+### [2026-07-05T22:30:00Z] 1-5-deployable-shell-with-authenticated-route-200-smoke-test — Task 3: direct Prisma session creation in globalSetup (no auth API)
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (Task 3 — session provisioning mechanism)
+- **Decision point:** Story recommends "real Better Auth server `auth` instance" to mint sessions. How to implement without calling HTTP auth endpoints or adding a bypass route?
+- **Options considered:** A) Construct fake `Request` objects and call `auth.api.signIn.*` — complex, fragile, imports auth.ts (which itself imports db.ts and betterauth — more surface); B) Direct Prisma upsert on `user` table + `session.create` with a random token → write token as the cookie value. Better Auth's `getSession` reads the cookie, looks up the session by token, and returns it — this IS the real auth path, just populated via DB rather than HTTP; C) Magic-link URL capture — needs a mail server to intercept.
+- **Chosen:** B — direct Prisma operations. Creates a valid `session` row with a random UUID token, writes that token as the `better-auth.session_token` cookie in `storageState`. Better Auth's `requireSession()` / `requireAdmin()` will find and validate this session correctly.
+- **Rationale:** Option A is fragile (internal API), option C requires mail infrastructure. Option B is deterministic, minimal, and exercises the exact same DB-lookup code path that the real `requireSession()` traverses — it's the genuine session path, just created directly. No new production code added.
+- **Reversibility:** Switch to option A (auth.api call) or B-variant (magic-link capture) by replacing the globalSetup body. No production code affected.
+- **Files touched:** acce-nextjs/tests/e2e/global-setup.ts
+
+### [2026-07-05T22:30:00Z] 1-5-deployable-shell-with-authenticated-route-200-smoke-test — globalSetup empty-state fallback + test.skip pattern for sandbox
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 3 — sandbox handling for no-DB case)
+- **Decision point:** When DATABASE_URL is unset, globalSetup cannot provision sessions. If globalSetup throws, the whole Playwright run (including the public smoke) fails. How to keep the public smoke green while marking authenticated tests as deferred?
+- **Options considered:** A) Throw from globalSetup → public smoke breaks; B) globalSetup returns silently without writing state files → `test.use({ storageState })` throws "file not found"; C) globalSetup writes empty storageState files (valid JSON, no cookies) → tests load cleanly but redirect instead of 200 → FAIL; D) globalSetup writes empty state files AND each authenticated test calls `test.skip(!hasSession(...))` at the top of its body → tests are SKIPPED, public smoke is unaffected.
+- **Chosen:** D — write empty `{ cookies: [], origins: [] }` JSON files when no DB, then use `hasSession()` check + `test.skip()` inside each authenticated test. The unauthenticated negative-smoke test runs without DB (the middleware only checks cookie presence, no DB lookup).
+- **Rationale:** Only option D satisfies all three requirements: public smoke stays green, authenticated tests skip cleanly (not fail), deferred posture is honest (not stubbed).
+- **Reversibility:** Remove the `writeEmptyState` call and `test.skip` guards once CI ephemeral-Postgres is wired.
+- **Files touched:** acce-nextjs/tests/e2e/global-setup.ts, acce-nextjs/tests/e2e/authenticated-smoke.spec.ts
+
+### [2026-07-05T22:19:30Z] 1-5-deployable-shell-with-authenticated-route-200-smoke-test — create-story: authenticated-session strategy for the smoke + live-run deferral
+- **Risk:** medium
+- **Workflow / step:** create-story step 3-4 (dev guardrails + testing standards)
+- **Decision point:** Magic-link auth has no password, so Playwright cannot type credentials. How does the smoke establish a STUDENT session AND an ADMIN session to hit guarded `(portal)`/`(admin)` routes at 200? And there is no test Postgres in the sandbox (established by 1.1/1.4 — prod creds blocked, static verification is the bar), so can the suite run green here?
+- **Options considered (session):** A) click the email link (needs a mail server / interception — heavy); B) a test-only sign-in bypass route gated behind an env flag (adds an auth surface — critical-risk, rejected); C) Playwright `globalSetup` that provisions users + sessions THROUGH the real Better Auth server `auth` instance (or the magic-link `sendMagicLink` callback exposing the URL in test mode) and saves per-role `storageState` — no new production auth surface, exercises the real cookie/session. **(live run):** run against ephemeral Postgres in CI vs run in sandbox.
+- **Chosen:** C for session provisioning (recommended: `globalSetup` mints a STUDENT session and reuses the seeded Priyanka ADMIN via the real `auth` server API / magic-link-URL capture, writes `storageState` per role; ephemeral student created in setup, NOT added to `prisma/seed.ts` which stays production-data-only). Live green run is DEFERRED to a CI job with an ephemeral Postgres (ties into the already-open 1.1 deferred-work item "CI job with ephemeral Postgres for migrate deploy"); sandbox bar = suite authored + `tsc`/build green + existing vitest green.
+- **Rationale:** Option B would open a real authentication bypass (critical risk) — unacceptable for a security-sensitive surface. Option C reuses the genuine Better Auth session path with zero production code added, mirroring how the marketing smoke drives off the real sitemap. The DB-dependent live run legitimately cannot execute in the credential-blocked sandbox; deferring live execution to CI is consistent with the 1.1/1.4 posture and avoids faking a pass.
+- **Reversibility:** If a lighter mechanism is preferred, swap the `globalSetup` provisioning without touching the specs (specs consume `storageState`). The CI ephemeral-Postgres job is additive infra. No production code is affected either way.
+- **Files touched:** (story spec only) 1-5-deployable-shell-with-authenticated-route-200-smoke-test.md
