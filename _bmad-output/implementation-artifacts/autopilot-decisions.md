@@ -297,3 +297,13 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Deterministic-id upsert is the only non-destructive way to make GroupSession seeding idempotent without a new unique constraint. Reusing the singleton honours the house rule the whole codebase is built on (grep-enforced in 1.1). `prisma db seed` is the env-loading entrypoint the deploy pipeline already expects (NFR7: "db:seed once").
 - **Reversibility:** Swap deterministic ids for a real unique constraint if 1b needs one; the id constants are localised to the seed. Import path is a one-line change.
 - **Files touched:** (story spec only) 1-4-...-6-test-3-classes.md
+
+### [2026-07-05T22:14:30Z] 1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes — code-review: clean, status → done
+- **Risk:** low
+- **Workflow / step:** code-review step 3-4 (triage + present/act)
+- **Decision point:** Adversarial 3-layer review (Blind Hunter / Edge Case Hunter / Acceptance Auditor) of the seed diff (seed.ts, seed-data.ts, seed-data.test.ts) against AC1-AC4. Fix-vs-action-items <ask>: default is FIX all HIGH/MEDIUM automatically.
+- **Options considered:** A) treat as clean and mark done; B) find fixable HIGH/MEDIUM issues and patch; C) leave as action items → in-progress.
+- **Chosen:** A — clean review, status `done`. No HIGH/MEDIUM findings. Two LOW/cosmetic observations recorded as deferred (not fixed): (1) `computeStart` comment says "SAST business hours" but computes in UTC (classes land 11:00/16:00 SAST — still business hours, so doc-only mismatch); (2) the "daysOffset separates two class starts" test calls `new Date()` twice, so a UTC-midnight straddle between calls could make the exact `toBe(3)` day-diff assertion flaky (astronomically rare).
+- **Rationale:** Independently re-verified (did NOT trust dev record): `npx prisma validate` clean, `tsc --noEmit` clean, `vitest run` 78/78 green incl. 23 new seed-data assertions. AC1 (4 subjects/2 levels/Priyanka ADMIN/6 SCHEDULED classes w/ 2-2-1-1 subject mix, R290, cap 4-6), AC2 (upsert idempotency by @unique name/email + deterministic class ids, no deleteMany), AC3 (SCHEDULED, future start, +2h, subject FK, non-empty title, canonical level, mode ONLINE default, meetingUrl null), AC4 (validate/build/test green, no schema/migration change) all satisfied. AD-2/AD-5/AD-9/AD-13 honoured. LOW items don't block `done`.
+- **Reversibility:** Revert status to `review`/`in-progress` in the story + sprint-status.yaml and re-open the two deferred LOW items if a follow-up loop wants them fixed.
+- **Files touched:** 1-4-...-6-test-3-classes.md (Status + Review Findings), deferred-work.md, sprint-status.yaml

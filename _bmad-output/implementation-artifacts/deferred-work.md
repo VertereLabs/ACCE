@@ -10,3 +10,8 @@ Real-but-not-actionable-now items surfaced during reviews. Each should be picked
 ## Deferred from: code review of story-1.3 (2026-07-05)
 
 - **`priority` boolean prop warning on `next/image` in `Logo.tsx`** — React warns "Received `true` for a non-boolean attribute `priority`" during jsdom render tests (surfaces in `portal-nav.test.tsx` and pre-existing `render-smoke.test.tsx`). Pre-existing in `src/components/Logo.tsx` (not touched by 1.3); cosmetic test-env noise only — Next's real `<Image>` consumes `priority` correctly at build/runtime. Follow-up: when `Logo.tsx` is next touched, confirm the prop is passed to the real Next `Image` and not leaking to the DOM under the mock. (Low; pre-existing, not caused by this change.)
+
+## Deferred from: code review of story-1.4 (2026-07-05)
+
+- **`computeStart` comment vs UTC computation** — `acce-nextjs/prisma/seed-data.ts:132-138` computes class start times in UTC (09:00/14:00 UTC → 11:00/16:00 SAST) but the surrounding comments say "business hours, SAST". Times are still within business hours after the +2h UTC offset, so this is a doc-only mismatch with no behavioural impact. Follow-up: align the comment with the actual UTC basis (or convert to an explicit SAST offset) next time the seed is touched. (Low; cosmetic.)
+- **Day-separation unit test can theoretically flake** — `acce-nextjs/tests/unit/seed-data.test.ts:172-178` calls `new Date()` twice and asserts an exact 3-day gap; a UTC-midnight straddle between the two `computeStart` calls could make the `toBe(3)` assertion flaky. Astronomically rare and product-irrelevant. Follow-up: derive both starts from a single injected base date to make it deterministic. (Low; test hygiene.)

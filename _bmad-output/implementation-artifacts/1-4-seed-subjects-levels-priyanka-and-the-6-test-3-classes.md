@@ -4,7 +4,7 @@ baseline_commit: 52ab5a0a20e1f96d890c3c10f21cda224135a443
 
 # Story 1.4: Seed subjects, levels, Priyanka and the 6 Test-3 classes
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -70,6 +70,13 @@ Then each `GroupSession` has `status = SCHEDULED`, `start` in the future (relati
   - [x] `npm run build` → succeeds (tsc clean, Next.js 16.1.1 build green).
   - [x] `npm test` → vitest 78/78 green incl. 23 new seed-data tests.
   - [x] No reachable DATABASE_URL in sandbox; real-DB seed deferred to pipeline (NFR7: `db:seed` once on release, consistent with Story 1.1 `migrate deploy` posture).
+
+## Review Findings
+
+Adversarial code review (Blind Hunter / Edge Case Hunter / Acceptance Auditor), 2026-07-05. Chain re-verified independently (not trusting dev record): `npx prisma validate` clean, `tsc --noEmit` clean, `vitest run` 78/78 green (incl. 23 new seed-data assertions). All of AC1–AC4 and AD-2/AD-5/AD-9/AD-13 satisfied. No HIGH/MEDIUM findings. Result: **clean → done.**
+
+- [x] [Review][Defer] `computeStart` "SAST business hours" comment vs UTC computation [acce-nextjs/prisma/seed-data.ts:132-138] — deferred, low/cosmetic. Times are computed in UTC (09:00/14:00 UTC → 11:00/16:00 SAST, still business hours); comment is a doc-only mismatch, no behavioural impact.
+- [x] [Review][Defer] Flaky-risk in day-separation test [acce-nextjs/tests/unit/seed-data.test.ts:172-178] — deferred, low. The test calls `new Date()` twice; a UTC-midnight straddle between the two calls could make the exact `toBe(3)` day-diff assertion flaky. Astronomically rare; harmless to product. If touched, derive both starts from a single injected base date.
 
 ## Dev Notes
 

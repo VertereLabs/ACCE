@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-05T22:08:00Z
+last_updated: 2026-07-05T22:15:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -58,6 +58,7 @@ project: ACCE
 # 1-4 set ready-for-dev on 2026-07-05 (create-story: idempotent prisma/seed.ts scoped [4 subjects, 2 level constants, Priyanka ADMIN, 6 SCHEDULED classes @ R290/2h/cap4-6]; NO schema/migration change; levels are string constants [no Level table in 1a]; upsert by unique name/email + deterministic class ids; future relative dates; run via `prisma db seed`)
 # 1-4 set in-progress on 2026-07-05 (dev-story)
 # 1-4 set review on 2026-07-05 (dev-story complete: seed-data.ts [pure constants], seed.ts [idempotent upserts], seed-data.test.ts [23 assertions]; 78/78 tests pass, prisma validate clean, build clean)
+# 1-4 set done on 2026-07-05 (code-review: CLEAN — no HIGH/MEDIUM; 2 LOW deferred [SAST-vs-UTC comment, flaky day-diff test]; independently re-verified prisma validate + tsc clean + 78/78 vitest incl 23 new seed assertions; AC1-AC4 & AD-2/5/9/13 all satisfied)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -68,7 +69,7 @@ development_status:
   1-1-database-prisma-foundation: done
   1-2-passwordless-student-signup-login-magic-link: done
   1-3-roles-and-guarded-portal-admin-route-groups: done
-  1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes: review
+  1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes: done
   1-5-deployable-shell-with-authenticated-route-200-smoke-test: backlog
   epic-1-retrospective: optional
 
