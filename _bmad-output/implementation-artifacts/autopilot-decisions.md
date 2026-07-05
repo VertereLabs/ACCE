@@ -247,3 +247,53 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Logo warning is untouched pre-existing noise; Next's real `<Image>` consumes `priority` correctly. The 3 indexes are additive/non-destructive FK indexes (NFR5-aligned), not the "new column/table" escalation condition the story defined — reversible by dropping them. Story remains clean.
 - **Reversibility:** Logo — fix when `Logo.tsx` is next touched. Indexes — `DROP INDEX` if ever unwanted; migration is isolated.
 - **Files touched:** _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-05T22:00:26Z] 1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes — create-story: "levels exist" with no Level table in 1a
+- **Risk:** medium
+- **Workflow / step:** create-story step 2/3 (interpret ambiguous AC against schema)
+- **Decision point:** AC1 requires "levels (Undergrad, CTA/PGDA) exist", but Phase 1a schema has NO `Level` model — level is a plain `String` tag on `GroupSession` ("Level model arrives with 1b", schema.prisma:119). So there is no table to seed levels into.
+- **Options considered:** A) add a Level model+migration now (scope creep, contradicts 1.1 which locked the 1a schema and deferred Level to 1b); B) satisfy "levels exist" by defining the two levels as an exported constant `LEVELS = ["Undergrad","CTA/PGDA"]` and using those exact strings on the seeded GroupSession.level fields; C) ignore levels entirely.
+- **Chosen:** B — levels are a seed-data constant used verbatim on the 6 classes; no schema change.
+- **Rationale:** 1a deliberately models level as a string (schema comment + 1.1 done). "Levels exist" is satisfied when the canonical level strings are present on real rows and defined as reusable constants for 1b migration. Adding a Level table would re-migrate shared tables mid-sprint (the exact anti-pattern 1.1 called out).
+- **Reversibility:** When 1b adds the `Level` model, migrate these string tags into FK rows; the constant array is the migration source of truth. No data loss.
+- **Files touched:** (story spec only) _bmad-output/implementation-artifacts/1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes.md
+
+### [2026-07-05T22:00:26Z] 1-4-seed-...-6-test-3-classes — create-story: class dates/times + Priyanka email not fully specified
+- **Risk:** medium
+- **Workflow / step:** create-story step 2 (fill under-specified data)
+- **Decision point:** The flyer gives subject mix (2 Accounting, 2 Tax, 1 Auditing, 1 Mgmt Acct), duration (2h), price (R290=29000 cents), capacity (4–6) — but NO exact calendar dates/times, and Priyanka's admin email is only found in UX contact blocks (`priyankamikaya21@gmail.com`).
+- **Options considered:** A) hardcode arbitrary fixed past dates (would render as non-"upcoming", breaking Epic-3 browse "shows real sellable classes from day one"); B) compute start/end relative to seed run-time (near-future, staggered) so classes are genuinely upcoming/SCHEDULED; C) block for missing data.
+- **Chosen:** B for dates (future, staggered days, 2-hour end = start+2h); use `priyankamikaya21@gmail.com` as the seeded ADMIN email, overridable via optional `SEED_ADMIN_EMAIL` env (no `.env.example` change required — optional with fallback, so not a new required config key).
+- **Rationale:** Epic-1 goal is "portal shows real, sellable classes from day one" → they must be upcoming. Relative dates keep the seed evergreen across re-runs. The email is the only real Priyanka address in the repo; an optional env override avoids hardcoding lock-in without adding a required var (keeps risk below `high`).
+- **Reversibility:** Priyanka can edit dates/price/email in-admin (Epic 2) once real flyer dates are known; change the seed constants + re-run. Optional env override removes the hardcode entirely.
+- **Files touched:** (story spec only) 1-4-...-6-test-3-classes.md
+
+### [2026-07-05T22:04:51Z] 1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit `52ab5a0a20e1f96d890c3c10f21cda224135a443` as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes.md
+
+### [2026-07-05T22:04:51Z] 1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes — Extract pure seed constants into seed-data.ts for testability
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — author seed constants)
+- **Decision point:** Story recommends extracting pure data constants into `prisma/seed-data.ts` so unit tests can import them without triggering `db.ts` (which throws when `DATABASE_URL` is unset in jsdom). Is this extraction required or optional?
+- **Options considered:** A) Inline constants in `seed.ts` and mock db.ts in tests; B) Extract to `seed-data.ts` (pure, no Prisma import) as the story recommends — enables import in jsdom tests with zero mocking.
+- **Chosen:** B — create `prisma/seed-data.ts` with all pure constants (`SUBJECTS`, `LEVELS`, `CLASSES`, `ADMIN_USER`); `seed.ts` imports from it. Tests import `seed-data.ts` directly.
+- **Rationale:** Avoids complex mocking; unit test stays pure and fast; story explicitly recommends this shape and says it is "the recommended shape". Zero risk — no coupling to any external system.
+- **Reversibility:** Inline the constants back into `seed.ts` if the split creates confusion; one-file merge is trivial.
+- **Files touched:** acce-nextjs/prisma/seed-data.ts, acce-nextjs/prisma/seed.ts
+
+### [2026-07-05T22:00:26Z] 1-4-seed-...-6-test-3-classes — create-story: idempotency mechanism + AD-2 client access from seed
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture guardrails for dev)
+- **Decision point:** AC2 requires an idempotent re-runnable seed, but `GroupSession` has no natural unique key (no unique on title/subject/start) to key an upsert on; and AD-2 forbids `new PrismaClient()` outside `src/lib/db.ts`.
+- **Options considered (idempotency):** A) `deleteMany` then recreate (destructive, unsafe once real enrollments/ledger exist); B) upsert Subject by `@unique name`, User by `@unique email`, and GroupSession by DETERMINISTIC explicit ids (e.g. `seed-acc-1`) supplied on upsert. **(AD-2 access):** import the singleton via relative path `../src/lib/db` (seed runs under tsx, tsconfig `@/*` alias not resolved by tsx) vs its own client.
+- **Chosen:** B for idempotency (deterministic ids + upsert on unique keys — never delete); seed imports `{ db }` from `../src/lib/db` (AD-2-compliant, no second client); run via `npx prisma db seed` so Prisma loads `.env` (db.ts throws if `DATABASE_URL` unset and there is no dotenv dep).
+- **Rationale:** Deterministic-id upsert is the only non-destructive way to make GroupSession seeding idempotent without a new unique constraint. Reusing the singleton honours the house rule the whole codebase is built on (grep-enforced in 1.1). `prisma db seed` is the env-loading entrypoint the deploy pipeline already expects (NFR7: "db:seed once").
+- **Reversibility:** Swap deterministic ids for a real unique constraint if 1b needs one; the id constants are localised to the seed. Import path is a one-line change.
+- **Files touched:** (story spec only) 1-4-...-6-test-3-classes.md
