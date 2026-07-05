@@ -196,10 +196,19 @@ claude-sonnet-4-6 (Claude Sonnet 4.6, 2026-07-05)
 - `_bmad-output/implementation-artifacts/1-2-passwordless-student-signup-login-magic-link.md` — MODIFIED: story file (baseline_commit, task checkboxes, Dev Agent Record, File List, Change Log, Status)
 - `_bmad-output/implementation-artifacts/autopilot-decisions.md` — MODIFIED: decision log entries
 
+## Review Findings
+
+Adversarial code review 2026-07-05 (fresh reasoning, better-auth@1.6.23 source verified). 1 patch applied, 0 unresolved high/medium. tsc clean, 40/40 vitest green post-fix.
+
+- [x] [Review][Patch] Over-aggressive global rate limit; email-bomb guard was not actually scoped to the send path [acce-nextjs/src/lib/auth.ts:30] — FIXED. `rateLimit: { window:60, max:5 }` did not control the magic-link send limit (the magic-link plugin's built-in rule of 5/60s governs `/sign-in/magic-link` and overrides the global for that path); instead the global `max:5` capped ALL other `/api/auth/*` endpoints (get-session, sign-out) at 5/60s per IP — a shared-NAT footgun that would 429 co-located users once 1.3 adds client session reads. Fix: raised the global fallback to `max:100/60s` and added an explicit `customRules["/sign-in/magic-link"] = { window:60, max:5 }` so AC4's email-bomb guard is deterministic and self-documenting. AC4 remains satisfied.
+
+Dismissed as noise / by-design (not written as follow-ups): `noValidate` on the form (Better Auth validates email server-side and surfaces via toast); dev-fallback email logging when `RESEND_API_KEY` is unset (explicitly specified by Task 2 dev-ergonomics); `getSession` 500 if DB is down (acceptable for the minimal page); focus not shifted to the "Check your email" state (NFR10 a11y floor — label association, keyboard, visible focus — is met; polish belongs to 1.3's portal/UX pass).
+
 ## Change Log
 
 - 2026-07-05 — Story 1.2 implemented: Better Auth magic-link auth wired end-to-end. Created auth.ts (server config), email.ts (Resend adapter, native fetch), auth-client.ts (browser client), API route handler, sign-in page, minimal portal landing. 40/40 tests pass. Build ✓. Schema validated ✓. better-auth pinned to exact 1.6.23.
+- 2026-07-05 — Code review: applied 1 patch (scoped the AC4 rate-limit guard to the magic-link send path in `src/lib/auth.ts`; raised the global fallback to avoid throttling session/sign-out traffic). tsc clean, 40/40 vitest green. Status → done.
 
 ## Status
 
-review
+done

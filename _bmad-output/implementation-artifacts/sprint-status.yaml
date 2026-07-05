@@ -1,5 +1,5 @@
 # generated: 2026-07-05
-# last_updated: 2026-07-05T21:25:00Z
+# last_updated: 2026-07-05T21:26:05Z
 # project: ACCE
 # project_key: NOKEY
 # tracking_system: file-system
@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-05T21:25:00Z
+last_updated: 2026-07-05T21:26:05Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -50,6 +50,7 @@ project: ACCE
 # 1-2 set ready-for-dev on 2026-07-05 (create-story: magic-link auth story contexted; admin plugin/guards scoped to 1.3)
 # 1-2 set in-progress on 2026-07-05 (dev-story)
 # 1-2 set review on 2026-07-05 (dev-story complete: auth.ts, email.ts, auth-client.ts, route handler, sign-in page, portal landing; 40/40 tests pass)
+# 1-2 set done on 2026-07-05 (code-review: 1 patch fixed [rate-limit guard scoped to /sign-in/magic-link via customRules; global raised to 100/60s]; tsc clean, 40/40 green)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -58,7 +59,7 @@ development_status:
   # Epic 1: Foundation, Auth & Seeded Data
   epic-1: in-progress
   1-1-database-prisma-foundation: done
-  1-2-passwordless-student-signup-login-magic-link: review
+  1-2-passwordless-student-signup-login-magic-link: done
   1-3-roles-and-guarded-portal-admin-route-groups: backlog
   1-4-seed-subjects-levels-priyanka-and-the-6-test-3-classes: backlog
   1-5-deployable-shell-with-authenticated-route-200-smoke-test: backlog

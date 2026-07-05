@@ -28,10 +28,21 @@ export const auth = betterAuth({
   ].filter(Boolean),
 
   // ── Rate limiting (AC4) ──────────────────────────────────────────────────────
+  // `enabled: true` forces the limiter on in every environment (Better Auth defaults
+  // it OFF in development, on in production). The email-bomb guard AC4 asks for lives
+  // in `customRules` scoped to the magic-link SEND path so the intent is explicit and
+  // does not accidentally throttle unrelated endpoints. The global window/max is a
+  // sane per-IP fallback for general auth traffic (get-session, sign-out, ...) — a
+  // low global `max` here would 429 co-located (shared-NAT) users on the session
+  // endpoint once client-side session reads land in Story 1.3.
   rateLimit: {
     enabled: true,
-    window: 60,   // seconds
-    max: 5,       // max magic-link sends per window
+    window: 60,   // seconds — general per-IP window for /api/auth/*
+    max: 100,     // generous fallback for non-sensitive auth traffic
+    customRules: {
+      // AC4 email-bomb guard: 5 magic-link sends per 60s per IP.
+      "/sign-in/magic-link": { window: 60, max: 5 },
+    },
   },
 
   // ── Plugins ──────────────────────────────────────────────────────────────────
