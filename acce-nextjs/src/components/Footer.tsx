@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Instagram } from "lucide-react";
 import Logo from "@/components/Logo";
 
 const footerLinks = {
@@ -105,6 +105,15 @@ const Footer = () => {
                         © 2026 ACCE Tutors. All rights reserved.
                     </p>
                     <div className="flex items-center gap-4">
+                        <a
+                            href="https://www.instagram.com/acce.tutorscta/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                            className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent text-footer-foreground hover:text-accent-foreground transition-all duration-300"
+                        >
+                            <Instagram className="w-5 h-5" />
+                        </a>
                         <a
                             href="https://www.linkedin.com/in/priyanka-govender21-724096186/"
                             target="_blank"
