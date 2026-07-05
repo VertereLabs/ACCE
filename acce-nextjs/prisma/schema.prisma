@@ -1,0 +1,184 @@
+// ACCE Tutors — Phase 1a (Group Classes MVP) data model.
+// Domain models per PHASE-1A-PLAN.md §2; Better Auth tables (User/Session/
+// Account/Verification) live in the same schema and are owned by Better Auth's
+// magic-link + admin plugins. Regenerate/reconcile the auth tables with
+// `npx @better-auth/cli generate` once src/lib/auth.ts is configured (Story 1.2).
+
+generator client {
+  provider = "prisma-client-js"
+  // Driver adapters are GA in current Prisma; if the installed version still
+  // gates them, add: previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Better Auth (magic-link + admin plugin) — standard v1 shape.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          String?   @default("STUDENT") // admin plugin: STUDENT | ADMIN
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions     Session[]
+  accounts     Account[]
+  enrollments  Enrollment[]
+
+  @@map("user")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String? // admin plugin
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ACCE domain — group classes, enrollments, wallet ledger, payments.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Subject {
+  // seeded: Accounting, Management Accounting & Finance, Auditing, Tax
+  id       String         @id @default(cuid())
+  name     String         @unique
+  sessions GroupSession[]
+}
+
+enum Mode {
+  ONLINE
+  IN_PERSON
+}
+
+enum GroupSessionStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+}
+
+model GroupSession {
+  id          String             @id @default(cuid())
+  subjectId   String
+  subject     Subject            @relation(fields: [subjectId], references: [id])
+  level       String // "CTA/PGDA" etc. (string tag in 1a; Level model arrives with 1b)
+  title       String
+  description String?
+  start       DateTime
+  end         DateTime
+  capacity    Int // 4–6
+  priceCents  Int // R290 = 29000
+  mode        Mode               @default(ONLINE)
+  location    String?
+  meetingUrl  String? // MANUAL in 1a; auto-gen deferred behind MeetingProvider
+  status      GroupSessionStatus @default(SCHEDULED)
+  enrollments Enrollment[]
+  createdAt   DateTime           @default(now())
+}
+
+enum EnrollmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  ATTENDED
+  NO_SHOW
+}
+
+model Enrollment {
+  id               String           @id @default(cuid())
+  studentId        String
+  student          User             @relation(fields: [studentId], references: [id])
+  groupSessionId   String
+  session          GroupSession     @relation(fields: [groupSessionId], references: [id])
+  priceCents       Int
+  status           EnrollmentStatus @default(PENDING)
+  pendingExpiresAt DateTime? // hold during Paystack round-trip
+  paymentRef       String?
+  createdAt        DateTime         @default(now())
+
+  @@unique([studentId, groupSessionId]) // one seat per student per class
+  @@index([groupSessionId, status]) // fast capacity count
+}
+
+enum LedgerType {
+  PACKAGE_PURCHASE
+  TOPUP
+  BOOKING_CHARGE
+  CANCELLATION_REFUND
+  CANCELLATION_FEE
+  WITHDRAWAL
+  ADJUSTMENT
+}
+
+model LedgerEntry {
+  id                String     @id @default(cuid())
+  studentId         String
+  type              LedgerType
+  amountCents       Int // signed
+  balanceAfterCents Int
+  enrollmentId      String?
+  paymentRef        String?
+  createdAt         DateTime   @default(now())
+
+  @@index([studentId, createdAt])
+}
+
+model Payment {
+  // Paystack mirror, written by webhook (idempotency)
+  id          String   @id @default(cuid())
+  reference   String   @unique
+  amountCents Int
+  status      String
+  type        String
+  raw         Json
+  createdAt   DateTime @default(now())
+}
