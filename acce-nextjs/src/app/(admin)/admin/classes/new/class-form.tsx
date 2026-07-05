@@ -1,13 +1,13 @@
 "use client";
 
-// ClassForm — Story 2.1 (Task 3, AC1, AC2, AC3).
+// ClassForm — Story 2.1 (Task 3, AC1, AC2, AC3); updated Story 2.2 (Task 3).
 // Client component: react-hook-form + zodResolver for instant client-side validation.
 // On submit calls createClassAction (server action); maps fieldErrors back to form.
 // Sonner toasts for success (AC3) and server/unexpected failures (AC2).
 //
 // UX: navy + gold token system (UX-DR2), ≥44px targets (NFR10), visible focus rings,
 // ≥4.5:1 contrast. One gold-accent CTA. Conditional fields (location / Meet link).
-// Post-create navigation: /admin (fallback until Story 2.2 ships /admin/classes).
+// Post-create navigation: /admin/classes (list page, now exists since Story 2.2).
 
 import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
@@ -120,9 +120,9 @@ export function ClassForm({ subjects, levels }: ClassFormProps) {
         return;
       }
 
-      // AC3: success toast + navigate to admin dashboard (fallback until Story 2.2).
+      // AC3: success toast + navigate to admin classes list (Story 2.2 closed the fallback).
       toast.success("Class created successfully!");
-      router.push("/admin");
+      router.push("/admin/classes");
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {

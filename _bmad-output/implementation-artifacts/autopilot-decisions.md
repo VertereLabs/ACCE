@@ -467,3 +467,63 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Restores the one gold-accent CTA using the canonical token system so it adapts to dark/light mode and stays consistent with the shadcn Button palette; avoids hero's scale animation for reduced-motion friendliness. Functionally the create path (AC1-AC5) was already correct — this is a UI-consistency fix only.
 - **Reversibility:** Trivially revert the single className swap in class-form.tsx to the prior inline style. No data/schema/API impact.
 - **Files touched:** acce-nextjs/src/app/(admin)/admin/classes/new/class-form.tsx
+
+### [2026-07-05T23:33:51Z] 2-2-list-and-view-classes-in-admin — Occupancy for the admin list via a single tested where-fragment fed to Prisma filtered _count (AD-5)
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture guardrails) → story ACs/tasks
+- **Decision point:** AC1 requires showing "occupied/seats-left" per class. AD-5 mandates occupancy is DERIVED (never stored) and readers MUST NOT write. How should 2.2 compute occupied without duplicating/diverging the AD-5 rule that Epic 3's browse/checkout will also need?
+- **Options considered:** A) fetch all enrollments per class into JS and count in the page (readable but N+1-ish, and buries the AD-5 predicate in view code); B) raw SQL COUNT; C) expose ONE pure, unit-testable helper `occupiedEnrollmentWhere(now)` returning the Prisma relation-filter (`status IN {PENDING,CONFIRMED} AND (pendingExpiresAt = null OR pendingExpiresAt > now)`) and feed it to a filtered `_count` on `db.groupSession.findMany({ select: { _count: { enrollments: where } } })`; seats-left arithmetic + ZAR formatting in a sibling pure module.
+- **Chosen:** C — single tested where-fragment + filtered `_count`; treats expired PENDING as free (AD-5) with zero UPDATEs.
+- **Rationale:** Keeps the AD-5 occupancy definition in ONE place that is unit-testable without a live DB (mirrors the 1.4/2.1 pure-module pattern) and is directly reusable by Epic 3 (FR4 seats-left). Filtered `_count` runs in the DB (no N+1), stays read-only (no expiry flip — that is enrollment.ts's job under a lock, AD-5).
+- **Reversibility:** The helper is a leaf module; swap its internals (e.g. to a groupBy or raw SQL) without touching the page. If Epic 3 needs a richer occupancy service (`lib/enrollment.ts`), move the fragment there and re-point imports.
+- **Files touched:** (planned) acce-nextjs/src/lib/class-occupancy.ts, class-display.ts; (admin)/admin/classes/page.tsx; tests/unit/*
+
+### [2026-07-05T23:33:51Z] 2-2-list-and-view-classes-in-admin — Read-only list scope: shadcn Table + Badges, chronological, no per-row edit (2.3 owns it)
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (story tasks/scope)
+- **Decision point:** How much UI to include, and whether to add per-row edit/delete links (2.3 not yet built).
+- **Options considered:** A) card grid; B) shadcn Table with Badge for status/mode, ordered by `start asc`, empty-state CTA to `/admin/classes/new`, NO edit/delete/pagination/filter; C) full CRUD table with edit links now.
+- **Chosen:** B — dense admin Table for scanning key facts; read-only; edit action explicitly deferred to Story 2.3.
+- **Rationale:** Matches AC1 (display key facts) + AC2 (empty state) exactly with no scope creep; a table is the right density for an admin index. Adding edit links now would 404 until 2.3 and duplicate 2.3's ownership of the edit surface.
+- **Reversibility:** Additive route only; 2.3 attaches row-level edit links to the same table. Reorder/paginate later without data changes.
+- **Files touched:** (planned) (admin)/admin/classes/page.tsx
+
+### [2026-07-05T23:33:51Z] 2-2-list-and-view-classes-in-admin — Low-risk wiring: make /admin/classes reachable + e2e-covered; repoint 2.1 success redirect
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (project-structure/optional UPDATEs)
+- **Decision point:** 2.1 shipped its create-success redirect to `/admin` (fallback) because `/admin/classes` did not exist; the admin landing has no link to a class list; and neither `/admin/classes` nor 2.1's `/admin/classes/new` is in the 1.5 authenticated-route manifest.
+- **Options considered:** A) leave all wiring for later; B) as small in-story UPDATEs: add an "All classes" link on `(admin)/admin/page.tsx`, repoint the 2.1 create-success `router.push('/admin')` → `/admin/classes`, and add `/admin/classes` (+ backfill `/admin/classes/new`) to `tests/e2e/authenticated-routes.ts`.
+- **Chosen:** B — small, reversible wiring so the new list is discoverable, the create flow lands on it, and the RSC-500 smoke (1.5) covers it.
+- **Rationale:** Cheap safety net (1.5 lesson: authenticated 200-smoke catches RSC-500s tsc/unit miss) and closes the fallback loop 2.1 explicitly left open. All edits are additive/1-line.
+- **Reversibility:** Revert the single link, the one-line redirect, and the manifest appends independently; no schema/API impact.
+- **Files touched:** (planned) (admin)/admin/page.tsx; (admin)/admin/classes/new/class-form.tsx; tests/e2e/authenticated-routes.ts
+
+### [2026-07-05T23:38:48Z] 2-2-list-and-view-classes-in-admin — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit `be17fc7ee12efc6c999cf41d67b074e6c3774f65` as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/2-2-list-and-view-classes-in-admin.md
+
+### [2026-07-05T23:44:11Z] 2-2-list-and-view-classes-in-admin — formatZar: explicit R+toFixed(2) over toLocaleString("en-ZA")
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — class-display.ts authoring)
+- **Decision point:** Story allows either `toLocaleString("en-ZA", { style: "currency", currency: "ZAR" })` or explicit `R${...toFixed(2)}`. Which produces a stable, pinnable string in jsdom test environment?
+- **Options considered:** A) `toLocaleString("en-ZA", { style: "currency", currency: "ZAR" })` — output depends on Node.js ICU data (may produce "R 290,00" with a non-breaking space + comma separator in some environments, not "R290.00"); B) Explicit `R${(cents/100).toFixed(2)}` — always produces "R290.00" in all environments.
+- **Chosen:** B — explicit `R${(cents/100).toFixed(2)}` for locale-independent, pinnable test output.
+- **Rationale:** jsdom uses Node.js ICU data which can vary by platform/build; `toLocaleString` with `en-ZA` may produce "R 290,00" or "R290.00" depending on the installed locale data, making the test assertion fragile. Explicit format is always correct for this use case (ZAR with 2 decimal places) and the story explicitly permits it.
+- **Reversibility:** Swap to `toLocaleString("en-ZA", ...)` in `class-display.ts` and update the test assertion to match its exact output. One-line change.
+- **Files touched:** acce-nextjs/src/lib/class-display.ts, acce-nextjs/tests/unit/class-display.test.ts
+
+### [2026-07-05T23:44:11Z] 2-2-list-and-view-classes-in-admin — story complete → status: review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (story completion + mark for review)
+- **Decision point:** All 5 tasks complete, all ACs verified statically. Mark as review and commit.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Status set to `review` in both story file and sprint-status.yaml. All 142 vitest pass, build clean, prisma validate clean.
+- **Rationale:** DoD fully met: tasks checked, ACs satisfied, 23 new unit tests added, file list complete, change log updated, no regressions.
+- **Reversibility:** Revert status lines to `in-progress` if a code-review loop finds issues.
+- **Files touched:** _bmad-output/implementation-artifacts/2-2-list-and-view-classes-in-admin.md, _bmad-output/implementation-artifacts/sprint-status.yaml

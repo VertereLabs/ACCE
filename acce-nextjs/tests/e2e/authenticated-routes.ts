@@ -45,4 +45,8 @@ export const AUTHENTICATED_ROUTES: AuthenticatedRoute[] = [
 
   // (admin) routes — require role === "ADMIN"
   { path: "/admin", role: "ADMIN" },
+  // Story 2.1 backfill — create form was shipped without a manifest entry.
+  { path: "/admin/classes/new", role: "ADMIN" },
+  // Story 2.2 — read-only admin classes index (RSC-500 smoke guard, 1.5 pattern).
+  { path: "/admin/classes", role: "ADMIN" },
 ];
