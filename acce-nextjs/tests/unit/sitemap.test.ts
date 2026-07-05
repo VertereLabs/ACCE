@@ -1,6 +1,18 @@
 import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// Treat ALL guides as published for sitemap tests — the sitemap should register
+// every route when content is live. The guides-config.test.ts file separately
+// covers the production-off (gated) behavior with its own targeted assertions.
+vi.mock("@/config/guides", () => ({
+  GUIDE_PUBLISH_STATUS: { groups: true, "ifrs-15": true, "ifrs-16": true },
+  isDev: false,
+  isGuidesPreview: false,
+  isGuidePublished: () => true,
+  anyGuidePublished: () => true,
+}));
+
 import sitemap from "@/app/sitemap";
 
 /**

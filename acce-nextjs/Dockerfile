@@ -31,6 +31,16 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Prisma client + query-engine binary (AC4 / NFR7).
+# Next.js `output: standalone` traces @prisma/client JS but historically omits
+# the .prisma/client engine binary (.node / libquery_engine*).
+# Explicit COPY guarantees `node server.js` can query the DB without
+# "PrismaClientInitializationError: engine not found" at runtime.
+# Release pipeline: run `npx prisma migrate deploy` before starting the server
+# (Story 1.4 owns the seed; do NOT run db:seed in the Dockerfile).
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma/client ./node_modules/@prisma/client
+
 USER nextjs
 
 EXPOSE 3000

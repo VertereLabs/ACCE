@@ -6,8 +6,9 @@
 
 generator client {
   provider = "prisma-client-js"
-  // Driver adapters are GA in current Prisma; if the installed version still
-  // gates them, add: previewFeatures = ["driverAdapters"]
+  // Driver adapters are GA in Prisma 6.16+; installed version is 6.19.3 — no
+  // previewFeatures needed. If downgraded below 6.16, add:
+  //   previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -32,9 +33,10 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  sessions     Session[]
-  accounts     Account[]
-  enrollments  Enrollment[]
+  sessions      Session[]
+  accounts      Account[]
+  enrollments   Enrollment[]
+  ledgerEntries LedgerEntry[] // NFR5: referential integrity for wallet ledger
 
   @@map("user")
 }
@@ -123,6 +125,7 @@ model GroupSession {
   status      GroupSessionStatus @default(SCHEDULED)
   enrollments Enrollment[]
   createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt // AD-16: optimistic-concurrency token for admin edits
 }
 
 enum EnrollmentStatus {
@@ -142,7 +145,7 @@ model Enrollment {
   priceCents       Int
   status           EnrollmentStatus @default(PENDING)
   pendingExpiresAt DateTime? // hold during Paystack round-trip
-  paymentRef       String?
+  paymentRef       String?   @unique // AD-7: pins webhook→enrollment join (idempotency)
   createdAt        DateTime         @default(now())
 
   @@unique([studentId, groupSessionId]) // one seat per student per class
@@ -162,6 +165,7 @@ enum LedgerType {
 model LedgerEntry {
   id                String     @id @default(cuid())
   studentId         String
+  student           User       @relation(fields: [studentId], references: [id]) // NFR5: FK for referential integrity (RESTRICT on delete — rows must survive)
   type              LedgerType
   amountCents       Int // signed
   balanceAfterCents Int
@@ -169,7 +173,12 @@ model LedgerEntry {
   paymentRef        String?
   createdAt         DateTime   @default(now())
 
-  @@index([studentId, createdAt])
+  // Partial unique index enforcing one BOOKING_CHARGE per enrollment (AD-8) is
+  // hand-added to migration SQL — Prisma does not emit partial-unique indexes.
+  // See migration: CREATE UNIQUE INDEX "LedgerEntry_enrollmentId_booking_charge_key"
+  //                ON "LedgerEntry"("enrollmentId") WHERE type = 'BOOKING_CHARGE';
+  @@index([studentId])          // NFR5: FK index
+  @@index([studentId, createdAt]) // ledger history query (existing)
 }
 
 model Payment {
