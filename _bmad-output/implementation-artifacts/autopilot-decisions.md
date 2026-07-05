@@ -177,3 +177,43 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Makes AC4 explicit and self-documenting, removes the accidental throttling of session/sign-out traffic, and does not add scope (single auth.ts config change, no new features). tsc clean, 40/40 vitest still green after the change.
 - **Reversibility:** Fully reversible — revert the `rateLimit` block in `src/lib/auth.ts` to `{ enabled: true, window: 60, max: 5 }`. No data/schema/migration impact, no secrets touched. To move to shared-state limiting later, add `storage: "database"` (the `rateLimit` model already exists in better-auth's schema) or `"secondary-storage"`.
 - **Files touched:** acce-nextjs/src/lib/auth.ts
+
+### [2026-07-05T21:31:29Z] 1-3-roles-and-guarded-portal-admin-route-groups — Extend the existing guides-gating middleware.ts rather than replacing it (coarse portal/admin redirect)
+- **Risk:** medium
+- **Workflow / step:** create-story steps 2-3 — brownfield state analysis; a live-code trap the epic text does not mention
+- **Decision point:** The epics/spine describe adding `middleware.ts` for a coarse portal/admin redirect (AD-3). But a middleware ALREADY EXISTS at `acce-nextjs/src/middleware.ts` — it gates unpublished guides/PDFs with matcher `["/guides/:path+", "/pdfs/:path*"]` and short-circuits to `NextResponse.next()` in dev / `NEXT_PUBLIC_GUIDES_PREVIEW`. Next.js allows exactly ONE middleware module per app. A naive "create middleware.ts" would clobber the guides gating (a shipped, load-bearing feature per project memory acce-guides-gating).
+- **Options considered:** A) Story instructs the dev to EXTEND the single existing `middleware.ts`: add a portal/admin unauthenticated-cookie-presence redirect branch AND widen the `config.matcher` to also include `/portal/:path*` + `/admin/:path*`, preserving the guides/PDF branches untouched. B) Naively add a second middleware / overwrite — breaks guides gating and is structurally impossible in Next. C) Skip middleware, rely only on layout+page guards — leaves AC "redirect to sign-in" only enforced at layout/page level (acceptable for security per AD-3 but the spine explicitly wants the coarse redirect for UX).
+- **Chosen:** A — explicit story guardrail to extend the existing middleware.ts additively (merge matcher, keep guides branches, add a cookie-presence-only coarse redirect) and to keep the REAL role/authorization enforcement in the (portal)/(admin) layouts + per-page/DAL server checks (AD-3: middleware is coarse UX only, never the trusted guard — the Edge runtime cannot safely do a full DB session/role lookup).
+- **Rationale:** Preserves the guides feature, honors Next's single-middleware constraint, and keeps the security boundary where AD-3 mandates it. This is the single highest-value context this story adds — without it the dev would very likely overwrite the file.
+- **Reversibility:** Middleware edit is local and additive; revert by restoring the guides-only matcher/body. No data/schema impact.
+- **Files touched:** _bmad-output/implementation-artifacts/1-3-roles-and-guarded-portal-admin-route-groups.md
+
+### [2026-07-05T21:37:00Z] 1-3-roles-and-guarded-portal-admin-route-groups — better-auth CLI generate: indexes added, not columns — proceed with migration
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (Task 1, subtask 3 — CLI schema reconciliation)
+- **Decision point:** `npx @better-auth/cli generate --yes` added 3 performance indexes to the schema (`@@index([userId])` on Session + Account, `@@index([identifier])` on Verification) and reformatted comment-aligned whitespace in Enrollment/LedgerEntry. No new columns or tables were proposed. The story says STOP only for "genuinely new column/table". `prisma migrate diff` confirmed the DB lacks these indexes. Should we create a migration to add them?
+- **Options considered:** A) Revert the schema changes and proceed without the indexes (would drift the schema vs what the CLI recommends for Better Auth); B) Keep the schema changes and run `prisma migrate dev` to add the indexes (a new migration); C) Keep schema changes but defer the migration.
+- **Chosen:** B — keep the CLI-generated indexes and create a migration. These are pure performance indexes (no behavioral change, no data risk), they are what Better Auth recommends for its query patterns, and the schema/DB should stay in sync. This is a medium risk migration (index-only, no data at stake, easily reversible by dropping the indexes).
+- **Rationale:** Indexes are not columns/tables — the STOP condition is not triggered. Skipping them risks query performance regressions when the session table has data. Creating the migration now keeps the DB in sync with what Better Auth expects.
+- **Reversibility:** `prisma migrate resolve --rolled-back <migration_name>` and manually drop the 3 indexes. Schema: remove the 3 `@@index` lines.
+- **Files touched:** acce-nextjs/prisma/schema.prisma, acce-nextjs/prisma/migrations/<new>/migration.sql
+
+### [2026-07-05T21:36:26Z] 1-3-roles-and-guarded-portal-admin-route-groups — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit `5d2eed23a08bffd009aef7037e051c286d215e2e` as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/1-3-roles-and-guarded-portal-admin-route-groups.md
+
+### [2026-07-05T21:31:29Z] 1-3-roles-and-guarded-portal-admin-route-groups — Scope: add admin plugin + role guards + portal/admin shells, no migration, no e2e
+- **Risk:** medium
+- **Workflow / step:** create-story steps 3-5 — story scoping and AC decomposition
+- **Decision point:** Story 1.3's ACs span the Better Auth admin plugin (role STUDENT|ADMIN), `(portal)`/`(admin)` route groups + guards, and a portal shell (nav/theme toggle/logo swap/a11y). Boundaries vs 1.2 (already shipped auth core + minimal /portal page + no layout) and 1.4 (seeds Priyanka/admin) and 1.5 (standalone deploy + Playwright route-200 smoke) need pinning so the dev neither under- nor over-builds.
+- **Options considered:** A) Full scope in one story: admin plugin in auth.ts + adminClient, `(portal)/layout.tsx` + `(admin)/layout.tsx` role guards, extend middleware, build a shared portal shell (navbar w/ Logo+ThemeToggle+sign-out), page-level role checks, vitest render/guard tests — but NO schema migration (role column already migrated in 1.1) and NO Playwright e2e (that's 1.5) and NO admin/user seeding (1.4). B) Split shell into a later story — rejected: AC4 explicitly requires the portal shell + a11y here. C) Add a DB migration for role — rejected: `user.role String? @default("STUDENT")` + admin columns already exist in schema/migration from 1.1; the admin plugin only needs wiring in config.
+- **Chosen:** A. Also flagged the admin-plugin schema reconciliation: run `npx @better-auth/cli generate` after adding `admin()` — expected no-op since 1.1 pre-migrated the admin columns (banned/banReason/banExpires/impersonatedBy already present); if the CLI proposes a new column, STOP and treat as a real migration (would bump risk).
+- **Rationale:** Matches the four ACs exactly, respects the 1.2 "leave /portal folder, 1.3 wraps it" handoff and the 1.4/1.5 boundaries, and avoids inventing scope. Testing floor is vitest render/guard tests (route-200 Playwright smoke is 1.5).
+- **Reversibility:** All additive (new layouts + shell components + config plugin line + middleware branch). Revert by removing the `(portal)`/`(admin)` layouts, the `admin()` plugin line, and the middleware portal/admin branch.
+- **Files touched:** _bmad-output/implementation-artifacts/1-3-roles-and-guarded-portal-admin-route-groups.md

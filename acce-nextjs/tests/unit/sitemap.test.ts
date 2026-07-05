@@ -88,12 +88,16 @@ describe("sitemap ↔ filesystem consistency", () => {
     //   - /not-found: 404 handler
     //   - /sign-in: app auth page (no SEO value, not a marketing page)
     //   - /(portal)/*: authenticated portal pages (session-gated, not indexable)
+    //   - /(admin)/*: admin-only pages (role-gated, not indexable) — Story 1.3
     const SITEMAP_EXCLUDED = new Set([
       "/not-found",
       "/sign-in",
     ]);
     const contentRoutes = pageRoutes.filter(
-      (r) => !SITEMAP_EXCLUDED.has(r) && !r.startsWith("/(portal)"),
+      (r) =>
+        !SITEMAP_EXCLUDED.has(r) &&
+        !r.startsWith("/(portal)") &&
+        !r.startsWith("/(admin)"),
     );
     const unregistered = contentRoutes.filter((r) => !routeSet.has(r));
     expect(

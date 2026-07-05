@@ -1,11 +1,11 @@
-// Better Auth server configuration — Story 1.2.
+// Better Auth server configuration — Stories 1.2 (magic-link) + 1.3 (admin plugin + roles).
 // Exports `auth` used by the catch-all route handler and server-side session reads.
 // AD-2: uses the existing `db` singleton — never a new PrismaClient.
 // AD-13: email delivery via src/lib/email.ts (native fetch, no SDK).
 
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { magicLink } from "better-auth/plugins";
+import { admin, magicLink } from "better-auth/plugins";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/lib/db";
 import { sendMagicLinkEmail } from "@/lib/email";
@@ -57,6 +57,11 @@ export const auth = betterAuth({
       expiresIn: 60 * 15, // 15 minutes (AC3)
       disableSignUp: false, // first-time = signup, existing = login (AC1)
     }),
-    nextCookies(), // MUST be last
+    // Story 1.3 — admin plugin: surfaces `session.user.role` (STUDENT | ADMIN).
+    // The schema columns (role, banned, banReason, banExpires, impersonatedBy) were
+    // pre-migrated in Story 1.1 — adding this plugin is config-only, no migration.
+    // Default role is STUDENT (schema default: `role String? @default("STUDENT")`).
+    admin(),
+    nextCookies(), // MUST be last — after all other plugins including admin()
   ],
 });

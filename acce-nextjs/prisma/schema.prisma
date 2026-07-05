@@ -54,6 +54,7 @@ model Session {
   updatedAt      DateTime @updatedAt
 
   @@map("session")
+  @@index([userId])
 }
 
 model Account {
@@ -73,6 +74,7 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   @@map("account")
+  @@index([userId])
 }
 
 model Verification {
@@ -84,6 +86,7 @@ model Verification {
   updatedAt  DateTime @updatedAt
 
   @@map("verification")
+  @@index([identifier])
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -145,11 +148,13 @@ model Enrollment {
   priceCents       Int
   status           EnrollmentStatus @default(PENDING)
   pendingExpiresAt DateTime? // hold during Paystack round-trip
-  paymentRef       String?   @unique // AD-7: pins webhook→enrollment join (idempotency)
+  paymentRef       String?          @unique // AD-7: pins webhook→enrollment join (idempotency)
   createdAt        DateTime         @default(now())
 
-  @@unique([studentId, groupSessionId]) // one seat per student per class
-  @@index([groupSessionId, status]) // fast capacity count
+  // one seat per student per class
+  // fast capacity count
+  @@unique([studentId, groupSessionId])
+  @@index([groupSessionId, status])
 }
 
 enum LedgerType {
@@ -177,8 +182,10 @@ model LedgerEntry {
   // hand-added to migration SQL — Prisma does not emit partial-unique indexes.
   // See migration: CREATE UNIQUE INDEX "LedgerEntry_enrollmentId_booking_charge_key"
   //                ON "LedgerEntry"("enrollmentId") WHERE type = 'BOOKING_CHARGE';
-  @@index([studentId])          // NFR5: FK index
-  @@index([studentId, createdAt]) // ledger history query (existing)
+  // NFR5: FK index
+  // ledger history query (existing)
+  @@index([studentId])
+  @@index([studentId, createdAt])
 }
 
 model Payment {
