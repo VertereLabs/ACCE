@@ -4,7 +4,7 @@ baseline_commit: be17fc7ee12efc6c999cf41d67b074e6c3774f65
 
 # Story 2.2: List and view classes in admin
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -84,7 +84,13 @@ Then `requireAdmin()` at the top of the page redirects them (`/sign-in` if unaut
   - [x] `npm test` → 142/142 vitest green (was 119, +23 new: 13 occupancy + 10 display).
   - [x] Live-DB read deferred to CI ephemeral-Postgres — same sandbox wall as 1.1/1.4/1.5/2.1. Static verification is the bar.
 
-## Dev Notes
+### Review Findings
+
+Code review (2026-07-05, fresh adversarial pass — Blind Hunter / Edge Case Hunter / Acceptance Auditor lenses). All 5 ACs re-verified from scratch against the diff and live schema; chain independently re-run green (prisma validate clean, `npm run build` clean with `/admin/classes` + `/admin/classes/new` in the route table, 142/142 vitest). AD-2/3/5/9 guardrails confirmed: `requireAdmin()` runs before any data fetch (AC4); occupancy is a filtered `_count` with zero writes and the AD-5 predicate matches exactly (AC3); `formatZar` is integer-cents→Rand at the UI edge (AD-9); no `new PrismaClient()` (AD-2). No HIGH/MEDIUM actionable findings.
+
+- [x] [Review][Defer] Class start/time is displayed via `toLocaleString("en-ZA")` with no explicit `timeZone`, so it renders in the deploy server's local TZ [acce-nextjs/src/app/(admin)/admin/classes/page.tsx:60] — deferred, cross-cutting. This is NOT a defect in isolation: 2.1's create form parses the `datetime-local` string with `z.coerce.date` (no offset → server-local), so input and display share the same TZ frame and round-trip consistently. Pinning a display-only `timeZone: "Africa/Johannesburg"` here WITHOUT also pinning 2.1's input parsing would *break* that consistency. Timezone hardening is a system-wide decision spanning Story 2.1 + this list (and echoes the 1.4 SAST/UTC deferral) — resolve holistically in a later loop, not as a unilateral patch here.
+
+
 
 ### Architecture guardrails (from ARCHITECTURE-SPINE — binding)
 - **AD-5 — Capacity is DERIVED, never stored; readers never write:** `occupied = count(Enrollment where status ∈ {PENDING, CONFIRMED} AND (pendingExpiresAt IS NULL OR pendingExpiresAt > now))`; `seatsLeft = capacity − occupied`. There is NO stored seat counter — never add one. The listing path treats expired `PENDING` as free **but must not issue any UPDATE**; the real `PENDING → CANCELLED` expiry flip happens only inside a locked mutation in `enrollment.ts` (later epic), so this read can never race a webhook. `@@index([groupSessionId, status])` backs the count. [Source: ARCHITECTURE-SPINE.md#AD-5; schema.prisma:157]
@@ -184,3 +190,4 @@ No blocking issues. `formatZar` uses explicit `R${(cents/100).toFixed(2)}` inste
 ## Change Log
 
 - 2026-07-05: Story 2.2 implemented — read-only admin classes index at `/admin/classes`. Added pure AD-5 occupancy helper (`class-occupancy.ts`) + ZAR formatter (`class-display.ts`); server-rendered table with filtered `_count` occupancy; empty-state gold CTA; wired admin landing + 2.1 success redirect + e2e manifest. 23 new unit tests. 142/142 vitest green, build clean, prisma validate clean.
+- 2026-07-05: Code review (fresh adversarial) → **done**. All 5 ACs + AD-2/3/5/9 re-verified from scratch; chain independently re-run green (prisma validate clean, build clean with `/admin/classes` present, 142/142 vitest). 0 decision-needed, 0 patch, 1 defer (display-timezone hardening — cross-cutting with 2.1 input parsing, deferred to a holistic later loop), 1 dismissed as noise (query selects unused `end`/`level` — harmless minor over-fetch). No HIGH/MEDIUM actionable findings; no code changes required.

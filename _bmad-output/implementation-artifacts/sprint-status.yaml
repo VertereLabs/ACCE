@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-05T23:44:11Z
+last_updated: 2026-07-05T23:50:47Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -68,6 +68,9 @@ project: ACCE
 # 2-1 set review on 2026-07-05 (dev-story complete: LEVELS constant, pure Zod schema + toCents, createClassAction [requireAdmin+safeParse+subjectCheck+priceCents+groupSession.create], admin page + client form [react-hook-form+zodResolver+sonner+gold CTA]; 119/119 vitest, build clean, prisma validate clean; live DB create deferred CI ephemeral-Postgres)
 # 2-1 set done on 2026-07-06 (code-review: FRESH-reviewed all 5 ACs + AD-2/3/5/9/13/16; 1 MEDIUM auto-fixed [primary CTA hardcoded hex #d4a91e/#1a2744 inline style → token classes bg-accent/text-accent-foreground so gold+navy flip per light/dark mode, UX-DR2/DR6]; 0 HIGH/critical; datetime-local→coerced-Date instant round-trip verified correct, discriminated result shape + requireAdmin-first guard confirmed [AC4]; independently re-verified prisma validate clean + build clean [/admin/classes/new present] + 119/119 vitest; live-DB create still deferred CI ephemeral-Postgres)
 # 2-2 set ready-for-dev on 2026-07-05 (create-story: read-only admin classes index at (admin)/admin/classes; occupancy DERIVED via single tested pure occupiedEnrollmentWhere(now) fed to Prisma filtered _count [AD-5, readers NEVER write, expired PENDING free, no seat counter]; seatsLeft=max(0,cap-occ); ZAR format at UI edge only [AD-9]; shadcn Table+Badge, chronological start asc, empty-state gold CTA→/classes/new; requireAdmin page guard [AD-3]; small wiring: link /admin→/admin/classes, repoint 2.1 success redirect /admin→/admin/classes, add /admin/classes+/admin/classes/new to e2e manifest; NO edit[2.3]/schema/migration/dep; live-DB read deferred CI ephemeral-Postgres)
+# 2-2 set in-progress on 2026-07-05 (dev-story)
+# 2-2 set review on 2026-07-05 (dev-story complete: class-occupancy.ts [pure AD-5 filter+computeSeatsLeft], class-display.ts [formatZar/formatMode/formatStatus], (admin)/admin/classes/page.tsx [server RSC, requireAdmin-first, filtered _count occupancy, empty-state gold CTA, shadcn Table+Badge], admin landing links + 2.1 redirect repoint + e2e manifest +2; 23 new unit tests, 142/142 vitest, build clean, prisma validate clean)
+# 2-2 set done on 2026-07-05 (code-review: FRESH adversarial pass re-verified all 5 ACs + AD-2/3/5/9 from scratch; independently re-ran chain green [prisma validate clean, build clean w/ /admin/classes+/admin/classes/new in route table, 142/142 vitest]; 0 patch/0 decision-needed, 1 defer [display-timezone hardening — cross-cutting w/ 2.1 datetime-local parse, self-consistent today, resolve holistically later], 1 dismissed [query over-selects unused end/level — harmless]; requireAdmin-before-fetch [AC4], zero-write filtered _count matches AD-5 predicate exactly [AC3], formatZar integer-cents→Rand at UI edge [AD-9] all confirmed; no code changes required)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -85,7 +88,7 @@ development_status:
   # Epic 2: Admin Class Management
   epic-2: in-progress
   2-1-create-a-group-class: done
-  2-2-list-and-view-classes-in-admin: review
+  2-2-list-and-view-classes-in-admin: done
   2-3-edit-an-existing-class: backlog
   epic-2-retrospective: optional
 

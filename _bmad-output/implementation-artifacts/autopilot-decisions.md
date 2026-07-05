@@ -527,3 +527,33 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** DoD fully met: tasks checked, ACs satisfied, 23 new unit tests added, file list complete, change log updated, no regressions.
 - **Reversibility:** Revert status lines to `in-progress` if a code-review loop finds issues.
 - **Files touched:** _bmad-output/implementation-artifacts/2-2-list-and-view-classes-in-admin.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-05T23:50:47Z] 2-2-list-and-view-classes-in-admin — Diff source & spec context for code review
+- **Risk:** low
+- **Workflow / step:** code-review step 1 (gather context)
+- **Decision point:** Which diff to review and which spec to audit against; workflow HALTs for user selection (overridden per autopilot contract).
+- **Options considered:** A) `git diff HEAD` uncommitted (empty — dev-story already committed); B) branch diff epic-2 vs main (would include 2.1 + all prior epic-2 work); C) diff story baseline_commit (be17fc7) → HEAD, story-scoped.
+- **Chosen:** C — `git diff be17fc7 HEAD -- acce-nextjs/`, using the story frontmatter `baseline_commit`; review_mode = "full" with spec_file = the 2.2 story.
+- **Rationale:** baseline_commit is exactly the 2.1-done tip; the single dev-story commit 2c53793 is the whole 2.2 change set (8 files, +526). Cleanest, story-scoped, no cross-story noise.
+- **Reversibility:** N/A (read-only scoping choice).
+- **Files touched:** none (read-only).
+
+### [2026-07-05T23:50:47Z] 2-2-list-and-view-classes-in-admin — Fix-vs-action-items resolution (no HIGH/MEDIUM found)
+- **Risk:** low
+- **Workflow / step:** code-review step 3–4 (triage + present/act)
+- **Decision point:** At the fix-vs-action-items `<ask>`: default is to auto-fix all HIGH/MEDIUM. Fresh adversarial pass (Blind Hunter / Edge Case Hunter / Acceptance Auditor lenses) surfaced no actionable HIGH/MEDIUM patch. One candidate (display timezone) evaluated for auto-fix.
+- **Options considered:** A) Auto-patch a display `timeZone: "Africa/Johannesburg"` on the list's `toLocaleString`; B) Defer timezone as cross-cutting; C) Fabricate findings to justify edits.
+- **Chosen:** B — defer. Verified 2.1 parses `datetime-local` with `z.coerce.date` (no offset → server-local) and this page displays server-local; input+display share one TZ frame and round-trip consistently. A display-only TZ patch here would BREAK that consistency (entered 10:00 → shown 12:00). So it is genuinely cross-cutting (spans 2.1) and self-consistent today — a defer, not a clean unambiguous patch.
+- **Rationale:** The auto-fix mandate applies to *actionable, unambiguous* HIGH/MEDIUM. This one's correct fix is ambiguous and cross-story; patching in isolation regresses correctness. Recorded to story Review Findings + deferred-work.md instead. Remaining item (query over-selects unused `end`/`level`) dismissed as harmless noise.
+- **Reversibility:** No code changed. To resolve the deferral later: pin a canonical app TZ (`Africa/Johannesburg`) end-to-end — both 2.1's create-form parse and every display edge — in one coordinated change.
+- **Files touched:** _bmad-output/implementation-artifacts/2-2-list-and-view-classes-in-admin.md; deferred-work.md; sprint-status.yaml (no source code changed).
+
+### [2026-07-05T23:50:47Z] 2-2-list-and-view-classes-in-admin — Final status: done
+- **Risk:** low
+- **Workflow / step:** code-review step 6 (status + sprint sync)
+- **Decision point:** Set final story status per outcome (done if clean; in-progress if unresolved HIGH/MEDIUM).
+- **Options considered:** A) done; B) in-progress with Review Follow-ups.
+- **Chosen:** A — done. Zero unresolved HIGH/MEDIUM; the sole open item is a Low/Medium environmental defer (timezone), consistent with the 1.4/1.5 deferral posture. All 5 ACs + AD-2/3/5/9 independently re-verified; chain re-run green (prisma validate clean, build clean w/ /admin/classes present, 142/142 vitest).
+- **Rationale:** Per step-04 §6, clean of actionable patch/decision findings → done. No code changes were required.
+- **Reversibility:** Revert story Status + sprint-status `2-2` entry to `review` if a blocking finding later emerges.
+- **Files touched:** 2-2-list-and-view-classes-in-admin.md (Status/Review Findings/Change Log); sprint-status.yaml; deferred-work.md.
