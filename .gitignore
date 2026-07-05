@@ -35,9 +35,6 @@ __pycache__/
 .venv/
 venv/
 
-# Local scratch / working artifacts (not part of the app or shared BMAD tooling)
-/.agent/
-/contentfiles/
-/design-artifacts/
+# Local deploy working dirs (not part of the app or shared tooling)
 /zdeploy/
 /zSEO/
