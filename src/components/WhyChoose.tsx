@@ -41,10 +41,10 @@ const WhyChoose = () => {
                     <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         Why Choose ACCE
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         What Makes Us Different
                     </h2>
-                    <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         More than just tutoring: it's mentorship from someone who truly understands the CA(SA) journey.
                     </p>
                 </div>
@@ -58,10 +58,10 @@ const WhyChoose = () => {
                             <div className="w-14 h-14 rounded-2xl bg-accent/20 text-accent flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
                                 <prop.icon className="w-7 h-7" />
                             </div>
-                            <h3 className="font-display text-xl font-semibold text-primary-foreground mb-3">
+                            <h3 className="font-display text-xl font-semibold text-foreground mb-3">
                                 {prop.title}
                             </h3>
-                            <p className="text-primary-foreground/70 leading-relaxed">
+                            <p className="text-muted-foreground leading-relaxed">
                                 {prop.description}
                             </p>
                         </div>

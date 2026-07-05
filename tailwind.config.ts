@@ -18,8 +18,8 @@ export default {
         },
         extend: {
             fontFamily: {
-                display: ['Playfair Display', 'serif'],
-                body: ['DM Sans', 'sans-serif'],
+                display: ['var(--font-display)', 'Playfair Display', 'serif'],
+                body: ['var(--font-body)', 'Inter', 'sans-serif'],
             },
             colors: {
                 border: "hsl(var(--border))",
@@ -27,6 +27,12 @@ export default {
                 ring: "hsl(var(--ring))",
                 background: "hsl(var(--background))",
                 foreground: "hsl(var(--foreground))",
+                "accent-ink": "hsl(var(--accent-ink))",
+                "primary-ink": "hsl(var(--primary-ink))",
+                footer: {
+                    DEFAULT: "hsl(var(--footer-bg))",
+                    foreground: "hsl(var(--footer-fg) / <alpha-value>)",
+                },
                 primary: {
                     DEFAULT: "hsl(var(--primary))",
                     foreground: "hsl(var(--primary-foreground))",

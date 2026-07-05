@@ -19,13 +19,13 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0f172a 0%, #111827 100%)",
+          background: "linear-gradient(135deg, #002251 0%, #001a3d 100%)",
         }}
       >
         <svg width="260" height="260" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-          <rect x="28" y="38" width="64" height="124" rx="8" stroke="#f59e0b" strokeWidth="10" />
-          <rect x="108" y="38" width="64" height="124" rx="8" stroke="#f59e0b" strokeWidth="10" />
-          <line x1="100" y1="42" x2="100" y2="162" stroke="#f8fafc" strokeWidth="6" />
+          <rect x="28" y="38" width="64" height="124" rx="8" stroke="#cb8a00" strokeWidth="10" />
+          <rect x="108" y="38" width="64" height="124" rx="8" stroke="#cb8a00" strokeWidth="10" />
+          <line x1="100" y1="42" x2="100" y2="162" stroke="#f5ecd9" strokeWidth="6" />
         </svg>
       </div>
     ),

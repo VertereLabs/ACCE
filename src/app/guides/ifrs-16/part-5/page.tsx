@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function IFRS16Part5Page() {
     return (
-        <div className="min-h-screen bg-primary">
+        <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
@@ -24,7 +24,7 @@ export default function IFRS16Part5Page() {
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
                             href="/guides/ifrs-16/"
-                            className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to IFRS 16
@@ -38,7 +38,7 @@ export default function IFRS16Part5Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
-                            <div className="text-primary-foreground/40 text-sm">
+                            <div className="text-muted-foreground text-sm">
                                 Part 5 of 5
                             </div>
                         </div>
@@ -51,10 +51,10 @@ export default function IFRS16Part5Page() {
                             <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm font-medium mb-4">
                                 Part 5: Finalizing Leases
                             </span>
-                            <h1 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4 font-display">
+                            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4 font-display">
                                 Lessor Accounting & Exam Strategy
                             </h1>
-                            <p className="text-primary-foreground/60 text-lg leading-relaxed">
+                            <p className="text-muted-foreground text-lg leading-relaxed">
                                 While the lessee model changed drastically, lessor accounting remains largely unchanged from IAS 17. Let&apos;s wrap up our IFRS 16 journey.
                             </p>
                         </header>
@@ -63,27 +63,27 @@ export default function IFRS16Part5Page() {
                         <div className="prose prose-invert max-w-none">
                             {/* Section 1: Lessor Classification */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">1</span>
                                     Lessor Classification
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
-                                    Unlike lessees, lessors must still classify a lease as either <strong className="text-primary-foreground">Finance</strong> or <strong className="text-primary-foreground">Operating</strong>.
+                                <p className="text-muted-foreground leading-relaxed mb-6">
+                                    Unlike lessees, lessors must still classify a lease as either <strong className="text-foreground">Finance</strong> or <strong className="text-foreground">Operating</strong>.
                                 </p>
 
                                 <div className="grid md:grid-cols-2 gap-6 mb-8 text-[11px]">
-                                    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+                                    <div className="bg-card border border-border rounded-xl p-6">
                                         <h4 className="font-display font-semibold text-accent mb-3 uppercase tracking-widest text-[10px]">Finance Lease</h4>
-                                        <p className="text-primary-foreground/70 mb-4 font-medium italic">A lease that transfers <strong className="text-primary-foreground">substantially all</strong> the risks and rewards incidental to ownership.</p>
-                                        <div className="p-3 bg-accent/10 rounded-lg text-primary-foreground/80 leading-relaxed">
-                                            <strong className="text-primary-foreground">ACCOUNTING:</strong> Derecognize the asset and recognize a <strong className="text-primary-foreground">Lease Receivable</strong>.
+                                        <p className="text-muted-foreground mb-4 font-medium italic">A lease that transfers <strong className="text-foreground">substantially all</strong> the risks and rewards incidental to ownership.</p>
+                                        <div className="p-3 bg-accent/10 rounded-lg text-muted-foreground leading-relaxed">
+                                            <strong className="text-foreground">ACCOUNTING:</strong> Derecognize the asset and recognize a <strong className="text-foreground">Lease Receivable</strong>.
                                         </div>
                                     </div>
-                                    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+                                    <div className="bg-card border border-border rounded-xl p-6">
                                         <h4 className="font-display font-semibold text-blue-400 mb-3 uppercase tracking-widest text-[10px]">Operating Lease</h4>
-                                        <p className="text-primary-foreground/70 mb-4 font-medium italic">All other leases that do not transfer risks and rewards.</p>
-                                        <div className="p-3 bg-blue-500/10 rounded-lg text-primary-foreground/80 leading-relaxed">
-                                            <strong className="text-primary-foreground">ACCOUNTING:</strong> Keep the asset on the SOFP. Recognize lease income on a <strong className="text-primary-foreground">Straight-Line</strong> basis.
+                                        <p className="text-muted-foreground mb-4 font-medium italic">All other leases that do not transfer risks and rewards.</p>
+                                        <div className="p-3 bg-blue-500/10 rounded-lg text-muted-foreground leading-relaxed">
+                                            <strong className="text-foreground">ACCOUNTING:</strong> Keep the asset on the SOFP. Recognize lease income on a <strong className="text-foreground">Straight-Line</strong> basis.
                                         </div>
                                     </div>
                                 </div>
@@ -91,12 +91,12 @@ export default function IFRS16Part5Page() {
 
                             {/* Section 2: Classification Criteria */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">2</span>
                                     Is it Finance or Operating?
                                 </h2>
-                                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
-                                    <h4 className="font-bold text-primary-foreground mb-4 text-sm flex items-center gap-2 uppercase tracking-wide">
+                                <div className="bg-card border border-border rounded-2xl p-6 mb-6">
+                                    <h4 className="font-bold text-foreground mb-4 text-sm flex items-center gap-2 uppercase tracking-wide">
                                         <Gavel className="w-4 h-4 text-accent" />
                                         Primary Indicators of a Finance Lease:
                                     </h4>
@@ -108,7 +108,7 @@ export default function IFRS16Part5Page() {
                                             "PV of lease payments is substantially all of the asset's fair value.",
                                             "Asset is of a specialized nature (only lessee can use it)."
                                         ].map((text, i) => (
-                                            <li key={i} className="flex items-start gap-2 text-xs text-primary-foreground/60 leading-relaxed">
+                                            <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />
                                                 {text}
                                             </li>
@@ -119,34 +119,34 @@ export default function IFRS16Part5Page() {
 
                             {/* Section 3: Exam Success Roadmap */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent text-primary flex items-center justify-center text-sm font-bold">3</span>
                                     The IFRS 16 Exam Roadmap
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-8">
+                                <p className="text-muted-foreground leading-relaxed mb-8">
                                     Lease questions are long and calculation-heavy. Follow this order to stay organized and pick up all the marks.
                                 </p>
 
                                 <div className="space-y-8">
                                     <div className="relative pl-10 border-l border-accent/30 ml-4 pb-8">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">1</div>
-                                        <h4 className="font-bold text-primary-foreground mb-1 text-sm">Define the Lease & Term</h4>
-                                        <p className="text-xs text-primary-foreground/60 m-0">Does the contract contain a lease? What is the non-cancellable period plus extension options?</p>
+                                        <h4 className="font-bold text-foreground mb-1 text-sm">Define the Lease & Term</h4>
+                                        <p className="text-xs text-muted-foreground m-0">Does the contract contain a lease? What is the non-cancellable period plus extension options?</p>
                                     </div>
                                     <div className="relative pl-10 border-l border-accent/30 ml-4 pb-8">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">2</div>
-                                        <h4 className="font-bold text-primary-foreground mb-1 text-sm">Determine the Discount Rate</h4>
-                                        <p className="text-xs text-primary-foreground/60 m-0 text-balance">Quote the rule for Implicit Rate vs IBR. Always search for the implicit rate first.</p>
+                                        <h4 className="font-bold text-foreground mb-1 text-sm">Determine the Discount Rate</h4>
+                                        <p className="text-xs text-muted-foreground m-0 text-balance">Quote the rule for Implicit Rate vs IBR. Always search for the implicit rate first.</p>
                                     </div>
                                     <div className="relative pl-10 border-l border-accent/30 ml-4 pb-8 text-balance">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">3</div>
-                                        <h4 className="font-bold text-primary-foreground mb-1 text-sm">Initial Measurement (The Day 1 Box)</h4>
-                                        <p className="text-xs text-primary-foreground/60 m-0">Show your workings for the PV of the liability and the bundle of costs that make up the ROU asset.</p>
+                                        <h4 className="font-bold text-foreground mb-1 text-sm">Initial Measurement (The Day 1 Box)</h4>
+                                        <p className="text-xs text-muted-foreground m-0">Show your workings for the PV of the liability and the bundle of costs that make up the ROU asset.</p>
                                     </div>
                                     <div className="relative pl-10 ml-4 pb-4">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">4</div>
-                                        <h4 className="font-bold text-primary-foreground mb-1 text-sm">Subsequent Amortization & Depreciation</h4>
-                                        <p className="text-xs text-primary-foreground/60 m-0 text-balance">Prepare an amortization table. It makes calculating interest and carrying amounts foolproof.</p>
+                                        <h4 className="font-bold text-foreground mb-1 text-sm">Subsequent Amortization & Depreciation</h4>
+                                        <p className="text-xs text-muted-foreground m-0 text-balance">Prepare an amortization table. It makes calculating interest and carrying amounts foolproof.</p>
                                     </div>
                                 </div>
                             </section>
@@ -157,8 +157,8 @@ export default function IFRS16Part5Page() {
                                     <div className="flex items-start gap-4">
                                         <GraduationCap className="w-8 h-8 text-accent flex-shrink-0" />
                                         <div>
-                                            <h3 className="font-display text-xl font-bold text-primary-foreground mb-3 font-display">You&apos;ve Completed IFRS 16!</h3>
-                                            <p className="text-sm text-primary-foreground/80 m-0 leading-relaxed italic text-pretty">
+                                            <h3 className="font-display text-xl font-bold text-foreground mb-3 font-display">You&apos;ve Completed IFRS 16!</h3>
+                                            <p className="text-sm text-muted-foreground m-0 leading-relaxed italic text-pretty">
                                                 Mastering leases is about managing the timeline and the math. From Day 1 measurement to Day 365 depreciation, you now have the full picture. Head back to all guides to tackle your next reporting standard.
                                             </p>
                                         </div>
@@ -168,8 +168,8 @@ export default function IFRS16Part5Page() {
                         </div>
 
                         {/* Navigation */}
-                        <div className="flex items-center justify-between pt-8 border-t border-white/10">
-                            <Button asChild variant="ghost" className="text-primary-foreground/60 hover:text-primary-foreground">
+                        <div className="flex items-center justify-between pt-8 border-t border-border">
+                            <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground">
                                 <Link href="/guides/ifrs-16/part-4/">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Part 4: Sale & Leaseback
@@ -186,11 +186,11 @@ export default function IFRS16Part5Page() {
 
                     {/* Final CTA */}
                     <div className="max-w-4xl mt-16">
-                        <div className="bg-white/10 border border-white/10 rounded-3xl p-8 md:p-14 text-center">
-                            <h3 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-4">
+                        <div className="bg-card border border-border rounded-3xl p-8 md:p-14 text-center">
+                            <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
                                 Ready for a Distinction?
                             </h3>
-                            <p className="text-primary-foreground/70 mb-8 max-w-xl mx-auto leading-relaxed text-lg">
+                            <p className="text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed text-lg">
                                 Don&apos;t just learn the theory—apply it. Get personalized feedback on your lease and revenue recognition calculations before your next exam.
                             </p>
                             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-12 h-14 text-lg shadow-xl shadow-accent/20">

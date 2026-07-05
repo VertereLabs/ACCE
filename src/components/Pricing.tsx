@@ -54,10 +54,10 @@ const Pricing = () => {
                     <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         Pricing
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         Invest in Your Success
                     </h2>
-                    <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         Flexible pricing options to suit your needs. Contact me for current rates and package details.
                     </p>
                 </div>
@@ -68,7 +68,7 @@ const Pricing = () => {
                             key={plan.name}
                             className={`relative bg-white/10 backdrop-blur-md rounded-2xl p-8 border-2 transition-all duration-500 hover:-translate-y-2 ${plan.popular
                                     ? "border-accent shadow-lg shadow-accent/20 scale-105 z-10"
-                                    : "border-white/10 opacity-90"
+                                    : "border-border opacity-90"
                                 }`}
                         >
                             {plan.popular && (
@@ -77,25 +77,25 @@ const Pricing = () => {
                                 </div>
                             )}
 
-                            <h3 className="font-display text-xl font-semibold text-primary-foreground mb-2">
+                            <h3 className="font-display text-xl font-semibold text-foreground mb-2">
                                 {plan.name}
                             </h3>
-                            <p className="text-primary-foreground/60 text-sm mb-6">
+                            <p className="text-muted-foreground text-sm mb-6">
                                 {plan.description}
                             </p>
 
                             <div className="mb-6">
-                                <span className="font-display text-4xl font-bold text-primary-foreground">
+                                <span className="font-display text-4xl font-bold text-foreground">
                                     {plan.price}
                                 </span>
-                                <span className="text-primary-foreground/60 text-sm ml-2">
+                                <span className="text-muted-foreground text-sm ml-2">
                                     {plan.period}
                                 </span>
                             </div>
 
                             <ul className="space-y-3 mb-8">
                                 {plan.features.map((feature) => (
-                                    <li key={feature} className="flex items-center gap-3 text-primary-foreground/80 text-sm">
+                                    <li key={feature} className="flex items-center gap-3 text-muted-foreground text-sm">
                                         <Check className="w-5 h-5 text-accent flex-shrink-0" />
                                         {feature}
                                     </li>
@@ -116,7 +116,7 @@ const Pricing = () => {
                     ))}
                 </div>
 
-                <p className="text-center text-primary-foreground/50 text-sm mt-8">
+                <p className="text-center text-muted-foreground text-sm mt-8">
                     💡 Prices vary based on subject and level. Contact me for a personalized quote.
                 </p>
             </div>

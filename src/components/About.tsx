@@ -32,10 +32,10 @@ const About = () => {
                     <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         About Priyanka
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         My CTA Journey
                     </h2>
-                    <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         A story of resistance and struggle, but triumph in the end through persistence and resilience.
                     </p>
                 </div>
@@ -55,24 +55,24 @@ const About = () => {
                         </div>
                         <div className="absolute -bottom-6 -right-6 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
                             <p className="font-display text-3xl font-bold text-accent">PGDA</p>
-                            <p className="text-sm text-primary-foreground/60">Graduate</p>
-                            <p className="text-xs text-primary-foreground/40 mt-1">Milpark Education</p>
+                            <p className="text-sm text-muted-foreground">Graduate</p>
+                            <p className="text-xs text-muted-foreground mt-1">Milpark Education</p>
                         </div>
                     </div>
 
                     {/* Content */}
                     <div>
-                        <blockquote className="text-xl text-primary-foreground/90 italic leading-relaxed mb-8 border-l-4 border-accent pl-6">
+                        <blockquote className="text-xl text-muted-foreground italic leading-relaxed mb-8 border-l-4 border-accent pl-6">
                             &quot;I am living proof that anything is possible. Short-term sacrifices do pay off in the long term.&quot;
                         </blockquote>
 
-                        <p className="text-primary-foreground/70 leading-relaxed mb-6">
+                        <p className="text-muted-foreground leading-relaxed mb-6">
                             After completing my undergraduate degree during COVID, I made the decision to commit fully to
                             becoming a Chartered Accountant. The journey wasn&apos;t smooth - I faced toxic work environments,
                             failed modules, and moments where I genuinely lost hope.
                         </p>
 
-                        <p className="text-primary-foreground/70 leading-relaxed mb-8">
+                        <p className="text-muted-foreground leading-relaxed mb-8">
                             When I failed Financial Accounting with 38%, something shifted inside me. I went back to basics,
                             practiced relentlessly, and disappeared for three months. The result? A 25% improvement and four passes.
                             Now I use my journey to encourage and mentor others through this challenging but rewarding path.
@@ -82,11 +82,11 @@ const About = () => {
                             {milestones.map((milestone) => (
                                 <div
                                     key={milestone.title}
-                                    className="bg-white/5 rounded-xl p-4 border border-white/10"
+                                    className="bg-white/5 rounded-xl p-4 border border-border"
                                 >
                                     <milestone.icon className="w-6 h-6 text-accent mb-2" />
-                                    <h4 className="font-semibold text-primary-foreground text-sm">{milestone.title}</h4>
-                                    <p className="text-xs text-primary-foreground/60 mt-1">{milestone.description}</p>
+                                    <h4 className="font-semibold text-foreground text-sm">{milestone.title}</h4>
+                                    <p className="text-xs text-muted-foreground mt-1">{milestone.description}</p>
                                 </div>
                             ))}
                         </div>

@@ -33,10 +33,10 @@ const Blog = () => {
                     <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         Blog
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         Tips, Guides & Insights
                     </h2>
-                    <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         Learn from my journey and get practical advice for your CA(SA) path.
                     </p>
                 </div>
@@ -56,13 +56,13 @@ const Blog = () => {
                                 <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-xs font-medium mb-3">
                                     {post.category}
                                 </span>
-                                <h3 className="font-display text-lg font-semibold text-primary-foreground mb-2 group-hover:text-accent transition-colors">
+                                <h3 className="font-display text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
                                     {post.title}
                                 </h3>
-                                <p className="text-primary-foreground/70 text-sm leading-relaxed mb-4">
+                                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                                     {post.excerpt}
                                 </p>
-                                <div className="flex items-center justify-between text-xs text-primary-foreground/50">
+                                <div className="flex items-center justify-between text-xs text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="w-4 h-4" />
                                         {post.date}
@@ -78,7 +78,7 @@ const Blog = () => {
                 </div>
 
                 <div className="text-center mt-12">
-                    <p className="text-primary-foreground/50 text-sm mb-4">
+                    <p className="text-muted-foreground text-sm mb-4">
                         Blog posts are coming soon! Follow me on LinkedIn for updates.
                     </p>
                     <Button

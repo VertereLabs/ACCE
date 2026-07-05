@@ -1,102 +1,124 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   ACCE Tutors — brand tokens (Stage 1 "fresh look")
+   Two-mode navy + gold system. Source of truth:
+   _bmad-output/planning-artifacts/ux-designs/ux-ACCE-2026-07-05/DESIGN.md
+   :root = Warm Scholar (LIGHT) · .dark = Deep Authority (DARK, default)
+   Fonts are wired via next/font in layout.tsx (--font-display / --font-body).
+   ============================================================ */
 @layer base {
   :root {
-    --background: 234 47% 8%;
-    --foreground: 40 33% 98%;
+    /* Warm Scholar — LIGHT */
+    --background: 40 38% 96%;
+    --foreground: 223 38% 18%;
 
-    --card: 234 40% 12%;
-    --card-foreground: 40 33% 98%;
+    --card: 40 44% 99%;
+    --card-foreground: 223 38% 18%;
 
-    --popover: 234 40% 12%;
-    --popover-foreground: 40 33% 98%;
+    --popover: 40 44% 99%;
+    --popover-foreground: 223 38% 18%;
 
-    --primary: 220 35% 25%;
-    --primary-foreground: 38 30% 96%;
+    --primary: 223 47% 26%;            /* brand navy */
+    --primary-foreground: 40 38% 97%;
 
-    --secondary: 234 30% 18%;
-    --secondary-foreground: 40 33% 98%;
+    --secondary: 40 34% 92%;
+    --secondary-foreground: 223 38% 18%;
 
-    --muted: 234 30% 18%;
-    --muted-foreground: 40 20% 70%;
+    --muted: 40 34% 92%;
+    --muted-foreground: 223 12% 44%;
 
-    --accent: 25 80% 45%;
-    --accent-foreground: 38 30% 98%;
-    --accent-text: 25 85% 35%;
+    --accent: 38 68% 48%;              /* warm brand gold (fills/buttons) */
+    --accent-foreground: 223 45% 12%;
 
-    --destructive: 0 65% 50%;
-    --destructive-foreground: 38 30% 96%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 40 38% 97%;
 
-    --border: 234 30% 20%;
-    --input: 234 30% 20%;
-    --ring: 40 33% 98%;
+    --border: 40 26% 88%;
+    --input: 40 26% 88%;
+    --ring: 38 68% 48%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    /* Custom tokens */
-    --gradient-hero: linear-gradient(135deg, hsl(220 35% 55%) 0%, hsl(240 25% 55%) 50%, hsl(25 70% 60%) 100%);
-    --gradient-text: linear-gradient(135deg, hsl(220 35% 25%) 0%, hsl(25 70% 55%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(234 40% 12%) 0%, hsl(234 30% 18%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(25 65% 38%) 0%, hsl(25 80% 45%) 100%);
-    
-    --shadow-soft: 0 4px 24px -4px hsl(220 30% 18% / 0.1);
-    --shadow-elevated: 0 12px 40px -12px hsl(220 30% 18% / 0.18);
-    --shadow-glow: 0 0 40px hsl(25 70% 55% / 0.2);
+    /* Non-native brand helpers (both modes) */
+    --accent-ink: 36 76% 33%;          /* readable gold for TEXT/ICONS on base */
+    --primary-ink: 223 47% 26%;        /* navy text tint (tags) */
+    --footer-bg: 223 44% 14%;          /* footer stays dark navy in BOTH modes */
+    --footer-fg: 40 38% 95%;
 
-    --font-display: 'Playfair Display', serif;
-    --font-body: 'DM Sans', sans-serif;
+    /* Brand gradients / shadows (navy + gold; no more burnt-orange) */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.06) 0%, hsl(var(--accent) / 0.06) 100%);
+    --gradient-text: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent-ink)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(41 62% 42%) 0%, hsl(var(--accent)) 100%);
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --shadow-soft: 0 4px 24px -6px hsl(223 47% 26% / 0.10);
+    --shadow-elevated: 0 18px 44px -24px hsl(38 60% 28% / 0.30);
+    --shadow-glow: 0 0 40px hsl(var(--accent) / 0.22);
+
+    /* --font-display / --font-body are provided by next/font (layout.tsx) */
+
+    /* Sidebar — unused in Stage 1 (off-brand); revisit in Stage 2 */
+    --sidebar-background: 40 38% 96%;
+    --sidebar-foreground: 223 38% 18%;
+    --sidebar-primary: 223 47% 26%;
+    --sidebar-primary-foreground: 40 38% 97%;
+    --sidebar-accent: 40 34% 92%;
+    --sidebar-accent-foreground: 223 38% 18%;
+    --sidebar-border: 40 26% 88%;
+    --sidebar-ring: 38 68% 48%;
   }
 
   .dark {
-    --background: 234 47% 8%;
-    --foreground: 40 33% 98%;
+    /* Deep Authority — DARK (default) */
+    --background: 223 45% 11%;
+    --foreground: 40 30% 96%;
 
-    --card: 234 40% 12%;
-    --card-foreground: 40 33% 98%;
+    --card: 223 40% 15%;
+    --card-foreground: 40 30% 96%;
 
-    --popover: 234 40% 12%;
-    --popover-foreground: 40 33% 98%;
+    --popover: 223 40% 15%;
+    --popover-foreground: 40 30% 96%;
 
-    --primary: 40 33% 98%;
-    --primary-foreground: 234 47% 14%;
+    --primary: 40 30% 96%;             /* light — for light-on-dark buttons */
+    --primary-foreground: 223 45% 12%;
 
-    --secondary: 234 30% 18%;
-    --secondary-foreground: 40 33% 98%;
+    --secondary: 223 40% 18%;
+    --secondary-foreground: 40 30% 96%;
 
-    --muted: 234 30% 18%;
-    --muted-foreground: 40 20% 70%;
+    --muted: 223 40% 14%;
+    --muted-foreground: 40 14% 70%;
 
-    --accent: 25 75% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 41 70% 55%;              /* distinction gold */
+    --accent-foreground: 223 45% 12%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 40 30% 96%;
 
-    --border: 234 30% 20%;
-    --input: 234 30% 20%;
-    --ring: 40 33% 98%;
+    --border: 223 30% 23%;
+    --input: 223 30% 23%;
+    --ring: 41 70% 55%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Helpers — dark values (footer does NOT invert) */
+    --accent-ink: 41 78% 63%;
+    --primary-ink: 40 30% 92%;
+    --footer-bg: 223 48% 8%;
+    --footer-fg: 40 30% 92%;
+
+    --shadow-soft: 0 4px 24px -4px hsl(0 0% 0% / 0.35);
+    --shadow-elevated: 0 24px 54px -22px hsl(0 0% 0% / 0.62);
+    --shadow-glow: 0 0 44px hsl(var(--accent) / 0.28);
+
+    --sidebar-background: 223 48% 8%;
+    --sidebar-foreground: 40 30% 92%;
+    --sidebar-primary: 40 30% 96%;
+    --sidebar-primary-foreground: 223 45% 12%;
+    --sidebar-accent: 223 40% 18%;
+    --sidebar-accent-foreground: 40 30% 96%;
+    --sidebar-border: 223 30% 23%;
+    --sidebar-ring: 41 70% 55%;
   }
 }
 
@@ -106,11 +128,10 @@
   }
 
   body {
-    background: var(--gradient-hero);
-    background-attachment: fixed;
+    background: hsl(var(--background));
     min-height: 100vh;
     font-family: var(--font-body);
-    @apply text-primary-foreground;
+    @apply text-foreground;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -127,6 +148,7 @@
     font-family: var(--font-body);
   }
 
+  /* Navy→gold gradient headline (dark: off-white→gold) */
   .gradient-text {
     background: var(--gradient-text);
     -webkit-background-clip: text;
@@ -142,28 +164,23 @@
     background: var(--gradient-accent);
   }
 
-  .text-primary-foreground\/40,
-  .text-primary-foreground\/50,
-  .text-primary-foreground\/60,
-  .text-primary-foreground\/70,
-  .text-primary-foreground\/80 {
-    color: hsl(var(--primary-foreground));
-  }
-
+  /* Gold text/icons — readable on the base (uses accent-ink, not raw accent) */
   .text-accent,
   .text-accent\/70,
   .text-accent\/80,
   .text-accent\/90 {
-    color: hsl(var(--accent-text));
+    color: hsl(var(--accent-ink));
   }
 
   .text-accent-light {
-    color: hsl(25 85% 65%);
+    color: hsl(var(--accent-ink));
   }
 
+  /* Gold pill on a navy-tinted field */
   .hero-tag {
-    background-color: hsl(220 35% 25% / 0.7);
-    color: hsl(25, 97%, 71%);
+    background-color: hsl(var(--primary) / 0.10);
+    color: hsl(var(--accent-ink));
+    border: 1px solid hsl(var(--accent) / 0.28);
   }
 
   .guides-shell .bg-primary {
@@ -236,5 +253,16 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* Honor reduced-motion (Accessibility Floor) */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-fade-up,
+  .animate-fade-up-delayed,
+  .animate-scale-in {
+    animation: none !important;
   }
 }

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function IFRS16Part2Page() {
     return (
-        <div className="min-h-screen bg-primary">
+        <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
@@ -24,7 +24,7 @@ export default function IFRS16Part2Page() {
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
                             href="/guides/ifrs-16/"
-                            className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to IFRS 16
@@ -38,7 +38,7 @@ export default function IFRS16Part2Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
-                            <div className="text-primary-foreground/40 text-sm">
+                            <div className="text-muted-foreground text-sm">
                                 Part 2 of 5
                             </div>
                         </div>
@@ -51,10 +51,10 @@ export default function IFRS16Part2Page() {
                             <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm font-medium mb-4">
                                 Part 2: Day One Accounting
                             </span>
-                            <h1 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+                            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
                                 Lessee Initial Measurement
                             </h1>
-                            <p className="text-primary-foreground/60 text-lg leading-relaxed">
+                            <p className="text-muted-foreground text-lg leading-relaxed">
                                 On the commencement date, the lessee must recognize both an asset and a liability. Getting the numbers right on Day 1 is crucial for everything that follows.
                             </p>
                         </header>
@@ -63,16 +63,16 @@ export default function IFRS16Part2Page() {
                         <div className="prose prose-invert max-w-none">
                             {/* Section 1: Lease Liability */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">1</span>
                                     1. Initial Lease Liability
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
-                                    The lease liability is measured at the <strong className="text-primary-foreground">Present Value (PV)</strong> of the lease payments that are not paid at the commencement date.
+                                <p className="text-muted-foreground leading-relaxed mb-6">
+                                    The lease liability is measured at the <strong className="text-foreground">Present Value (PV)</strong> of the lease payments that are not paid at the commencement date.
                                 </p>
 
-                                <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8">
-                                    <h4 className="font-bold text-primary-foreground mb-4 text-xs uppercase tracking-widest text-accent">What is a &quot;Lease Payment&quot;?</h4>
+                                <div className="bg-card border border-border rounded-xl p-6 mb-8">
+                                    <h4 className="font-bold text-foreground mb-4 text-xs uppercase tracking-widest text-accent">What is a &quot;Lease Payment&quot;?</h4>
                                     <ul className="space-y-3 p-0 m-0 list-none">
                                         {[
                                             { title: "Fixed Payments", detail: "Minus any lease incentives receivable." },
@@ -83,7 +83,7 @@ export default function IFRS16Part2Page() {
                                         ].map((item, i) => (
                                             <li key={i} className="flex gap-3 text-sm">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />
-                                                <p className="m-0"><strong className="text-primary-foreground">{item.title}:</strong> <span className="text-primary-foreground/60">{item.detail}</span></p>
+                                                <p className="m-0"><strong className="text-foreground">{item.title}:</strong> <span className="text-muted-foreground">{item.detail}</span></p>
                                             </li>
                                         ))}
                                     </ul>
@@ -92,75 +92,75 @@ export default function IFRS16Part2Page() {
 
                             {/* Section 2: Discount Rate */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">2</span>
                                     2. Choosing the Discount Rate
                                 </h2>
                                 <div className="grid md:grid-cols-2 gap-6">
-                                    <div className="p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors cursor-default">
+                                    <div className="p-6 bg-card border border-border rounded-xl hover:bg-muted transition-colors cursor-default">
                                         <div className="flex items-center gap-2 mb-4">
                                             <Landmark className="w-5 h-5 text-accent" />
-                                            <h4 className="font-bold text-primary-foreground m-0 text-sm uppercase">Implicit Rate</h4>
+                                            <h4 className="font-bold text-foreground m-0 text-sm uppercase">Implicit Rate</h4>
                                         </div>
-                                        <p className="text-xs text-primary-foreground/60 leading-relaxed m-0 italic">
+                                        <p className="text-xs text-muted-foreground leading-relaxed m-0 italic">
                                             The rate that causes the PV of (lease payments + unguaranteed residual value) to equal the Fair Value of the asset + direct costs.
                                         </p>
                                         <div className="mt-4 p-2 bg-accent/10 rounded text-[10px] text-accent font-bold text-center">FIRST CHOICE</div>
                                     </div>
-                                    <div className="p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors cursor-default">
+                                    <div className="p-6 bg-card border border-border rounded-xl hover:bg-muted transition-colors cursor-default">
                                         <div className="flex items-center gap-2 mb-4">
                                             <Calculator className="w-5 h-5 text-accent" />
-                                            <h4 className="font-bold text-primary-foreground m-0 text-sm uppercase">Incremental Borrowing Rate (IBR)</h4>
+                                            <h4 className="font-bold text-foreground m-0 text-sm uppercase">Incremental Borrowing Rate (IBR)</h4>
                                         </div>
-                                        <p className="text-xs text-primary-foreground/60 leading-relaxed m-0 italic">
+                                        <p className="text-xs text-muted-foreground leading-relaxed m-0 italic">
                                             The rate the lessee would have to pay to borrow (over a similar term, and with similar security) the funds necessary to obtain an asset of similar value.
                                         </p>
-                                        <div className="mt-4 p-2 bg-white/5 border border-white/10 rounded text-[10px] text-primary-foreground/40 font-bold text-center uppercase tracking-widest">USE IF IMPLICIT UNKNOWN</div>
+                                        <div className="mt-4 p-2 bg-muted border border-border rounded text-[10px] text-muted-foreground font-bold text-center uppercase tracking-widest">USE IF IMPLICIT UNKNOWN</div>
                                     </div>
                                 </div>
                             </section>
 
                             {/* Section 3: ROU Asset Calculation */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent text-primary flex items-center justify-center text-sm font-bold">3</span>
                                     3. Right-of-Use (ROU) Asset
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
+                                <p className="text-muted-foreground leading-relaxed mb-6">
                                     The ROU asset is NOT always equal to the lease liability. It consists of more components:
                                 </p>
 
-                                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-2xl mx-auto shadow-xl">
+                                <div className="bg-card border border-border rounded-2xl p-8 max-w-2xl mx-auto shadow-xl">
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between font-mono text-sm underline decoration-accent/30 underline-offset-4 decoration-2">
-                                            <span className="text-primary-foreground/60">Initial Lease Liability</span>
-                                            <span className="text-primary-foreground">X</span>
+                                            <span className="text-muted-foreground">Initial Lease Liability</span>
+                                            <span className="text-foreground">X</span>
                                         </div>
                                         <div className="flex items-center justify-between font-mono text-sm">
                                             <div className="flex items-center gap-2">
                                                 <Plus className="w-3 h-3 text-accent" />
-                                                <span className="text-primary-foreground/60">Payments at/before commencement</span>
+                                                <span className="text-muted-foreground">Payments at/before commencement</span>
                                             </div>
-                                            <span className="text-primary-foreground">X</span>
+                                            <span className="text-foreground">X</span>
                                         </div>
                                         <div className="flex items-center justify-between font-mono text-sm">
                                             <div className="flex items-center gap-2">
                                                 <Plus className="w-3 h-3 text-accent" />
-                                                <p className="text-primary-foreground/60 m-0">Lessee&apos;s Initial Direct Costs</p>
+                                                <p className="text-muted-foreground m-0">Lessee&apos;s Initial Direct Costs</p>
                                             </div>
-                                            <span className="text-primary-foreground">X</span>
+                                            <span className="text-foreground">X</span>
                                         </div>
-                                        <div className="flex items-center justify-between font-mono text-sm border-b border-white/20 pb-4">
+                                        <div className="flex items-center justify-between font-mono text-sm border-b border-border pb-4">
                                             <div className="flex items-center gap-2">
                                                 <Plus className="w-3 h-3 text-accent" />
-                                                <span className="text-primary-foreground/60">Decommissioning / Removal Costs (IAS 37)</span>
+                                                <span className="text-muted-foreground">Decommissioning / Removal Costs (IAS 37)</span>
                                             </div>
-                                            <span className="text-primary-foreground">X</span>
+                                            <span className="text-foreground">X</span>
                                         </div>
                                         <div className="flex items-center justify-between font-mono text-lg pt-4">
                                             <div className="flex items-center gap-2 font-display font-bold">
                                                 <Equal className="w-4 h-4 text-accent" />
-                                                <span className="text-primary-foreground">INITIAL ROU ASSET</span>
+                                                <span className="text-foreground">INITIAL ROU ASSET</span>
                                             </div>
                                             <span className="text-accent font-bold underline decoration-accent decoration-2 underline-offset-8">TOTAL</span>
                                         </div>
@@ -169,13 +169,13 @@ export default function IFRS16Part2Page() {
                             </section>
 
                             <section className="mb-12">
-                                <div className="bg-white/5 border border-white/10 rounded-xl p-8">
+                                <div className="bg-card border border-border rounded-xl p-8">
                                     <div className="flex gap-4">
                                         <Lightbulb className="w-8 h-8 text-accent flex-shrink-0" />
                                         <div>
-                                            <h3 className="font-display text-xl font-bold text-primary-foreground mb-2">Exam Hack: The Timeline</h3>
-                                            <p className="text-sm text-primary-foreground/80 m-0 leading-relaxed italic">
-                                                Always draw a timeline for lease questions. Distinguish between payments made <strong className="text-primary-foreground uppercase underline decoration-accent underline-offset-4 decoration-2">At Commencement</strong> (Only ROU, not Liability) and <strong className="text-primary-foreground uppercase underline decoration-accent underline-offset-4 decoration-2">After Commencement</strong> (Both).
+                                            <h3 className="font-display text-xl font-bold text-foreground mb-2">Exam Hack: The Timeline</h3>
+                                            <p className="text-sm text-muted-foreground m-0 leading-relaxed italic">
+                                                Always draw a timeline for lease questions. Distinguish between payments made <strong className="text-foreground uppercase underline decoration-accent underline-offset-4 decoration-2">At Commencement</strong> (Only ROU, not Liability) and <strong className="text-foreground uppercase underline decoration-accent underline-offset-4 decoration-2">After Commencement</strong> (Both).
                                             </p>
                                         </div>
                                     </div>
@@ -184,8 +184,8 @@ export default function IFRS16Part2Page() {
                         </div>
 
                         {/* Navigation */}
-                        <div className="flex items-center justify-between pt-8 border-t border-white/10">
-                            <Button asChild variant="ghost" className="text-primary-foreground/60 hover:text-primary-foreground transition-all">
+                        <div className="flex items-center justify-between pt-8 border-t border-border">
+                            <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground transition-all">
                                 <Link href="/guides/ifrs-16/part-1">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Part 1: Key Changes
@@ -202,11 +202,11 @@ export default function IFRS16Part2Page() {
 
                     {/* CTA */}
                     <div className="max-w-4xl mt-16">
-                        <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center">
-                            <h3 className="font-display text-xl font-bold text-primary-foreground mb-3 font-display">
+                        <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-8 text-center">
+                            <h3 className="font-display text-xl font-bold text-foreground mb-3 font-display">
                                 Stuck on Discount Rates or PV?
                             </h3>
-                            <p className="text-primary-foreground/70 mb-6 max-w-lg mx-auto leading-relaxed">
+                            <p className="text-muted-foreground mb-6 max-w-lg mx-auto leading-relaxed">
                                 Don&apos;t let the math distract you from the logic. We can help you build a spreadsheet model or master the calculator steps for your exam.
                             </p>
                             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-10 h-12">

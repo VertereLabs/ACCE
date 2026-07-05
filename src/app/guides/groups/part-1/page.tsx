@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function GroupsPart1Page() {
     return (
-        <div className="min-h-screen bg-primary">
+        <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
@@ -24,7 +24,7 @@ export default function GroupsPart1Page() {
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
                             href="/guides/groups/"
-                            className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to Guide
@@ -38,7 +38,7 @@ export default function GroupsPart1Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
-                            <div className="text-primary-foreground/40 text-sm">
+                            <div className="text-muted-foreground text-sm">
                                 Part 1 of 7
                             </div>
                         </div>
@@ -51,10 +51,10 @@ export default function GroupsPart1Page() {
                             <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                                 Part 1
                             </span>
-                            <h1 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+                            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
                                 Foundations of Group Financial Reporting
                             </h1>
-                            <p className="text-primary-foreground/60 text-lg">
+                            <p className="text-muted-foreground text-lg">
                                 45 min read • Last updated January 2026
                             </p>
                         </header>
@@ -62,33 +62,33 @@ export default function GroupsPart1Page() {
                         {/* Content */}
                         <div className="prose prose-invert max-w-none">
                             {/* Introduction */}
-                            <div className="bg-white/5 rounded-2xl border border-white/10 p-8 mb-10">
-                                <p className="text-primary-foreground/80 text-lg leading-relaxed m-0">
+                            <div className="bg-card rounded-2xl border border-border p-8 mb-10">
+                                <p className="text-muted-foreground text-lg leading-relaxed m-0">
                                     Let&apos;s talk about Group Financial Accounting… Daunting, right? From FCTRs to changes in degrees of influence to eliminating pro formas — where do you even begin? This part covers the essential foundations you need before diving into the mechanics.
                                 </p>
                             </div>
 
                             {/* Section 1 */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">1</span>
                                     Know Your Starting Point
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
+                                <p className="text-muted-foreground leading-relaxed mb-6">
                                     Before doing any consolidation work, ask yourself the fundamental question:
                                 </p>
 
                                 {/* Decision Tree */}
-                                <div className="bg-white/5 rounded-xl border border-white/10 p-6 mb-6">
-                                    <h3 className="font-display text-lg font-semibold text-primary-foreground mb-4">
+                                <div className="bg-card rounded-xl border border-border p-6 mb-6">
+                                    <h3 className="font-display text-lg font-semibold text-foreground mb-4">
                                         The Control Question
                                     </h3>
                                     <div className="space-y-4">
                                         <div className="flex items-start gap-4">
                                             <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-1" />
-                                            <p className="text-primary-foreground/80 m-0">
-                                                <strong className="text-primary-foreground">Am I acquiring a subsidiary or an associate?</strong><br />
-                                                <span className="text-primary-foreground/60">Does the parent have control?</span>
+                                            <p className="text-muted-foreground m-0">
+                                                <strong className="text-foreground">Am I acquiring a subsidiary or an associate?</strong><br />
+                                                <span className="text-muted-foreground">Does the parent have control?</span>
                                             </p>
                                         </div>
 
@@ -98,7 +98,7 @@ export default function GroupsPart1Page() {
                                                     <CheckCircle2 className="w-4 h-4" />
                                                     Yes → Control
                                                 </div>
-                                                <p className="text-primary-foreground/70 text-sm m-0">
+                                                <p className="text-muted-foreground text-sm m-0">
                                                     <strong>Consolidate</strong> (Subsidiary)<br />
                                                     Apply IFRS 10 consolidation procedures
                                                 </p>
@@ -108,7 +108,7 @@ export default function GroupsPart1Page() {
                                                     <AlertCircle className="w-4 h-4" />
                                                     No → Significant Influence
                                                 </div>
-                                                <p className="text-primary-foreground/70 text-sm m-0">
+                                                <p className="text-muted-foreground text-sm m-0">
                                                     <strong>Equity Account</strong> (Associate)<br />
                                                     Apply IAS 28 equity method
                                                 </p>
@@ -117,14 +117,14 @@ export default function GroupsPart1Page() {
                                     </div>
                                 </div>
 
-                                <p className="text-primary-foreground/80 leading-relaxed">
+                                <p className="text-muted-foreground leading-relaxed">
                                     This decision is crucial because it determines the entire accounting approach. Get this wrong, and everything that follows will be incorrect.
                                 </p>
                             </section>
 
                             {/* Section 2 */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">2</span>
                                     Master the Analysis of Equity (AOE)
                                 </h2>
@@ -134,16 +134,16 @@ export default function GroupsPart1Page() {
                                     <div className="flex items-start gap-4">
                                         <Lightbulb className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
                                         <div>
-                                            <h4 className="font-display font-semibold text-primary-foreground mb-1">Pro Tip</h4>
-                                            <p className="text-primary-foreground/80 text-sm m-0">
+                                            <h4 className="font-display font-semibold text-foreground mb-1">Pro Tip</h4>
+                                            <p className="text-muted-foreground text-sm m-0">
                                                 Work in the 100% column first, then multiply out to NCI or parent as needed. This reduces calculation errors significantly.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
-                                    This is the <strong className="text-primary-foreground">heart of group accounting</strong> — your journals flow from here. Understanding the structure of an AOE is essential.
+                                <p className="text-muted-foreground leading-relaxed mb-6">
+                                    This is the <strong className="text-foreground">heart of group accounting</strong> — your journals flow from here. Understanding the structure of an AOE is essential.
                                 </p>
 
                                 {/* AOE Structure */}
@@ -154,41 +154,41 @@ export default function GroupsPart1Page() {
                                             🔵 At Acquisition
                                         </h3>
                                         <ul className="space-y-3 m-0 p-0 list-none">
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 flex-shrink-0"></span>
                                                 Eliminate the subsidiary&apos;s equity balances
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 flex-shrink-0"></span>
                                                 Process fair value adjustments on assets and liabilities
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 flex-shrink-0"></span>
                                                 Apply deferred tax
                                             </li>
                                         </ul>
 
                                         {/* Tax Rates Table */}
-                                        <div className="mt-4 bg-white/5 rounded-lg p-4">
-                                            <h4 className="text-primary-foreground font-medium mb-3 text-sm">Tax Rates:</h4>
+                                        <div className="mt-4 bg-card rounded-lg p-4">
+                                            <h4 className="text-foreground font-medium mb-3 text-sm">Tax Rates:</h4>
                                             <div className="grid md:grid-cols-2 gap-3 text-sm">
                                                 <div className="flex justify-between">
-                                                    <span className="text-primary-foreground/60">Normal tax rate:</span>
-                                                    <span className="text-primary-foreground font-mono">27%</span>
+                                                    <span className="text-muted-foreground">Normal tax rate:</span>
+                                                    <span className="text-foreground font-mono">27%</span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-primary-foreground/60">CGT inclusion (assets recovered through sale):</span>
-                                                    <span className="text-primary-foreground font-mono">27% × 80% = 21.6%</span>
+                                                    <span className="text-muted-foreground">CGT inclusion (assets recovered through sale):</span>
+                                                    <span className="text-foreground font-mono">27% × 80% = 21.6%</span>
                                                 </div>
                                             </div>
-                                            <p className="text-primary-foreground/50 text-xs mt-3 m-0">
+                                            <p className="text-muted-foreground text-xs mt-3 m-0">
                                                 Note: 21.6% is the exact figure; many students use 21.3% from lecture material.
                                             </p>
                                         </div>
 
-                                        <div className="mt-4 p-4 bg-white/5 rounded-lg">
-                                            <h4 className="text-primary-foreground font-medium mb-2 text-sm">Assets usually recovered through sale include:</h4>
-                                            <ul className="text-primary-foreground/70 text-sm space-y-1 m-0 p-0 list-none">
+                                        <div className="mt-4 p-4 bg-card rounded-lg">
+                                            <h4 className="text-foreground font-medium mb-2 text-sm">Assets usually recovered through sale include:</h4>
+                                            <ul className="text-muted-foreground text-sm space-y-1 m-0 p-0 list-none">
                                                 <li>• Land</li>
                                                 <li>• Investment property (usually measured through fair value model)</li>
                                             </ul>
@@ -200,27 +200,27 @@ export default function GroupsPart1Page() {
                                         <h3 className="font-display text-lg font-semibold text-accent mb-4">
                                             🟡 Since Acquisition (Pre-current year)
                                         </h3>
-                                        <p className="text-primary-foreground/80 mb-4">
+                                        <p className="text-muted-foreground mb-4">
                                             Process all movements after acquisition:
                                         </p>
                                         <ul className="space-y-3 m-0 p-0 list-none">
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
                                                 Depreciation/amortisation on FV adjustments
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
                                                 Deferred tax movements
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
                                                 Prior year profits
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
                                                 Impairments if applicable
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
                                                 Dividends declared/paid
                                             </li>
@@ -233,19 +233,19 @@ export default function GroupsPart1Page() {
                                             🟢 Current Year
                                         </h3>
                                         <ul className="space-y-3 m-0 p-0 list-none">
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 mt-2 flex-shrink-0"></span>
                                                 Current-year profit
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 mt-2 flex-shrink-0"></span>
                                                 Current-year effects of fair value adjustments
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 mt-2 flex-shrink-0"></span>
                                                 Updated deferred tax
                                             </li>
-                                            <li className="flex items-start gap-3 text-primary-foreground/80">
+                                            <li className="flex items-start gap-3 text-muted-foreground">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 mt-2 flex-shrink-0"></span>
                                                 Any FV adjustments on financial instruments or investment property
                                             </li>
@@ -256,53 +256,53 @@ export default function GroupsPart1Page() {
 
                             {/* Section 3 */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">3</span>
                                     Know Your Group Statements
                                 </h2>
 
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
+                                <p className="text-muted-foreground leading-relaxed mb-6">
                                     Understanding where figures flow from in your AOE and journals is crucial. You should be comfortable drafting:
                                 </p>
 
                                 <div className="grid md:grid-cols-2 gap-4 mb-6">
-                                    <div className="bg-white/5 rounded-lg border border-white/10 p-4">
-                                        <h4 className="text-primary-foreground font-semibold mb-3">Primary Statements</h4>
+                                    <div className="bg-card rounded-lg border border-border p-4">
+                                        <h4 className="text-foreground font-semibold mb-3">Primary Statements</h4>
                                         <ul className="space-y-2 m-0 p-0 list-none text-sm">
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 Group Statement of Financial Position
                                             </li>
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 Group Income Statement
                                             </li>
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 Group Statement of Changes in Equity
                                             </li>
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 Group Statement of Cash Flows
                                             </li>
                                         </ul>
                                     </div>
-                                    <div className="bg-white/5 rounded-lg border border-white/10 p-4">
-                                        <h4 className="text-primary-foreground font-semibold mb-3">Key Calculations</h4>
+                                    <div className="bg-card rounded-lg border border-border p-4">
+                                        <h4 className="text-foreground font-semibold mb-3">Key Calculations</h4>
                                         <ul className="space-y-2 m-0 p-0 list-none text-sm">
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 Group Profit After Tax (GPAT)
                                             </li>
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 Notes to the financial statements
                                             </li>
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 NCI calculations
                                             </li>
-                                            <li className="flex items-center gap-2 text-primary-foreground/70">
+                                            <li className="flex items-center gap-2 text-muted-foreground">
                                                 <CheckCircle2 className="w-4 h-4 text-accent" />
                                                 Goodwill reconciliation
                                             </li>
@@ -313,8 +313,8 @@ export default function GroupsPart1Page() {
                                 <div className="bg-accent/10 border border-accent/30 rounded-xl p-6">
                                     <div className="flex items-start gap-4">
                                         <Lightbulb className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
-                                        <p className="text-primary-foreground/80 m-0">
-                                            <strong className="text-primary-foreground">Key Insight:</strong> If you know the source of every number, consolidation becomes logical and not intimidating. Always trace back to your AOE.
+                                        <p className="text-muted-foreground m-0">
+                                            <strong className="text-foreground">Key Insight:</strong> If you know the source of every number, consolidation becomes logical and not intimidating. Always trace back to your AOE.
                                         </p>
                                     </div>
                                 </div>
@@ -322,33 +322,33 @@ export default function GroupsPart1Page() {
 
                             {/* Summary */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6">
                                     Key Takeaways
                                 </h2>
-                                <div className="bg-white/5 rounded-xl border border-white/10 p-6">
+                                <div className="bg-card rounded-xl border border-border p-6">
                                     <ul className="space-y-4 m-0 p-0 list-none">
                                         <li className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                                            <span className="text-primary-foreground/80">
-                                                <strong className="text-primary-foreground">Control = Consolidate:</strong> Always start by determining whether you have control (subsidiary) or significant influence (associate).
+                                            <span className="text-muted-foreground">
+                                                <strong className="text-foreground">Control = Consolidate:</strong> Always start by determining whether you have control (subsidiary) or significant influence (associate).
                                             </span>
                                         </li>
                                         <li className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                                            <span className="text-primary-foreground/80">
-                                                <strong className="text-primary-foreground">AOE is king:</strong> The Analysis of Equity is the foundation of all group accounting journals.
+                                            <span className="text-muted-foreground">
+                                                <strong className="text-foreground">AOE is king:</strong> The Analysis of Equity is the foundation of all group accounting journals.
                                             </span>
                                         </li>
                                         <li className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                                            <span className="text-primary-foreground/80">
-                                                <strong className="text-primary-foreground">Work in 100%:</strong> Always calculate in the 100% column first, then allocate to NCI and parent.
+                                            <span className="text-muted-foreground">
+                                                <strong className="text-foreground">Work in 100%:</strong> Always calculate in the 100% column first, then allocate to NCI and parent.
                                             </span>
                                         </li>
                                         <li className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                                            <span className="text-primary-foreground/80">
-                                                <strong className="text-primary-foreground">Know your tax rates:</strong> 27% normal rate, 21.6% for CGT assets.
+                                            <span className="text-muted-foreground">
+                                                <strong className="text-foreground">Know your tax rates:</strong> 27% normal rate, 21.6% for CGT assets.
                                             </span>
                                         </li>
                                     </ul>
@@ -357,18 +357,18 @@ export default function GroupsPart1Page() {
 
                             {/* Coming Next */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-4">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-4">
                                     Coming in Part 2...
                                 </h2>
-                                <p className="text-primary-foreground/70 mb-6">
-                                    We&apos;ll dive deep into <strong className="text-primary-foreground">IFRS 3: The Acquisition Method</strong> — covering how to identify the acquirer, determine the acquisition date, measure identifiable assets, calculate goodwill, and handle contingent consideration.
+                                <p className="text-muted-foreground mb-6">
+                                    We&apos;ll dive deep into <strong className="text-foreground">IFRS 3: The Acquisition Method</strong> — covering how to identify the acquirer, determine the acquisition date, measure identifiable assets, calculate goodwill, and handle contingent consideration.
                                 </p>
                             </section>
                         </div>
 
                         {/* Navigation */}
-                        <div className="flex items-center justify-between pt-8 border-t border-white/10">
-                            <Button asChild variant="ghost" className="text-primary-foreground/60 hover:text-primary-foreground">
+                        <div className="flex items-center justify-between pt-8 border-t border-border">
+                            <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground">
                                 <Link href="/guides/groups">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Back to Guide
@@ -385,11 +385,11 @@ export default function GroupsPart1Page() {
 
                     {/* CTA */}
                     <div className="max-w-4xl mt-16">
-                        <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center">
-                            <h3 className="font-display text-xl font-bold text-primary-foreground mb-3">
+                        <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-8 text-center">
+                            <h3 className="font-display text-xl font-bold text-foreground mb-3">
                                 Need Help with Groups?
                             </h3>
-                            <p className="text-primary-foreground/70 mb-6">
+                            <p className="text-muted-foreground mb-6">
                                 If you&apos;re struggling with PGDA or your BCom Accounting degree and need guidance, support, or structure — book a session with Priyanka.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -398,7 +398,7 @@ export default function GroupsPart1Page() {
                                         WhatsApp: 071 325 5295
                                     </a>
                                 </Button>
-                                <Button asChild variant="outline" className="border-white/20 text-primary-foreground hover:bg-white/10">
+                                <Button asChild variant="outline" className="border-border text-foreground hover:bg-muted">
                                     <a href="mailto:priyankamikaya21@gmail.com">
                                         priyankamikaya21@gmail.com
                                     </a>

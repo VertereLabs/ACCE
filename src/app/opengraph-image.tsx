@@ -18,12 +18,13 @@ export default function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "linear-gradient(135deg, #0f172a 0%, #111827 100%)",
-          color: "#f8fafc",
+          background: "linear-gradient(135deg, #002251 0%, #001a3d 100%)",
+          color: "#f5ecd9",
         }}
       >
+        <div style={{ width: 80, height: 6, background: "#cb8a00", marginBottom: 32 }} />
         <div style={{ fontSize: 72, fontWeight: 700, marginBottom: 16 }}>ACCE Tutors</div>
-        <div style={{ fontSize: 32, color: "#cbd5f5" }}>
+        <div style={{ fontSize: 32, color: "#d8c9a8" }}>
           Expert CA(SA) &amp; CTA tutoring for undergraduate and PGDA students.
         </div>
       </div>

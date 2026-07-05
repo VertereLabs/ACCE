@@ -59,14 +59,14 @@ const parts = [
 
 export default function IFRS15GuidePage() {
     return (
-        <div className="min-h-screen bg-primary">
+        <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     {/* Back Link */}
                     <Link
                         href="/guides/"
-                        className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors mb-8"
+                        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         All Guides
@@ -78,46 +78,46 @@ export default function IFRS15GuidePage() {
                             <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium">
                                 Intermediate
                             </span>
-                            <span className="px-3 py-1 rounded-full bg-white/10 text-primary-foreground/70 text-sm">
+                            <span className="px-3 py-1 rounded-full bg-card text-muted-foreground text-sm">
                                 5 Parts
                             </span>
                         </div>
-                        <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
+                        <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
                             IFRS 15: Revenue from Contracts with Customers
                         </h1>
-                        <p className="text-primary-foreground/70 text-lg leading-relaxed mb-8">
+                        <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             IFRS 15 establishes a comprehensive framework for revenue recognition, replacing IAS 18 and IAS 11. The five-step model is the heart of this standard — master it and you&apos;ll unlock consistent revenue recognition across any scenario.
                         </p>
 
                         {/* Progress Stats */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
                                     <BookOpen className="w-4 h-4" />
                                     <span className="font-semibold">{parts.length}</span>
                                 </div>
-                                <span className="text-primary-foreground/60 text-sm">Parts</span>
+                                <span className="text-muted-foreground text-sm">Parts</span>
                             </div>
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
                                     <Clock className="w-4 h-4" />
                                     <span className="font-semibold">4+ hrs</span>
                                 </div>
-                                <span className="text-primary-foreground/60 text-sm">Total Time</span>
+                                <span className="text-muted-foreground text-sm">Total Time</span>
                             </div>
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
                                     <Target className="w-4 h-4" />
                                     <span className="font-semibold">{parts.filter(p => p.status === "available").length}/{parts.length}</span>
                                 </div>
-                                <span className="text-primary-foreground/60 text-sm">Available</span>
+                                <span className="text-muted-foreground text-sm">Available</span>
                             </div>
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
                                     <Receipt className="w-4 h-4" />
                                     <span className="font-semibold">5</span>
                                 </div>
-                                <span className="text-primary-foreground/60 text-sm">Steps Model</span>
+                                <span className="text-muted-foreground text-sm">Steps Model</span>
                             </div>
                         </div>
 
@@ -125,10 +125,10 @@ export default function IFRS15GuidePage() {
                         <div className="mt-8 bg-gradient-to-r from-accent/20 to-accent/5 rounded-xl p-6 border border-accent/30">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div>
-                                    <h2 className="font-display text-lg font-semibold text-primary-foreground mb-1">
+                                    <h2 className="font-display text-lg font-semibold text-foreground mb-1">
                                         Download Complete Guide
                                     </h2>
-                                    <p className="text-primary-foreground/60 text-sm">
+                                    <p className="text-muted-foreground text-sm">
                                         Get the full 9-part guide with detailed examples, worked solutions, and exam tips (PDF, 155KB)
                                     </p>
                                 </div>
@@ -144,27 +144,27 @@ export default function IFRS15GuidePage() {
 
                     {/* Preview of Parts */}
                     <div className="max-w-4xl">
-                        <h2 className="font-display text-2xl font-semibold text-primary-foreground mb-8">
+                        <h2 className="font-display text-2xl font-semibold text-foreground mb-8">
                             Course Content
                         </h2>
                         <div className="space-y-4">
                             {parts.map((part) => (
                                 <div
                                     key={part.id}
-                                    className={`group bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 transition-all duration-300 ${part.status === "available" ? "hover:bg-white/10 cursor-pointer" : "opacity-60"
+                                    className={`group bg-card backdrop-blur-md rounded-xl border border-border p-6 transition-all duration-300 ${part.status === "available" ? "hover:bg-muted cursor-pointer" : "opacity-60"
                                         }`}
                                 >
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${part.status === "available"
                                                 ? "bg-accent/20 text-accent"
-                                                : "bg-white/10 text-primary-foreground/50"
+                                                : "bg-card text-muted-foreground"
                                                 }`}>
                                                 {part.id}
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-3 mb-1">
-                                                    <h3 className="font-display text-lg font-semibold text-primary-foreground">
+                                                    <h3 className="font-display text-lg font-semibold text-foreground">
                                                         {part.title}
                                                     </h3>
                                                     {part.status === "coming-soon" && (
@@ -173,14 +173,14 @@ export default function IFRS15GuidePage() {
                                                         </span>
                                                     )}
                                                 </div>
-                                                <p className="text-primary-foreground/60 text-sm mb-3">
+                                                <p className="text-muted-foreground text-sm mb-3">
                                                     {part.description}
                                                 </p>
                                                 <div className="flex flex-wrap gap-2">
                                                     {part.topics.map((topic) => (
                                                         <span
                                                             key={topic}
-                                                            className="px-2 py-1 rounded-full bg-white/5 text-primary-foreground/50 text-xs"
+                                                            className="px-2 py-1 rounded-full bg-muted text-muted-foreground text-xs"
                                                         >
                                                             {topic}
                                                         </span>
@@ -189,7 +189,7 @@ export default function IFRS15GuidePage() {
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-end gap-2">
-                                            <span className="text-primary-foreground/40 text-sm">{part.duration}</span>
+                                            <span className="text-muted-foreground text-sm">{part.duration}</span>
                                             {part.status === "available" && (
                                                 <Button asChild size="sm" variant="ghost" className="text-accent hover:text-accent hover:bg-accent/10">
                                                     <Link href={`/guides/ifrs-15/part-${part.id}`}>
@@ -208,10 +208,10 @@ export default function IFRS15GuidePage() {
                     {/* CTA Section */}
                     <div className="max-w-4xl mt-16">
                         <div className="bg-accent/10 border border-accent/30 rounded-2xl p-8 text-center">
-                            <h3 className="font-display text-xl font-bold text-primary-foreground mb-3">
+                            <h3 className="font-display text-xl font-bold text-foreground mb-3">
                                 Need Extra Support with IFRS 15?
                             </h3>
-                            <p className="text-primary-foreground/70 mb-6 max-w-lg mx-auto">
+                            <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 While these guides cover everything you need for the exams, some topics are tricky. Book a session with Priyanka for personalized guidance.
                             </p>
                             <Button asChild variant="hero">

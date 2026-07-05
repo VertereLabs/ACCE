@@ -9,7 +9,7 @@ const Hero = () => {
         <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0 -z-10">
-                <div className="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float" />
+                <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-float" />
                 <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float-delayed" />
             </div>
 
@@ -17,20 +17,20 @@ const Hero = () => {
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                     {/* Content */}
                     <div className="animate-fade-up">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted border border-border mb-6">
                             <Sparkles className="w-4 h-4 text-accent" />
-                            <span className="text-sm font-medium text-primary-foreground/80">
+                            <span className="text-sm font-medium text-muted-foreground">
                                 PGDA & BCom Accounting Tutoring
                             </span>
                         </div>
 
-                        <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-primary-foreground">
+                        <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-foreground">
                             Your Path to{" "}
                             <span className="text-accent-light">CA(SA)</span>
                             {" "}Success
                         </h1>
 
-                        <p className="text-xl text-primary-foreground mb-8 max-w-lg leading-relaxed">
+                        <p className="text-xl text-foreground mb-8 max-w-lg leading-relaxed">
                             Using my journey to encourage and mentor others through a challenging but rewarding journey. Expert guidance in Financial Accounting, Taxation, Management Accounting & Auditing.
                         </p>
 
@@ -48,7 +48,6 @@ const Hero = () => {
                             <Button
                                 variant="outline"
                                 size="lg"
-                                className="border-white/30 text-primary-foreground hover:bg-white/10 bg-transparent"
                                 asChild
                             >
                                 <a href="#services">
@@ -62,7 +61,7 @@ const Hero = () => {
                     <div className="relative animate-fade-up-delayed hidden lg:block">
                         <div className="relative">
                             {/* Main Card */}
-                            <div className="bg-primary/35 backdrop-blur-md rounded-3xl p-8 border border-primary/40 shadow-elevated">
+                            <div className="bg-card rounded-3xl p-8 border border-border shadow-elevated">
                                 <div className="flex items-center gap-6 mb-6">
                                     <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-accent/30">
                                         <Image
@@ -75,11 +74,11 @@ const Hero = () => {
                                         />
                                     </div>
                                     <div>
-                                        <h3 className="font-display text-xl font-semibold text-primary-foreground">Priyanka Govender</h3>
-                                        <p className="text-sm text-primary-foreground/60">PGDA Graduate | ACCE Tutors Founder</p>
+                                        <h3 className="font-display text-xl font-semibold text-foreground">Priyanka Govender</h3>
+                                        <p className="text-sm text-muted-foreground">PGDA Graduate | ACCE Tutors Founder</p>
                                     </div>
                                 </div>
-                                <blockquote className="text-primary-foreground/80 italic leading-relaxed border-l-2 border-accent pl-4">
+                                <blockquote className="text-muted-foreground italic leading-relaxed border-l-2 border-accent pl-4">
                                     &quot;I am living proof that anything is possible. Short-term sacrifices do pay off in the long term.&quot;
                                 </blockquote>
                                 <div className="mt-6 flex flex-wrap gap-2">
@@ -91,14 +90,14 @@ const Hero = () => {
                             </div>
 
                             {/* Floating Elements */}
-                            <div className="absolute -top-6 -right-6 bg-primary/35 backdrop-blur-md rounded-2xl p-4 border border-primary/40 animate-float">
+                            <div className="absolute -top-6 -right-6 bg-card rounded-2xl p-4 border border-border shadow-elevated animate-float">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
                                         <GraduationCap className="w-5 h-5 text-accent" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-primary-foreground">PGDA Complete</p>
-                                        <p className="text-xs text-primary-foreground/60">Milpark Education</p>
+                                        <p className="text-sm font-semibold text-foreground">PGDA Complete</p>
+                                        <p className="text-xs text-muted-foreground">Milpark Education</p>
                                     </div>
                                 </div>
                             </div>

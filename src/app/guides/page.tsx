@@ -67,25 +67,25 @@ const getDifficultyColor = (difficulty: string) => {
 
 export default function GuidesPage() {
     return (
-        <div className="min-h-screen bg-primary">
+        <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     {/* Header */}
                     <div className="text-center mb-16">
-                        <span className="inline-block px-4 py-2 rounded-full bg-white/10 text-primary-foreground text-sm font-medium mb-4">
+                        <span className="inline-block px-4 py-2 rounded-full bg-card text-foreground text-sm font-medium mb-4">
                             Study Guides
                         </span>
-                        <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-6">
+                        <h1 className="font-display text-4xl md:text-6xl font-bold text-foreground mb-6">
                             Master Complex Topics
                         </h1>
-                        <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+                        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                             Exam-focused guides built for CA(SA) and CTA success. Each guide breaks complex standards into short,
                             practical steps you can study quickly.
                         </p>
                     </div>
 
-                    <div className="max-w-3xl mx-auto mb-12 text-center text-primary-foreground/70 text-base leading-relaxed">
+                    <div className="max-w-3xl mx-auto mb-12 text-center text-muted-foreground text-base leading-relaxed">
                         <p>
                             Use these notes to revise key standards, learn exam techniques, and build confidence before test day.
                             We focus on clear explanations, worked examples, and common pitfalls.
@@ -103,21 +103,21 @@ export default function GuidesPage() {
                                 <BookOpen className="w-5 h-5" />
                                 <span className="font-display text-2xl font-bold">17</span>
                             </div>
-                            <span className="text-primary-foreground/60 text-sm">Parts Total</span>
+                            <span className="text-muted-foreground text-sm">Parts Total</span>
                         </div>
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-2 text-accent mb-2">
                                 <Clock className="w-5 h-5" />
                                 <span className="font-display text-2xl font-bold">50+</span>
                             </div>
-                            <span className="text-primary-foreground/60 text-sm">Hours of Content</span>
+                            <span className="text-muted-foreground text-sm">Hours of Content</span>
                         </div>
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-2 text-accent mb-2">
                                 <Users className="w-5 h-5" />
                                 <span className="font-display text-2xl font-bold">100%</span>
                             </div>
-                            <span className="text-primary-foreground/60 text-sm">Exam Focused</span>
+                            <span className="text-muted-foreground text-sm">Exam Focused</span>
                         </div>
                     </div>
 
@@ -126,10 +126,10 @@ export default function GuidesPage() {
                         {guides.map((guide) => (
                             <div
                                 key={guide.id}
-                                className="group bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden hover:bg-white/10 transition-all duration-500"
+                                className="group bg-card backdrop-blur-md rounded-2xl border border-border overflow-hidden hover:bg-muted transition-all duration-500"
                             >
                                 {/* Card Header */}
-                                <div className="p-6 border-b border-white/10">
+                                <div className="p-6 border-b border-border">
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="w-14 h-14 rounded-xl bg-accent/20 text-accent flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                                             <guide.icon className="w-7 h-7" />
@@ -145,21 +145,21 @@ export default function GuidesPage() {
                                             </span>
                                         </div>
                                     </div>
-                                    <h2 className="font-display text-xl font-semibold text-primary-foreground mb-2">
+                                    <h2 className="font-display text-xl font-semibold text-foreground mb-2">
                                         {guide.title}
                                     </h2>
-                                    <p className="text-primary-foreground/60 text-sm leading-relaxed">
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
                                         {guide.description}
                                     </p>
                                 </div>
 
                                 {/* Topics */}
-                                <div className="p-6 border-b border-white/10">
+                                <div className="p-6 border-b border-border">
                                     <div className="flex flex-wrap gap-2">
                                         {guide.topics.map((topic) => (
                                             <span
                                                 key={topic}
-                                                className="px-3 py-1 rounded-full bg-white/5 text-primary-foreground/70 text-xs"
+                                                className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs"
                                             >
                                                 {topic}
                                             </span>
@@ -169,7 +169,7 @@ export default function GuidesPage() {
 
                                 {/* Card Footer */}
                                 <div className="p-6 flex items-center justify-between">
-                                    <span className="text-primary-foreground/60 text-sm">
+                                    <span className="text-muted-foreground text-sm">
                                         {guide.parts} Parts
                                     </span>
                                     {guide.status === "available" ? (
@@ -180,7 +180,7 @@ export default function GuidesPage() {
                                             </Link>
                                         </Button>
                                     ) : (
-                                        <span className="text-primary-foreground/40 text-sm">
+                                        <span className="text-muted-foreground text-sm">
                                             Notify Me →
                                         </span>
                                     )}
@@ -191,11 +191,11 @@ export default function GuidesPage() {
 
                     {/* CTA Section */}
                     <div className="mt-24 text-center">
-                        <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-12 max-w-3xl mx-auto">
-                            <h3 className="font-display text-2xl font-bold text-primary-foreground mb-4">
+                        <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-12 max-w-3xl mx-auto">
+                            <h3 className="font-display text-2xl font-bold text-foreground mb-4">
                                 Want personalized guidance?
                             </h3>
-                            <p className="text-primary-foreground/70 mb-8 max-w-lg mx-auto">
+                            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
                                 These guides are great for self-study, but nothing beats personalized tutoring. Book a session with Priyanka for one-on-one support.
                             </p>
                             <Button asChild variant="hero" size="lg">

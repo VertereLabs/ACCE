@@ -32,13 +32,13 @@ const HowItWorks = () => {
         <section id="how-it-works" className="py-24">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-2 rounded-full bg-white/10 text-primary-foreground text-sm font-medium mb-4">
+                    <span className="inline-block px-4 py-2 rounded-full bg-white/10 text-foreground text-sm font-medium mb-4">
                         How It Works
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         Your Journey to Success
                     </h2>
-                    <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         Getting started is simple. Four steps to personalized, intentional support for your accounting journey.
                     </p>
                 </div>
@@ -61,13 +61,13 @@ const HowItWorks = () => {
                                     </div>
 
                                     <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
-                                        <step.icon className="w-8 h-8 text-primary-foreground group-hover:text-accent transition-colors duration-300" />
+                                        <step.icon className="w-8 h-8 text-foreground group-hover:text-accent transition-colors duration-300" />
                                     </div>
 
-                                    <h3 className="font-display text-xl font-semibold text-primary-foreground mb-3">
+                                    <h3 className="font-display text-xl font-semibold text-foreground mb-3">
                                         {step.title}
                                     </h3>
-                                    <p className="text-primary-foreground/70 leading-relaxed">
+                                    <p className="text-muted-foreground leading-relaxed">
                                         {step.description}
                                     </p>
                                 </div>

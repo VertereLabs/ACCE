@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function GroupsPart6Page() {
     return (
-        <div className="min-h-screen bg-primary">
+        <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
@@ -24,7 +24,7 @@ export default function GroupsPart6Page() {
                     <div className="flex items-center justify-between mb-8 max-w-4xl">
                         <Link
                             href="/guides/groups/"
-                            className="inline-flex items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to Guide
@@ -38,7 +38,7 @@ export default function GroupsPart6Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
-                            <div className="text-primary-foreground/40 text-sm">
+                            <div className="text-muted-foreground text-sm">
                                 Part 6 of 7
                             </div>
                         </div>
@@ -51,10 +51,10 @@ export default function GroupsPart6Page() {
                             <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                                 Part 6
                             </span>
-                            <h1 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+                            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
                                 Associates & Joint Ventures
                             </h1>
-                            <p className="text-primary-foreground/60 text-lg">
+                            <p className="text-muted-foreground text-lg">
                                 45 min read • Last updated January 2026
                             </p>
                         </header>
@@ -62,15 +62,15 @@ export default function GroupsPart6Page() {
                         {/* Content */}
                         <div className="prose prose-invert max-w-none">
                             {/* Introduction */}
-                            <div className="bg-white/5 rounded-2xl border border-white/10 p-8 mb-10">
-                                <p className="text-primary-foreground/80 text-lg leading-relaxed m-0">
-                                    Not every investment in another company leads to control. When you have <strong className="text-primary-foreground">significant influence</strong> or <strong className="text-primary-foreground">joint control</strong>, you don&apos;t consolidate line-by-line. Instead, you use the <strong className="text-primary-foreground">Equity Method</strong>.
+                            <div className="bg-card rounded-2xl border border-border p-8 mb-10">
+                                <p className="text-muted-foreground text-lg leading-relaxed m-0">
+                                    Not every investment in another company leads to control. When you have <strong className="text-foreground">significant influence</strong> or <strong className="text-foreground">joint control</strong>, you don&apos;t consolidate line-by-line. Instead, you use the <strong className="text-foreground">Equity Method</strong>.
                                 </p>
                             </div>
 
                             {/* Section 1: Determining Influence */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">1</span>
                                     Significant Influence & Joint Control
                                 </h2>
@@ -81,10 +81,10 @@ export default function GroupsPart6Page() {
                                             <Users className="w-5 h-5" />
                                             Associates (IAS 28)
                                         </h3>
-                                        <p className="text-primary-foreground/80 text-sm mb-4">
-                                            The power to participate in financial and operating policy decisions, but <strong className="text-primary-foreground">not control</strong>.
+                                        <p className="text-muted-foreground text-sm mb-4">
+                                            The power to participate in financial and operating policy decisions, but <strong className="text-foreground">not control</strong>.
                                         </p>
-                                        <ul className="space-y-2 text-xs text-primary-foreground/70 list-none p-0 m-0">
+                                        <ul className="space-y-2 text-xs text-muted-foreground list-none p-0 m-0">
                                             <li>• Usually 20% to 50% voting rights</li>
                                             <li>• Representation on the board</li>
                                             <li>• Participation in policy-making</li>
@@ -96,12 +96,12 @@ export default function GroupsPart6Page() {
                                             <Scale className="w-5 h-5" />
                                             Joint Ventures (IFRS 11)
                                         </h3>
-                                        <p className="text-primary-foreground/80 text-sm mb-4">
-                                            Contractually agreed sharing of control. Decisions require <strong className="text-primary-foreground">unanimous consent</strong> of the parties sharing control.
+                                        <p className="text-muted-foreground text-sm mb-4">
+                                            Contractually agreed sharing of control. Decisions require <strong className="text-foreground">unanimous consent</strong> of the parties sharing control.
                                         </p>
-                                        <ul className="space-y-2 text-xs text-primary-foreground/70 list-none p-0 m-0">
+                                        <ul className="space-y-2 text-xs text-muted-foreground list-none p-0 m-0">
                                             <li>• Joint Control is the key</li>
-                                            <li>• Parties have rights to the <strong className="text-primary-foreground">net assets</strong> of the arrangement</li>
+                                            <li>• Parties have rights to the <strong className="text-foreground">net assets</strong> of the arrangement</li>
                                             <li>• Accounted for using the Equity Method (same as associates)</li>
                                         </ul>
                                     </div>
@@ -110,19 +110,19 @@ export default function GroupsPart6Page() {
 
                             {/* Section 2: The Equity Method */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">2</span>
                                     The Equity Method Principles
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
+                                <p className="text-muted-foreground leading-relaxed mb-6">
                                     The equity method is often called &quot;one-line consolidation.&quot; Instead of adding assets and liabilities, you show your investment as a single line item in the SOFP.
                                 </p>
 
-                                <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-6">
-                                    <h3 className="font-display text-lg font-semibold text-primary-foreground mb-4">
+                                <div className="bg-card border border-border rounded-xl p-6 mb-6">
+                                    <h3 className="font-display text-lg font-semibold text-foreground mb-4">
                                         The Standard Formula:
                                     </h3>
-                                    <div className="bg-white/5 rounded-lg p-5 font-mono text-sm space-y-3">
+                                    <div className="bg-card rounded-lg p-5 font-mono text-sm space-y-3">
                                         <div className="flex justify-between items-center">
                                             <span>Initial Cost of Investment</span>
                                             <span className="text-accent">X</span>
@@ -131,7 +131,7 @@ export default function GroupsPart6Page() {
                                             <span>+ Share of Post-Acq Profits (Net of Tax)</span>
                                             <span>X</span>
                                         </div>
-                                        <div className="flex justify-between items-center text-blue-400 border-b border-white/10 pb-2">
+                                        <div className="flex justify-between items-center text-blue-400 border-b border-border pb-2">
                                             <span>+ Share of Post-Acq OCI</span>
                                             <span>X</span>
                                         </div>
@@ -153,8 +153,8 @@ export default function GroupsPart6Page() {
                                 <div className="bg-accent/10 border border-accent/30 rounded-xl p-6">
                                     <div className="flex items-start gap-4">
                                         <Lightbulb className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
-                                        <p className="text-primary-foreground/80 m-0 text-sm">
-                                            <strong className="text-primary-foreground">Crucial Distinction:</strong> In consolidation, dividends from a sub are eliminated in full. In the equity method, dividends from an associate <strong className="text-primary-foreground">reduce the carrying amount</strong> of the investment — they are not recognized as income in the group P/L.
+                                        <p className="text-muted-foreground m-0 text-sm">
+                                            <strong className="text-foreground">Crucial Distinction:</strong> In consolidation, dividends from a sub are eliminated in full. In the equity method, dividends from an associate <strong className="text-foreground">reduce the carrying amount</strong> of the investment — they are not recognized as income in the group P/L.
                                         </p>
                                     </div>
                                 </div>
@@ -162,43 +162,43 @@ export default function GroupsPart6Page() {
 
                             {/* Section 3: The Investment in Associate Working */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">3</span>
                                     The &quot;Investment in Associate&quot; Working
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
+                                <p className="text-muted-foreground leading-relaxed mb-6">
                                     Just like the AOE for subsidiaries, you need a structured working for associates. Use these two columns:
                                 </p>
 
-                                <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden mb-6">
+                                <div className="bg-card rounded-xl border border-border overflow-hidden mb-6">
                                     <table className="w-full text-xs text-left border-collapse">
                                         <thead>
-                                            <tr className="bg-white/10 text-primary-foreground">
-                                                <th className="p-3 border-b border-white/10">Working Item</th>
-                                                <th className="p-3 border-b border-white/10 border-l border-white/10 text-center">Since Acq (Pre-CY)</th>
-                                                <th className="p-3 border-b border-white/10 border-l border-white/10 text-center">Current Year</th>
+                                            <tr className="bg-muted text-foreground">
+                                                <th className="p-3 border-b border-border">Working Item</th>
+                                                <th className="p-3 border-b border-border border-l border-border text-center">Since Acq (Pre-CY)</th>
+                                                <th className="p-3 border-b border-border border-l border-border text-center">Current Year</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="text-primary-foreground/70">
+                                        <tbody className="text-muted-foreground">
                                             <tr>
-                                                <td className="p-3 border-b border-white/5 font-semibold">Associate&apos;s Profit</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center">X</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center">X</td>
+                                                <td className="p-3 border-b border-border font-semibold">Associate&apos;s Profit</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center">X</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center">X</td>
                                             </tr>
                                             <tr>
-                                                <td className="p-3 border-b border-white/5 underline italic">Less: Unrealised Profits (Group Share)</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center">(X)</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center">(X)</td>
+                                                <td className="p-3 border-b border-border underline italic">Less: Unrealised Profits (Group Share)</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center">(X)</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center">(X)</td>
                                             </tr>
                                             <tr>
-                                                <td className="p-3 border-b border-white/5 italic">Adjusted Profit</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center font-bold">Total</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center font-bold">Total</td>
+                                                <td className="p-3 border-b border-border italic">Adjusted Profit</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center font-bold">Total</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center font-bold">Total</td>
                                             </tr>
                                             <tr className="bg-accent/5">
-                                                <td className="p-3 border-b border-white/5 font-bold text-accent">Group Share (x%)</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center font-bold text-accent">Split</td>
-                                                <td className="p-3 border-b border-white/5 border-l border-white/10 text-center font-bold text-accent">Split</td>
+                                                <td className="p-3 border-b border-border font-bold text-accent">Group Share (x%)</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center font-bold text-accent">Split</td>
+                                                <td className="p-3 border-b border-border border-l border-border text-center font-bold text-accent">Split</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -207,25 +207,25 @@ export default function GroupsPart6Page() {
 
                             {/* Section 4: Elimination of Unrealised Profit */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6 flex items-center gap-3">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center text-sm font-bold">4</span>
                                     Unrealised Profits with Associates
                                 </h2>
-                                <p className="text-primary-foreground/80 leading-relaxed mb-6">
-                                    When the group sells to an associate (downstream) or vice versa (upstream), only the <strong className="text-primary-foreground">group&apos;s share</strong> of the profit is eliminated.
+                                <p className="text-muted-foreground leading-relaxed mb-6">
+                                    When the group sells to an associate (downstream) or vice versa (upstream), only the <strong className="text-foreground">group&apos;s share</strong> of the profit is eliminated.
                                 </p>
 
                                 <div className="bg-accent/10 border border-accent/30 rounded-xl p-6">
-                                    <h4 className="font-display font-semibold text-primary-foreground mb-2 flex items-center gap-2">
+                                    <h4 className="font-display font-semibold text-foreground mb-2 flex items-center gap-2">
                                         <AlertCircle className="w-5 h-5" />
                                         Example: Downstream Sale
                                     </h4>
-                                    <p className="text-primary-foreground/80 text-sm m-0">
+                                    <p className="text-muted-foreground text-sm m-0">
                                         Parent sells inventory to Associate for R10,000 profit. Parent owns 30% of Associate. Associate still holds the stock at year-end.
                                     </p>
-                                    <div className="mt-4 p-3 bg-white/5 rounded-lg font-mono text-xs">
+                                    <div className="mt-4 p-3 bg-card rounded-lg font-mono text-xs">
                                         <p className="text-accent m-0">Profit to eliminate = R10,000 x 30% = R3,000</p>
-                                        <p className="mt-2 text-primary-foreground">Dr Group Retained Earnings / COS</p>
+                                        <p className="mt-2 text-foreground">Dr Group Retained Earnings / COS</p>
                                         <p className="ml-4 text-accent">Cr Investment in Associate</p>
                                     </div>
                                 </div>
@@ -233,11 +233,11 @@ export default function GroupsPart6Page() {
 
                             {/* Summary */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-6">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6">
                                     Key Takeaways
                                 </h2>
-                                <div className="bg-white/5 rounded-xl border border-white/10 p-6">
-                                    <ul className="space-y-4 m-0 p-0 list-none text-primary-foreground/80">
+                                <div className="bg-card rounded-xl border border-border p-6">
+                                    <ul className="space-y-4 m-0 p-0 list-none text-muted-foreground">
                                         <li className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                                             <span>Associate = Significant influence (usually 20-50%).</span>
@@ -252,7 +252,7 @@ export default function GroupsPart6Page() {
                                         </li>
                                         <li className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                                            <span>Dividends <strong className="text-primary-foreground">reduce</strong> the asset; they aren&apos;t income.</span>
+                                            <span>Dividends <strong className="text-foreground">reduce</strong> the asset; they aren&apos;t income.</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -260,18 +260,18 @@ export default function GroupsPart6Page() {
 
                             {/* Coming Next */}
                             <section className="mb-12">
-                                <h2 className="font-display text-2xl font-bold text-primary-foreground mb-4">
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-4">
                                     Coming in Part 7...
                                 </h2>
-                                <p className="text-primary-foreground/70 mb-6">
-                                    We&apos;ll wrap up the series with <strong className="text-primary-foreground">Group Financial Statements</strong>. You&apos;ll see how everything pulls together into the Group SOFP, SOCI, and SOCIE, with final exam tips for the big day.
+                                <p className="text-muted-foreground mb-6">
+                                    We&apos;ll wrap up the series with <strong className="text-foreground">Group Financial Statements</strong>. You&apos;ll see how everything pulls together into the Group SOFP, SOCI, and SOCIE, with final exam tips for the big day.
                                 </p>
                             </section>
                         </div>
 
                         {/* Navigation */}
-                        <div className="flex items-center justify-between pt-8 border-t border-white/10">
-                            <Button asChild variant="ghost" className="text-primary-foreground/60 hover:text-primary-foreground">
+                        <div className="flex items-center justify-between pt-8 border-t border-border">
+                            <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground">
                                 <Link href="/guides/groups/part-5">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Part 5: Complex Transactions
@@ -288,11 +288,11 @@ export default function GroupsPart6Page() {
 
                     {/* CTA */}
                     <div className="max-w-4xl mt-16">
-                        <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center">
-                            <h3 className="font-display text-xl font-bold text-primary-foreground mb-3">
+                        <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-8 text-center">
+                            <h3 className="font-display text-xl font-bold text-foreground mb-3">
                                 Confused by the Equity Method?
                             </h3>
-                            <p className="text-primary-foreground/70 mb-6 font-medium">
+                            <p className="text-muted-foreground mb-6 font-medium">
                                 Share of profits, unrealised eliminations, and carrying amount calcs can be overwhelming. Let&apos;s simplify it together.
                             </p>
                             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
