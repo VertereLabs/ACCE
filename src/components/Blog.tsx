@@ -45,7 +45,7 @@ const Blog = () => {
                     {blogPosts.map((post) => (
                         <article
                             key={post.title}
-                            className="group bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all duration-500"
+                            className="group surface-card surface-card-hover rounded-2xl overflow-hidden border border-border transition-all duration-500"
                         >
                             {/* Placeholder Image */}
                             <div className="h-40 bg-gradient-to-br from-accent/20 to-white/5 flex items-center justify-center">

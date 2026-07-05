@@ -45,7 +45,7 @@ const WhyChoose = () => {
                         What Makes Us Different
                     </h2>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                        More than just tutoring: it's mentorship from someone who truly understands the CA(SA) journey.
+                        More than just tutoring: it&apos;s mentorship from someone who truly understands the CA(SA) journey.
                     </p>
                 </div>
 
@@ -53,7 +53,7 @@ const WhyChoose = () => {
                     {valueProps.map((prop) => (
                         <div
                             key={prop.title}
-                            className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-500 relative group"
+                            className="surface-card surface-card-hover rounded-2xl p-8 border border-border transition-all duration-500 relative group"
                         >
                             <div className="w-14 h-14 rounded-2xl bg-accent/20 text-accent flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
                                 <prop.icon className="w-7 h-7" />

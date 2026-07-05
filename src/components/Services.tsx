@@ -44,7 +44,7 @@ const Services = () => {
                     {services.map((service, index) => (
                         <div
                             key={service.title}
-                            className="group bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-500 hover:-translate-y-1"
+                            className="group surface-card surface-card-hover rounded-2xl p-8 border border-border transition-all duration-500 hover:-translate-y-1"
                             style={{ animationDelay: `${index * 100}ms` }}
                         >
                             <div className="w-14 h-14 rounded-2xl bg-accent/20 text-accent flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">

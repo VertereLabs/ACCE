@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import GroupSessions from "@/components/GroupSessions";
 import Services from "@/components/Services";
 import About from "@/components/About";
 import HowItWorks from "@/components/HowItWorks";
@@ -33,6 +34,7 @@ export default function HomePage() {
       <Navbar />
       <main>
         <Hero />
+        <GroupSessions />
         <Services />
         <About />
         <HowItWorks />

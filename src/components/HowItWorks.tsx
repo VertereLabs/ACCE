@@ -32,7 +32,7 @@ const HowItWorks = () => {
         <section id="how-it-works" className="py-24">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-2 rounded-full bg-white/10 text-foreground text-sm font-medium mb-4">
+                    <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         How It Works
                     </span>
                     <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -45,7 +45,7 @@ const HowItWorks = () => {
 
                 <div className="relative">
                     {/* Connection Line */}
-                    <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-white/20 -translate-y-1/2" />
+                    <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-border -translate-y-1/2" />
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {steps.map((step, index) => (
@@ -54,13 +54,13 @@ const HowItWorks = () => {
                                 className="relative group"
                             >
                                 {/* Step Card */}
-                                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-500 hover:-translate-y-2 relative z-10">
+                                <div className="surface-card surface-card-hover rounded-2xl p-8 border border-border transition-all duration-500 hover:-translate-y-2 relative z-10">
                                     {/* Number Badge */}
                                     <div className="absolute -top-4 left-8 px-3 py-1 rounded-full gradient-accent text-accent-foreground text-sm font-bold">
                                         {step.number}
                                     </div>
 
-                                    <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
+                                    <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
                                         <step.icon className="w-8 h-8 text-foreground group-hover:text-accent transition-colors duration-300" />
                                     </div>
 

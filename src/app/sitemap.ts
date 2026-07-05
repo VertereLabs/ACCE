@@ -1,6 +1,16 @@
 import type { MetadataRoute } from "next";
+import { isGuidePublished, anyGuidePublished } from "@/config/guides";
 
 const BASE_URL = "https://accetutors.co.za";
+
+// Only advertise guide URLs once they're actually live. The /guides index is
+// listed only when at least one guide is published.
+function isRouteIndexable(path: string): boolean {
+  if (!path.startsWith("/guides")) return true;
+  const match = path.match(/^\/guides\/([^/]+)/);
+  if (!match) return anyGuidePublished();
+  return isGuidePublished(match[1]);
+}
 
 const ROUTES = [
   "/",
@@ -44,7 +54,7 @@ function getPriority(path: string): number {
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
-  return ROUTES.map((path) => ({
+  return ROUTES.filter(isRouteIndexable).map((path) => ({
     url: `${BASE_URL}${path}`,
     lastModified,
     changeFrequency: "weekly",

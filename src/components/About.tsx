@@ -43,7 +43,7 @@ const About = () => {
                 <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
                     {/* Image */}
                     <div className="relative">
-                        <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border-2 border-white/20">
+                        <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border-2 border-border">
                             <Image
                                 src="/images/priyanka.png"
                                 alt="Priyanka Govender"
@@ -53,10 +53,10 @@ const About = () => {
                                 sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                         </div>
-                        <div className="absolute -bottom-6 -right-6 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                            <p className="font-display text-3xl font-bold text-accent">PGDA</p>
-                            <p className="text-sm text-muted-foreground">Graduate</p>
-                            <p className="text-xs text-muted-foreground mt-1">Milpark Education</p>
+                        <div className="stat-badge absolute -bottom-6 -right-6 rounded-2xl p-6">
+                            <p className="stat-badge-title font-display text-3xl font-bold">PGDA</p>
+                            <p className="text-sm">Graduate</p>
+                            <p className="text-xs mt-1">Milpark Education</p>
                         </div>
                     </div>
 
@@ -82,7 +82,7 @@ const About = () => {
                             {milestones.map((milestone) => (
                                 <div
                                     key={milestone.title}
-                                    className="bg-white/5 rounded-xl p-4 border border-border"
+                                    className="surface-card rounded-xl p-4 border border-border"
                                 >
                                     <milestone.icon className="w-6 h-6 text-accent mb-2" />
                                     <h4 className="font-semibold text-foreground text-sm">{milestone.title}</h4>

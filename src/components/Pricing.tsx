@@ -66,7 +66,7 @@ const Pricing = () => {
                     {plans.map((plan) => (
                         <div
                             key={plan.name}
-                            className={`relative bg-white/10 backdrop-blur-md rounded-2xl p-8 border-2 transition-all duration-500 hover:-translate-y-2 ${plan.popular
+                            className={`relative surface-card rounded-2xl p-8 border-2 transition-all duration-500 hover:-translate-y-2 ${plan.popular
                                     ? "border-accent shadow-lg shadow-accent/20 scale-105 z-10"
                                     : "border-border opacity-90"
                                 }`}

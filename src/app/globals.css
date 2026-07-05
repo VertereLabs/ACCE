@@ -201,6 +201,33 @@
 }
 
 @layer components {
+  /* Theme-aware frosted card surface. Replaces `bg-white/10` (invisible fill
+     in light mode) with a real per-mode card colour that reads in BOTH modes.
+     Pair with `border border-border` for a visible edge. */
+  .surface-card {
+    background-color: hsl(var(--card) / 0.6);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .surface-card-hover:hover {
+    background-color: hsl(var(--card) / 0.92);
+  }
+
+  /* Fixed-light stat badge overlaid on photography — stays legible in both
+     modes (dark mode's light muted text used to vanish against the photo). */
+  .stat-badge {
+    background-color: hsl(40 44% 99% / 0.55);
+    border: 1px solid hsl(40 44% 99% / 0.5);
+    color: hsl(223 38% 18%);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  .stat-badge-title {
+    color: hsl(36 76% 33%);
+  }
+
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }

@@ -44,7 +44,7 @@ const Resources = () => {
         <section id="resources" className="py-24">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-2 rounded-full bg-white/10 text-foreground text-sm font-medium mb-4">
+                    <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         Study Guides
                     </span>
                     <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -58,7 +58,7 @@ const Resources = () => {
                 <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                     {resources.map((resource) => {
                         const cardClass =
-                            "group bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 relative block";
+                            "group surface-card surface-card-hover rounded-2xl p-6 border border-border transition-all duration-500 relative block";
 
                         const cardInner = (
                             <>
