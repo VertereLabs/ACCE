@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-05T23:19:00Z
+last_updated: 2026-07-06T00:00:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -66,6 +66,7 @@ project: ACCE
 # epic-2 marked in-progress and 2-1 set ready-for-dev on 2026-07-05 (create-story: first server mutation in app; new-class admin route [(admin)/admin/classes/new] = client form + colocated Zod-validated "use server" createClassAction + requireAdmin trusted guard [AD-3] + priceCents integer-cents [AD-9]; pure schema module unit-tested [mirrors 1.4 seed-data]; capacity floor >=1 not hard 4-6; meetingUrl optional at create [AD-13, edit is 2.3]; location required if IN_PERSON; NO schema/migration, NO transaction/FOR-UPDATE [AD-16 concurrency is 2.3], NO list/edit; live-DB create deferred to CI ephemeral Postgres)
 # 2-1 set in-progress on 2026-07-05T23:02:20Z (dev-story)
 # 2-1 set review on 2026-07-05 (dev-story complete: LEVELS constant, pure Zod schema + toCents, createClassAction [requireAdmin+safeParse+subjectCheck+priceCents+groupSession.create], admin page + client form [react-hook-form+zodResolver+sonner+gold CTA]; 119/119 vitest, build clean, prisma validate clean; live DB create deferred CI ephemeral-Postgres)
+# 2-1 set done on 2026-07-06 (code-review: FRESH-reviewed all 5 ACs + AD-2/3/5/9/13/16; 1 MEDIUM auto-fixed [primary CTA hardcoded hex #d4a91e/#1a2744 inline style → token classes bg-accent/text-accent-foreground so gold+navy flip per light/dark mode, UX-DR2/DR6]; 0 HIGH/critical; datetime-local→coerced-Date instant round-trip verified correct, discriminated result shape + requireAdmin-first guard confirmed [AC4]; independently re-verified prisma validate clean + build clean [/admin/classes/new present] + 119/119 vitest; live-DB create still deferred CI ephemeral-Postgres)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -82,7 +83,7 @@ development_status:
 
   # Epic 2: Admin Class Management
   epic-2: in-progress
-  2-1-create-a-group-class: review
+  2-1-create-a-group-class: done
   2-2-list-and-view-classes-in-admin: backlog
   2-3-edit-an-existing-class: backlog
   epic-2-retrospective: optional

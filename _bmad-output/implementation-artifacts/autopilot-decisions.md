@@ -457,3 +457,13 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Guarantees no 404 for Priyanka after creating a class. AC3 says "sensible admin destination" — the admin dashboard satisfies this until the list is available.
 - **Reversibility:** Change `router.push("/admin")` to `router.push("/admin/classes")` once Story 2.2 merges.
 - **Files touched:** src/app/(admin)/admin/classes/new/class-form.tsx
+
+### [2026-07-05T23:28:12Z] 2-1-create-a-group-class — code-review: gold CTA hardcoded hex → design tokens
+- **Risk:** low
+- **Workflow / step:** code-review step 3 (triage) → fix
+- **Decision point:** Adversarial review found the primary "Create class" CTA in class-form.tsx used inline `style={{ backgroundColor: "#d4a91e", color: "#1a2744" }}`. The story explicitly mandated "Reuse existing navy+gold tokens — no new palette" and both-mode contrast (UX-DR2/UX-DR6/NFR10). Hardcoded hex bypasses the `--accent`/`--accent-foreground` tokens which FLIP between light (`38 68% 48%`) and dark (`41 70% 55%`) modes, so the button no longer adapts to theme. MEDIUM review finding.
+- **Options considered:** A) leave as-is (violates explicit story directive + theming); B) use `variant="hero"` (gradient-accent gold CTA, but adds hover:scale animation vs prefers-reduced-motion); C) swap to token utility classes `bg-accent text-accent-foreground hover:bg-accent/90` (solid gold CTA, mode-aware, no motion).
+- **Chosen:** C — token classes `bg-accent text-accent-foreground hover:bg-accent/90`, removed the inline style; kept `w-full min-h-[44px] font-semibold` (≥44px target, weight).
+- **Rationale:** Restores the one gold-accent CTA using the canonical token system so it adapts to dark/light mode and stays consistent with the shadcn Button palette; avoids hero's scale animation for reduced-motion friendliness. Functionally the create path (AC1-AC5) was already correct — this is a UI-consistency fix only.
+- **Reversibility:** Trivially revert the single className swap in class-form.tsx to the prior inline style. No data/schema/API impact.
+- **Files touched:** acce-nextjs/src/app/(admin)/admin/classes/new/class-form.tsx

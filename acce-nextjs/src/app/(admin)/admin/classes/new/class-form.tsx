@@ -405,11 +405,12 @@ export function ClassForm({ subjects, levels }: ClassFormProps) {
               />
             )}
 
-            {/* ── Submit CTA (gold accent, UX-DR2) ─────────────────────── */}
+            {/* ── Submit CTA (gold accent via design tokens, UX-DR2/DR6) ─
+                Uses --accent / --accent-foreground so the gold + navy pairing
+                flips correctly between light and dark modes (no hardcoded hex). */}
             <Button
               type="submit"
-              className="w-full min-h-[44px] font-semibold"
-              style={{ backgroundColor: "#d4a91e", color: "#1a2744" }}
+              className="w-full min-h-[44px] font-semibold bg-accent text-accent-foreground hover:bg-accent/90"
               disabled={isSubmitting}
               aria-busy={isSubmitting}
             >

@@ -4,7 +4,7 @@ baseline_commit: 1d96dabac5261fc8f54f35d42653eeb26b45c790
 
 # Story 2.1: Create a group class
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -189,3 +189,4 @@ claude-sonnet-4-6 (autopilot subagent, 2026-07-05)
 ## Change Log
 
 - 2026-07-05: Story implemented (dev-story). Added LEVELS constant, pure Zod schema + toCents helper, createClassAction server action (requireAdmin guard, safeParse, subjectId re-check, priceCents conversion, groupSession.create), admin page + client form (react-hook-form + zodResolver, conditional fields, sonner toasts, gold CTA). 36 new vitest assertions. `prisma validate` + build + 119/119 tests all green. Status → review.
+- 2026-07-06: Code review (fresh reasoning, adversarial). All 5 ACs + guardrails AD-2/3/5/9/13/16 independently verified. Confirmed: requireAdmin() runs first inside the action (AC4 trusted guard, before parse/write); discriminated `{ ok }` result never throws on the validation path (AC3); toCents integer-cents conversion is the single conversion site (AD-9); no seat counter (AD-5), no transaction/lock (AD-16 scoped to 2.3); datetime-local values are coerced to Date client-side by the resolver and round-trip to the server as correct absolute instants (no timezone drift). **1 MEDIUM finding auto-fixed:** the primary "Create class" CTA hardcoded `style={{ backgroundColor: "#d4a91e", color: "#1a2744" }}`, bypassing the mode-flipping `--accent`/`--accent-foreground` tokens the story mandated (UX-DR2/DR6, no-new-palette) — replaced with `bg-accent text-accent-foreground hover:bg-accent/90`. 0 HIGH/critical. Re-verified after fix: `prisma validate` clean, `npm run build` clean (`/admin/classes/new` present), 119/119 vitest green. Status → done. Live-DB create remains deferred to CI ephemeral-Postgres (same sandbox wall as 1.1/1.4/1.5).
