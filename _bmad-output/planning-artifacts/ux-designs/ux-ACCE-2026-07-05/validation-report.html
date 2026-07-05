@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Validation Report — ACCE Tutors redesign spines</title>
+<style>
+:root{--bg:#0e1626;--card:#16203a;--fg:#f3ecdd;--mut:#a9b4c9;--navy:#3a5a92;--gold:#e0a83a;--gold-ink:#f0c46e;
+--crit:#e05a5a;--high:#e08a3a;--med:#d8c24a;--low:#7fa8d8;--ok:#57b98a;--bd:#2a3654}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;font-size:15px}
+.wrap{max-width:960px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:Georgia,serif;font-size:2rem;margin:0 0 4px}h1 .g{color:var(--gold-ink)}
+h2{font-family:Georgia,serif;font-size:1.35rem;margin:38px 0 14px;border-bottom:1px solid var(--bd);padding-bottom:8px}
+h3{font-size:1rem;margin:22px 0 8px;letter-spacing:.02em}
+.meta{color:var(--mut);font-size:.9rem;margin-bottom:8px}.meta b{color:var(--fg)}
+.lede{background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--gold);border-radius:10px;padding:18px 22px;margin:18px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+.v{font-weight:700;font-size:.8rem;padding:2px 9px;border-radius:999px;display:inline-block}
+.v.strong{background:rgba(87,185,138,.16);color:var(--ok)}.v.adequate{background:rgba(127,168,216,.16);color:var(--low)}
+.v.thin{background:rgba(216,194,74,.16);color:var(--med)}.v.broken{background:rgba(224,90,90,.16);color:var(--crit)}
+.done{color:var(--ok);font-weight:600}.defer{color:var(--high);font-weight:600}
+.sev{font-weight:800;font-size:.72rem;padding:2px 8px;border-radius:5px;margin-right:8px;letter-spacing:.04em}
+.sev.c{background:var(--crit);color:#1a0d0d}.sev.h{background:var(--high);color:#1a0f05}
+.sev.m{background:var(--med);color:#1a1705}.sev.l{background:var(--low);color:#0a1424}
+.f{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:13px 16px;margin:9px 0}
+.f .fix{color:var(--mut);font-size:.88rem}.f .fix b{color:var(--gold-ink)}
+ol{padding-left:22px}ol li{margin:7px 0}
+.pill{display:inline-block;background:rgba(224,168,58,.12);border:1px solid rgba(224,168,58,.3);color:var(--gold-ink);
+font-size:.75rem;font-weight:600;padding:3px 11px;border-radius:999px;margin:2px 4px 2px 0}
+code{background:#0a1120;border:1px solid var(--bd);border-radius:4px;padding:1px 6px;font-size:.85em;color:var(--gold-ink)}
+</style></head><body><div class="wrap">
+
+<h1>Validation Report — <span class="g">ACCE Tutors</span></h1>
+<div class="meta">Stage 1 redesign spines · <b>DESIGN.md</b> + <b>EXPERIENCE.md</b> · Run <b>2026-07-05</b></div>
+<div>
+<span class="pill">Lens: Rubric walker</span><span class="pill">Lens: Brand &amp; implementation fidelity</span>
+<span class="pill">review-rubric.md</span><span class="pill">review-fidelity.md</span>
+</div>
+
+<div class="lede">
+The spine pair is a disciplined, unusually faithful shadcn brand-layer delta — canonical order, both
+color modes fully paired, two-mode system coherent, and every mode-token triple matches the approved
+mocks with <b>zero numeric drift</b>. Validation found <b>one systemic spec defect</b>: load-bearing
+helper colors (<code>accent-ink</code>, <code>footer-bg/fg</code>, undocumented <code>primary-ink</code>)
+lived only in YAML comments, so <code>{accent-ink}</code> refs resolved to nothing. <b class="done">That,
+and every other spec-level finding, is now fixed in place.</b> The fidelity review's <b>critical</b>
+finding is <i>not</i> a spec defect — the current <code>globals.css</code> hardcodes the old burnt-orange
+look across <b>42 files</b>; that plus the <code>next/font</code> migration, <code>next-themes</code>
+config, and toggle/logo build is <b class="defer">implementation-story work</b>, captured as a checklist.
+</div>
+
+<h2>Category verdicts</h2>
+<table><tr><th>Category</th><th>Verdict</th><th>Status after fixes</th></tr>
+<tr><td>Flow coverage</td><td><span class="v adequate">adequate</span></td><td class="done">✓ resolved — Sipho + Nomsa flows added</td></tr>
+<tr><td>Token completeness</td><td><span class="v thin">thin</span></td><td class="done">✓ resolved — helpers now real tokens</td></tr>
+<tr><td>Component coverage</td><td><span class="v adequate">adequate</span></td><td class="done">✓ resolved — toggle/tag/CTA-ghost rows</td></tr>
+<tr><td>State coverage</td><td><span class="v strong">strong</span></td><td>—</td></tr>
+<tr><td>Visual reference coverage</td><td><span class="v thin">thin</span></td><td class="done">✓ resolved — finals linked, A/B/C archived</td></tr>
+<tr><td>Bloat &amp; overspecification</td><td><span class="v strong">clean</span></td><td>—</td></tr>
+<tr><td>Inheritance discipline</td><td><span class="v thin">1 broken ref</span></td><td class="done">✓ resolved — {accent-ink} resolves</td></tr>
+<tr><td>Shape fit</td><td><span class="v strong">strong</span></td><td class="done">✓ responsive note added</td></tr>
+<tr><td>Mock ↔ spec fidelity</td><td><span class="v strong">strong</span></td><td class="done">✓ primary-ink + anchor table clarified</td></tr>
+<tr><td>Two-mode coherence</td><td><span class="v strong">strong</span></td><td>—</td></tr>
+<tr><td>Values-swap portability</td><td><span class="v thin">thin</span></td><td class="defer">→ deferred to implementation story</td></tr>
+<tr><td>Font migration</td><td><span class="v adequate">adequate</span></td><td class="defer">→ deferred to implementation story</td></tr>
+</table>
+
+<h2>Findings by severity</h2>
+
+<h3><span class="sev c">CRITICAL</span> 1 · deferred (not a spec defect)</h3>
+<div class="f"><b>[Fidelity] Old burnt-orange layer survives a token swap</b> — <code>globals.css</code>.
+<code>body</code> bg is an orange gradient; <code>--gradient-*</code>, <code>--accent-text:25 85% 35%</code>,
+<code>.hero-tag</code>, <code>.text-accent*</code> are hue-25 orange, referenced across <b>42 component
+files</b>. A palette swap leaves it all in place → violates "don't reintroduce burnt-orange".
+<div class="fix"><b>Fix (port story):</b> <code>body</code> bg → <code>hsl(var(--background))</code>; purge/remap all <code>--gradient-*</code> + orange utilities; audit all 42 consumers.</div></div>
+
+<h3><span class="sev h">HIGH</span> 7</h3>
+<div class="f"><b>[Rubric] <code>accent-ink</code> phantom token</b> — comment-only, <code>{accent-ink}</code> unresolved. <span class="done">✓ Fixed:</span> promoted to real per-mode tokens; refs now <code>{colors.accent-ink}</code>.</div>
+<div class="f"><b>[Rubric] Footer surfaces comment-only</b> (<code>footer-bg/fg</code>). <span class="done">✓ Fixed:</span> now real per-mode tokens.</div>
+<div class="f"><b>[Rubric] Theme toggle had no visual spec.</b> <span class="done">✓ Fixed:</span> added Components row + <code>theme-toggle</code> token.</div>
+<div class="f"><b>[Fidelity] <code>:root</code> is currently dark, not light</b> — must be replaced wholesale with the Warm Scholar light palette. <span class="defer">→ port story.</span></div>
+<div class="f"><b>[Fidelity] Non-native tokens must be hand-added</b> to both blocks. Spec now names them; <span class="defer">wiring → port story.</span></div>
+<div class="f"><b>[Fidelity] Font-loader migration</b> — app uses CDN <code>@import</code>, no <code>next/font</code>. <span class="defer">→ port story.</span></div>
+<div class="f"><b>[Fidelity] <code>next-themes</code> config contradicts "dark default"</b> — <code>enableSystem</code> + <code>disableTransitionOnChange</code>. <span class="defer">→ port story.</span></div>
+
+<h3><span class="sev m">MEDIUM</span> selected</h3>
+<div class="f"><b>[Fidelity] <code>--primary-ink</code> used by mocks, absent from spec.</b> <span class="done">✓ Fixed.</span></div>
+<div class="f"><b>[Fidelity] Anchor table vs token contradiction</b> (<code>#002251</code> ≠ light <code>--primary</code>). <span class="done">✓ Fixed:</span> anchors = provenance; triples authoritative.</div>
+<div class="f"><b>[Rubric] Tag half-true across modes; <code>components.tag</code> missing.</b> <span class="done">✓ Fixed both.</span></div>
+<div class="f"><b>[Rubric] Mocks not linked; A/B/C orphaned &amp; misleading.</b> <span class="done">✓ Fixed:</span> finals linked, candidates archived.</div>
+<div class="f"><b>[Rubric] Flow 2 thin; no guides-library flow.</b> <span class="done">✓ Fixed.</span></div>
+<div class="f"><b>[Fidelity] Theme-toggle control + theme-aware logo net-new.</b> <span class="defer">→ port story.</span></div>
+
+<h3><span class="sev l">LOW</span> selected</h3>
+<div class="f"><b>[Fidelity] Radius/button-radius port cleanly by coincidence.</b> Documented so no one "fixes" it.</div>
+<div class="f"><b>[Fidelity] CTA-box ghost override.</b> <span class="done">✓ Fixed:</span> added <code>ghost-on-primary</code>.</div>
+<div class="f"><b>[Rubric] Contrast "verified" vs "verify at build" mismatch; guides path precision.</b> <span class="done">✓ Fixed.</span></div>
+<div class="f"><b>[Fidelity] <code>sidebar-*</code> off-brand but unused.</b> Leave for Stage 1; revisit Stage 2.</div>
+
+<h2>Implementation-story seed checklist</h2>
+<p class="meta">The future "port redesign into <code>acce-nextjs</code>" dev story must:</p>
+<ol>
+<li>Rewrite both token blocks: <code>:root</code> ← Warm Scholar <b>light</b>, <code>.dark</code> ← Deep Authority <b>dark</b>, verbatim from frontmatter.</li>
+<li>Add the 4 non-native tokens to <i>both</i> blocks (footer values do not invert).</li>
+<li>Purge the burnt-orange layer (<code>body</code> bg, <code>--gradient-*</code>, orange utilities).</li>
+<li>Audit all <b>42</b> component files using the orange utility classes; re-point to new tokens.</li>
+<li>Swap <code>--radius</code> <code>0.75</code>→<code>0.625rem</code>; buttons stay on <code>rounded-md</code> (no edit).</li>
+<li>Font migration: <code>next/font/google</code> (Playfair + Inter); set body font to Inter; delete CDN <code>@import</code>.</li>
+<li>Fix <code>next-themes</code>: <code>enableSystem={false}</code>; drop <code>disableTransitionOnChange</code> if cross-fade wanted.</li>
+<li>Build the theme toggle (navbar sun/moon, keyboard-operable) + theme-aware logo.</li>
+<li>Copy logo assets into <code>acce-nextjs/public/</code>.</li>
+<li>Verify contrast at build for <code>muted-foreground</code> in both modes; leave <code>sidebar-*</code> as-is.</li>
+</ol>
+
+<p class="meta" style="margin-top:34px">Full lens reports: <code>review-rubric.md</code> · <code>review-fidelity.md</code> · Markdown twin: <code>validation-report.md</code></p>
+</div></body></html>
