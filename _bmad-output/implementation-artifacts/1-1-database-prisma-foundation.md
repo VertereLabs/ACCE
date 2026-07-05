@@ -4,7 +4,7 @@ baseline_commit: 2dadb34d15aab7e4bace2dd579ba2b0be7ec15d5
 
 # Story 1.1: Database & Prisma foundation
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -80,6 +80,16 @@ Then the generated Prisma client **and its query-engine binary** reach the runne
   - [x] `npm run build` → standalone build succeeds. (✓ All 40 pages generated)
   - [x] `npm test` → vitest green. (✓ 24/24 tests pass across 5 suites)
   - [x] Record results in Dev Agent Record. (See completion notes below)
+
+## Review Findings
+
+Adversarial code review (2026-07-05, autopilot code-review, fresh reasoning — dev step not assumed correct). Layers: Blind Hunter, Edge Case Hunter, Acceptance Auditor (full mode against this spec). Verified live: `prisma validate` ✓, `prisma migrate diff` canonical-SQL comparison, `npm run db:generate` ✓, `vitest run` 24/24 ✓, `grep -rn "new PrismaClient" src/` → only `db.ts`.
+
+- [x] [Review][Patch] GroupSession.updatedAt schema↔migration DEFAULT drift — FIXED [acce-nextjs/prisma/schema.prisma:128]. Migration `20260705203800_schema_deltas_spine` adds `updatedAt TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`, but the schema declared `@updatedAt` with no `@default`, so Prisma's canonical SQL was `NOT NULL` (no default) — confirmed via `prisma migrate diff --from-empty`. This drift would make a future `prisma migrate dev` emit a spurious `ALTER COLUMN ... DROP DEFAULT`. Fixed by adding `@default(now())` (valid with `@updatedAt`); canonical SQL now equals the migration exactly. Re-verified: validate ✓, generate ✓, 24/24 tests ✓.
+- [x] [Review][Defer] Partial unique index not represented in the Prisma schema — deferred, inherent Prisma limitation. `LedgerEntry_enrollmentId_booking_charge_key` (AD-8) is hand-added SQL; Prisma cannot model partial-unique indexes, so it is permanently invisible to the schema and every future `prisma migrate dev` shadow-DB compare will flag it as drift and try to drop it. Mitigation is documented in-schema and in the migration. Future story authors MUST preserve it and reject any auto-generated migration that drops it. Low severity (documented, no runtime effect).
+- [x] [Review][Defer] AC5 `migrate deploy` leg unproven by execution — deferred, environmental. The new migration SQL was never run against a real Postgres (dev sandbox blocked prod-credential deploy; correct call — you don't run `migrate deploy` against prod from a dev box). Verification is static only: `prisma validate` (schema), line-by-line SQL review (valid Postgres, correct identifiers incl. lowercase `"user"` FK target, empty-table safe), and Prisma canonical-diff confirming the FK / unique-index / column DDL. Follow-up: add a CI job (ephemeral Postgres service / testcontainers) that runs `prisma migrate deploy` on the full chain to prove it applies cleanly — mirrors the "authenticated-route 200 smoke test" lesson (cheap safety net a green unit suite doesn't provide). Medium severity but not a code defect in the delivered artifact.
+
+Review outcome: 1 patch (fixed), 2 defers (by-design / environmental), 0 decision-needed, 0 dismissed. No unresolved high/medium code defects → Status set to `done`; the two defers are recorded in `deferred-work.md` for a later loop.
 
 ## Dev Notes
 

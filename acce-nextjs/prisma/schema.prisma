@@ -125,7 +125,7 @@ model GroupSession {
   status      GroupSessionStatus @default(SCHEDULED)
   enrollments Enrollment[]
   createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt // AD-16: optimistic-concurrency token for admin edits
+  updatedAt   DateTime           @default(now()) @updatedAt // AD-16: optimistic-concurrency token for admin edits (@default(now()) matches the migration's DEFAULT CURRENT_TIMESTAMP — no schema/DB drift)
 }
 
 enum EnrollmentStatus {

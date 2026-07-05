@@ -87,3 +87,23 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** AC5 requires `npm test` passes. The mock is minimal, isolated, and correct — sitemap tests should verify the full sitemap when content is published. Doesn't touch guides-config.test.ts.
 - **Reversibility:** Remove `vi.mock` from sitemap.test.ts.
 - **Files touched:** acce-nextjs/tests/unit/sitemap.test.ts
+
+### [2026-07-05T20:55:00Z] 1-1-database-prisma-foundation — Code review: fix GroupSession.updatedAt schema/migration DEFAULT drift
+- **Risk:** medium
+- **Workflow / step:** code-review step 4 (present & act — fix-vs-action-items ask; autopilot default = fix HIGH/MEDIUM)
+- **Decision point:** Adversarial review found the migration adds `updatedAt TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP` while the Prisma schema declared `@updatedAt` with no `@default`. Confirmed drift via `prisma migrate diff --from-empty` (canonical SQL emitted `NOT NULL` with no default). A future `prisma migrate dev` would emit a spurious `DROP DEFAULT` migration.
+- **Options considered:** A) Add `@default(now())` to the schema field so canonical SQL matches the migration (keeps the safe DB default, no migration edit); B) Remove `DEFAULT CURRENT_TIMESTAMP` from the migration SQL to match Prisma's default no-default form (fragile — a bare `ADD COLUMN NOT NULL` fails if any GroupSession row exists at deploy); C) Leave as-is and accept drift.
+- **Chosen:** A — added `@default(now())` to `GroupSession.updatedAt`. `prisma migrate diff` now emits `NOT NULL DEFAULT CURRENT_TIMESTAMP`, exactly matching the migration. `@default(now()) @updatedAt` is a valid, common Prisma combo.
+- **Rationale:** Eliminates drift AND keeps the DB-level default (safe even if the table is non-empty at deploy), without editing an authored migration. Option B is more fragile; C leaves a latent spurious migration.
+- **Reversibility:** Remove `@default(now())` from `GroupSession.updatedAt` in schema.prisma (reverts to prior drift state). No data impact — additive DB default on an empty table.
+- **Files touched:** acce-nextjs/prisma/schema.prisma
+
+### [2026-07-05T20:55:30Z] 1-1-database-prisma-foundation — Code review: final status = done; 2 defers recorded
+- **Risk:** medium
+- **Workflow / step:** code-review step 4 section 6 (determine status + sync sprint tracking)
+- **Decision point:** After fixing the one concrete code defect, decide done vs in-progress given two remaining defers: (B) partial-unique index permanently invisible to Prisma (inherent limitation); (C) AC5 `migrate deploy` proven only statically (sandbox blocks prod-credential deploy).
+- **Options considered:** A) Set `done` — treat B/C as accepted defers (recorded in deferred-work.md), since the only actionable code defect (updatedAt drift) is fixed and B/C are by-design/environmental, not open patches; B) Set `in-progress` and bounce to dev-story — but no sandboxed dev loop can run `migrate deploy` against prod either, and B is unfixable in Prisma, so this risks a no-progress ping-pong.
+- **Chosen:** A — `done`. B and C are legitimate DEFER-bucket items (real but not actionable now), written to deferred-work.md and the story's Review Findings. No unresolved high/medium *code* defect remains; the migration is verified as far as possible without prod DB access (validate + canonical-diff + static SQL review).
+- **Rationale:** The delivered artifact is correct and fully unit-verified (24/24). C is an environmental CI improvement, not a defect; B is an unavoidable Prisma constraint. Matches the workflow's "done if clean, defers don't block done" rule.
+- **Reversibility:** Re-open by setting the story + sprint-status entry back to `in-progress` and moving C from deferred-work.md into a Review Follow-up task.
+- **Files touched:** _bmad-output/implementation-artifacts/1-1-database-prisma-foundation.md, _bmad-output/implementation-artifacts/deferred-work.md, _bmad-output/implementation-artifacts/sprint-status.yaml
