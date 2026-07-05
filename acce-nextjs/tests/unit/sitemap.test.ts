@@ -84,8 +84,17 @@ describe("sitemap ↔ filesystem consistency", () => {
 
   it("every content page.tsx on disk is registered in the sitemap", () => {
     const pageRoutes = collectPageRoutes(APP_DIR);
-    // not-found renders 404 and is intentionally excluded from the sitemap.
-    const contentRoutes = pageRoutes.filter((r) => r !== "/not-found");
+    // Exclude pages that are intentionally outside the marketing sitemap:
+    //   - /not-found: 404 handler
+    //   - /sign-in: app auth page (no SEO value, not a marketing page)
+    //   - /(portal)/*: authenticated portal pages (session-gated, not indexable)
+    const SITEMAP_EXCLUDED = new Set([
+      "/not-found",
+      "/sign-in",
+    ]);
+    const contentRoutes = pageRoutes.filter(
+      (r) => !SITEMAP_EXCLUDED.has(r) && !r.startsWith("/(portal)"),
+    );
     const unregistered = contentRoutes.filter((r) => !routeSet.has(r));
     expect(
       unregistered,
