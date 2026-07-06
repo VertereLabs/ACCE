@@ -667,3 +667,73 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** The only sandbox-actionable defect is fixed and re-verified (build clean, 190/190). Remaining findings are environmental (deferred to CI, consistent with every prior story) or low. Marking in-progress would create a no-progress loop on an unfixable-here CI item.
 - **Reversibility:** Set `2-3-edit-an-existing-class: in-progress` in sprint-status.yaml and revert the story Status if the team wants the story held open until the CI concurrency test is green.
 - **Files touched:** _bmad-output/implementation-artifacts/2-3-edit-an-existing-class.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-06T00:28:53Z] 3-1-view-wallet-balance-and-ledger — Epic 3 backlog → in-progress
+- **Risk:** low
+- **Workflow / step:** create-story step 1 (first story in epic marks epic in-progress)
+- **Decision point:** 3-1 is the first story of Epic 3; epic-3 is `backlog` in sprint-status.yaml.
+- **Options considered:** A) set epic-3 → in-progress per workflow rule; B) leave backlog.
+- **Chosen:** A — set `epic-3: in-progress` (matches epic-1/epic-2 precedent).
+- **Rationale:** Workflow step 1 mandates marking the epic in-progress when its first story is created.
+- **Reversibility:** revert `epic-3` to `backlog` in sprint-status.yaml.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-06T00:28:53Z] 3-1-view-wallet-balance-and-ledger — Canonical mutation helper name = wallet.mutate (not addEntry)
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture analysis / interface shape)
+- **Decision point:** Epic 3.1 AC wording says wallet.ts provides `getBalance` + `addEntry(tx, …)`, but ARCHITECTURE-SPINE AD-6 and Epic Story 3.5 AC both name the single serialized mutation `wallet.mutate(tx, studentId, …)`.
+- **Options considered:** A) name it `addEntry` per 3.1 wording; B) name it `mutate` per AD-6 + 3.5 (binding architecture); C) build both.
+- **Chosen:** B — `mutate` is the canonical single serialized mutation path (per-student lock → append immutable LedgerEntry with balanceAfterCents, non-negative guard). The epic's "addEntry" is treated as informal shorthand for the same append; story documents the mapping so 3.4/3.5 wire to `wallet.mutate`.
+- **Rationale:** Architecture spine is binding and two downstream stories (3.4 reserve, 3.5 admin credit) already reference `wallet.mutate`. A divergent `addEntry` name would fork the "one serialized mutation path" invariant (AD-6).
+- **Reversibility:** rename the exported function in `src/lib/wallet.ts` and update 3.1's callers-to-be; single-file change, no persisted state.
+- **Files touched:** _bmad-output/implementation-artifacts/3-1-view-wallet-balance-and-ledger.md
+
+### [2026-07-06T00:35:20Z] 3-1-view-wallet-balance-and-ledger — dev-story start: mark in-progress, baseline_commit already set
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story is `ready-for-dev`; baseline_commit `2a404e71` already in YAML frontmatter (matches current HEAD). Need to transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Keep existing baseline_commit; update sprint-status.yaml to `in-progress`.
+- **Rationale:** Required by workflow contract; baseline already captured by create-story agent.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/3-1-view-wallet-balance-and-ledger.md
+
+### [2026-07-06T00:28:53Z] 3-1-view-wallet-balance-and-ledger — Story scope: build getBalance + mutate now, live-DB lock verification deferred to CI
+- **Risk:** medium
+- **Workflow / step:** create-story step 2/5 (scope determination)
+- **Decision point:** 3.1 has no caller of the mutation path yet (reserve=3.4, admin credit=3.5). Does 3.1 implement the full `mutate` (advisory lock + non-negative guard) or only `getBalance` + the read page?
+- **Options considered:** A) getBalance + read page only, defer `mutate` to 3.4/3.5; B) build getBalance + full `mutate` helper now (unit-test the pure guard/balance logic; defer the live Postgres advisory-lock/concurrency verification to CI ephemeral-Postgres, same wall as 1.1/1.5/2.2/2.3).
+- **Chosen:** B. 3.1 AC3 (NFR4: every mutation goes through the helper, never negative) requires the helper to exist as the single seam. Build it now; unit-test `computeBalanceAfter` + the non-negative guard db-free; defer the locked round-trip to CI.
+- **Rationale:** Establishing the single serialized seam in 3.1 (where the wallet domain module is born) prevents 3.4/3.5 from each inventing their own mutation path — mirrors how 2.2 seeded `occupiedEnrollmentWhere` for later reuse. Live-DB advisory-lock behaviour is environmental (unit mocks can't exercise pg_advisory_xact_lock), consistent with prior CI deferrals.
+- **Reversibility:** if the team prefers a thinner 3.1, delete `mutate` from wallet.ts and re-add it in 3.4; getBalance + page are independent.
+- **Files touched:** _bmad-output/implementation-artifacts/3-1-view-wallet-balance-and-ledger.md
+
+### [2026-07-06T00:43:42Z] 3-1-view-wallet-balance-and-ledger — WalletInsufficientFundsError: typed error class (not discriminated result) for mutate rejection
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (Task 2 — pick the mutate failure shape)
+- **Decision point:** Story says "pick the shape the caller in 3.4/3.5 will consume; document it" for the NFR4 rejection. Two options: (A) throw a typed error class (callers `try/catch`); (B) return a discriminated result `{ ok: false, reason: "INSUFFICIENT_FUNDS" }` (callers check `if (!result.ok)`).
+- **Options considered:** A) typed error class `WalletInsufficientFundsError extends Error` — callers catch and present user-friendly message; (B) discriminated result — avoids try/catch but requires every caller to check; (C) raw `Error("Insufficient funds")` — untyped, hard to handle cleanly.
+- **Chosen:** A — `WalletInsufficientFundsError` extends Error, includes `currentBalanceCents` + `requestedAmountCents` fields. Story 3.4 (reserve) and 3.5 (admin credit) both wrap mutate in a try/catch in a server action — the typed error pattern is idiomatic there. The architecture notes that server actions that can fail return discriminated results at the action boundary, not inside domain functions.
+- **Rationale:** Domain functions that detect constraint violations conventionally throw (cf. how Prisma throws `PrismaClientKnownRequestError` on unique violations). The server actions in 3.4/3.5 will wrap `mutate` in try/catch and convert to a discriminated action result. The typed error carries the numeric context (balance, shortfall) callers need for user messages.
+- **Reversibility:** Swap to discriminated result in wallet.ts: change the `throw` to `return { ok: false, reason: "INSUFFICIENT_FUNDS", currentBalanceCents, requestedAmountCents }`, update callers in 3.4/3.5 to check the result. No data/schema impact.
+- **Files touched:** acce-nextjs/src/lib/wallet.ts
+
+### [2026-07-06T00:43:42Z] 3-1-view-wallet-balance-and-ledger — formatSignedZar: U+2212 MINUS SIGN (not ASCII hyphen) for negative amounts
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — formatSignedZar sign character)
+- **Decision point:** Story says "Use a real minus sign or ASCII `-` consistently and pin the exact string in the test." Which character?
+- **Options considered:** A) U+2212 MINUS SIGN (typographically correct for numeric contexts); B) U+002D HYPHEN-MINUS (ASCII `-`, simpler, no encoding surprise).
+- **Chosen:** A — U+2212 MINUS SIGN. The story calls for a "real minus sign" as the preferred option, and financial UIs conventionally use U+2212 for negative amounts. Tests pin the exact character.
+- **Rationale:** Typographic correctness; the test pins the character explicitly so any encoding inconsistency is caught. The implementation comment documents the character code.
+- **Reversibility:** Change `−` to `-` in wallet-display.ts and the corresponding test string in wallet-display.test.ts. One-line change each.
+- **Files touched:** acce-nextjs/src/lib/wallet-display.ts, acce-nextjs/tests/unit/wallet-display.test.ts
+
+### [2026-07-06T00:43:42Z] 3-1-view-wallet-balance-and-ledger — Story 3.1 complete: status → review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (completion + sprint-status update)
+- **Decision point:** All 6 tasks checked, all ACs satisfied, 219/219 vitest green, build clean, prisma validate clean. Mark story review.
+- **Options considered:** n/a — prescribed workflow outcome.
+- **Chosen:** Set development_status["3-1-view-wallet-balance-and-ledger"] = "review" in sprint-status.yaml; set Status: "review" in story file.
+- **Rationale:** All DoD conditions met: tasks complete, ACs satisfied, tests pass (incl. 29 new), build clean, File List complete, Change Log updated, Dev Agent Record complete.
+- **Reversibility:** Revert to "in-progress" by editing sprint-status.yaml and story file Status line.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/3-1-view-wallet-balance-and-ledger.md

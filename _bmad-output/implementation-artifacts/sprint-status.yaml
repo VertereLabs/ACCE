@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-06T00:23:00Z
+last_updated: 2026-07-06T00:45:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -74,6 +74,9 @@ project: ACCE
 # 2-3 set ready-for-dev on 2026-07-05 (create-story: the AD-16 concurrency-safe edit story [(admin)/admin/classes/[id]/edit] = pre-filled client form + updateClassAction wrapping the FIRST FOR UPDATE interactive tx in the app; capacity-vs-occupied floor counted INSIDE the lock via reused occupiedEnrollmentWhere [AC2], optimistic-concurrency via expectedUpdatedAt vs @updatedAt [AC4], price edit never touches Enrollment.priceCents snapshot [AC5]; VERIFIED updatedAt already migrated [schema_deltas_spine] → NO schema/migration change; reuse create schema/action/form templates + toCents [AD-9]; pure edit-schema + capacityBelowOccupied unit-tested; live-DB + concurrency integration test deferred to CI ephemeral-Postgres; per-row Edit link on 2.2 list + dynamic route in e2e manifest via seed-class-acc-1; NO delete/status-transition/enrollment code)
 # 2-3 set review on 2026-07-06 (dev-story complete: editClassSchema [pure, +id/expectedUpdatedAt], updateClassAction [requireAdmin→safeParse→subjectCheck→toCents→$transaction FOR UPDATE lock→ISO updatedAt concurrency check→count-under-lock→update, no Enrollment touch], server page.tsx [notFound+serialisable props] + client edit-form + capacityBelowOccupied + per-row Edit link + e2e manifest; 190/190 vitest, build clean, prisma validate clean)
 # 2-3 set done on 2026-07-06 (code-review: FRESH adversarial pass over all 6 ACs + AD-16/5/3/2/9/13; 1 MEDIUM auto-fixed [edit pre-fill used session.start.toISOString().slice(0,16) = UTC wall-clock, diverging from create-parse/2.2-list server-local frame → on any non-UTC deploy showed wrong time + shifted stored instant each edit round-trip; fixed with server-local toDatetimeLocalInput() → lossless round-trip, consistent w/ create/list, AC1]; 2 deferred [concurrency+token-parity integration test → CI ephemeral-Postgres per Task 7; meetingUrl not nulled on ONLINE→IN_PERSON switch → low, symmetric w/ create]; independently re-verified prisma validate clean + build clean [/admin/classes/[id]/edit ƒ Dynamic] + 190/190 vitest incl 42 edit-schema + 6 capacity-floor; FOR UPDATE lock/optimistic-concurrency/capacity-floor-under-lock + immutable Enrollment.priceCents [AC5] confirmed)
+# epic-3 marked in-progress and 3-1 set ready-for-dev on 2026-07-06 (create-story: first wallet + first Epic 3 story; builds src/lib/wallet.ts [getBalance = Σ amountCents via aggregate + the SINGLE serialized mutate seam per AD-6: per-student pg_advisory_xact_lock → read-under-lock → computeBalanceAfter → non-negative guard NFR4 → append immutable LedgerEntry, on caller tx not db] + read-only (portal)/portal/wallet page [requireSession-first AD-3, query by session.user.id only, balance Card + chronological ledger Table, empty-state R0.00] + pure wallet-math/wallet-display helpers [reuse formatZar]; canonical name = wallet.mutate NOT epic addEntry [AD-6 + Story 3.5 binding]; 3.1 BUILDS+unit-tests the mutate seam but does NOT call it [reserve=3.4, admin credit=3.5]; NO enrollment/Paystack/admin-credit/schema/dep; nav link + /portal/wallet e2e manifest; live-DB read + advisory-lock round-trip deferred CI ephemeral-Postgres)
+# 3-1 set in-progress on 2026-07-06 (dev-story)
+# 3-1 set review on 2026-07-06 (dev-story complete: wallet-math.ts [sumLedgerAmounts+computeBalanceAfter+wouldGoNegative], wallet-display.ts [formatSignedZar+formatLedgerType], wallet.ts [getBalance+mutate AD-6 seam+WalletInsufficientFundsError], (portal)/portal/wallet/page.tsx [requireSession-first+parallel fetch+balance Card+chronological Table+empty-state], portal-nav.tsx [Wallet link], authenticated-routes.ts [/portal/wallet STUDENT]; 219/219 vitest incl 29 new, build clean, prisma validate clean)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -96,8 +99,8 @@ development_status:
   epic-2-retrospective: optional
 
   # Epic 3: Browse & Enroll with Wallet Balance
-  epic-3: backlog
-  3-1-view-wallet-balance-and-ledger: backlog
+  epic-3: in-progress
+  3-1-view-wallet-balance-and-ledger: review
   3-2-browse-upcoming-classes-with-seats-left: backlog
   3-3-class-detail-and-checkout-page: backlog
   3-4-reserve-and-pay-a-seat-from-wallet-balance: backlog

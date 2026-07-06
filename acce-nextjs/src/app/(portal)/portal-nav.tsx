@@ -36,6 +36,17 @@ export function PortalNav() {
           <Logo variant="auto" showWordmark size={32} />
         </Link>
 
+        {/* Centre nav links */}
+        <div className="flex items-center gap-1">
+          {/* Story 3.1 — Wallet balance page (STUDENT+, keyboard-operable, ≥44px touch) */}
+          <Link
+            href="/portal/wallet"
+            className="flex h-11 items-center rounded-md px-3 text-sm font-medium text-foreground/80 hover:bg-accent/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Wallet
+          </Link>
+        </div>
+
         {/* Right-side controls: theme toggle + sign-out */}
         <div className="flex items-center gap-2">
           {/* ThemeToggle: ghost icon button, 40×40px, already a11y-correct */}
