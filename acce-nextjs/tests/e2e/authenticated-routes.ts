@@ -61,4 +61,8 @@ export const AUTHENTICATED_ROUTES: AuthenticatedRoute[] = [
   // route belongs to Story 3.3 (mirrors 2.2 leaving the edit route to 2.3).
   // Live authenticated run is DB-bound → deferred to CI ephemeral-Postgres.
   { path: "/portal/classes", role: "STUDENT" },
+  // Story 3.3 — dynamic class detail + checkout page (uses deterministic seeded id seed-class-acc-1).
+  // Mirrors 2.3's /admin/classes/seed-class-acc-1/edit dynamic-route manifest entry.
+  // Live authenticated run is DB-bound → deferred to CI ephemeral-Postgres.
+  { path: "/portal/classes/seed-class-acc-1", role: "STUDENT" },
 ];

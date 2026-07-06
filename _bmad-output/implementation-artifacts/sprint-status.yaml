@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-06T05:23:06Z
+last_updated: 2026-07-06T05:38:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -82,6 +82,7 @@ project: ACCE
 # 3-2 set in-progress on 2026-07-06 (dev-story)
 # 3-2 set review on 2026-07-06 (dev-story complete: formatSeatsLeft [pure helper in class-display.ts], (portal)/portal/classes/page.tsx [server RSC, requireSession-first, filtered _count occupancy, Card grid, full=Class-full badge+no-CTA, available=gold-accent CTA→/portal/classes/[id], empty-state], portal-nav "Classes" link + e2e manifest +1; 4 new unit tests, 223/223 vitest, build clean, prisma validate clean)
 # 3-2 set done on 2026-07-06 (code-review: FRESH adversarial pass over all 6 ACs + AD-2/3/5/9/10; CLEAN — 0 patch/0 decision-needed/0 defer, 1 dismissed [per-card gold CTA in browse grid is standard product-grid pattern, not a UX-DR2 competing-gold violation; label carries full-vs-available per UX-DR6]; independently re-verified prisma validate clean + build clean [/portal/classes ƒ Dynamic] + 223/223 vitest incl 4 new formatSeatsLeft boundaries; requireSession-first before fetch/JSX [AC5], reused occupiedEnrollmentWhere+computeSeatsLeft AD-5 single source [AC1], full=Class-full+no-CTA [AC2], available=token CTA→3.3 detail route [AC3], empty-state [AC4], meetingUrl/location NOT selected [AD-10]; pure reader zero-write; live-DB occupancy read deferred CI ephemeral-Postgres)
+# 3-3 set ready-for-dev on 2026-07-06 (create-story: read-only class detail+checkout page at (portal)/portal/classes/[id] = dynamic server RSC [params awaited, requireSession-first AD-3, findUnique+notFound mirrors 2.3], full class info + seats-left via reused occupiedEnrollmentWhere+computeSeatsLeft filtered _count [AD-5 reader zero-write], checkout panel computes canPayFromBalance = getBalance(session.user.id) READ-ONLY >= priceCents [AD-6/9, never calls wallet.mutate]; HEADLINE AD-10/FR6 join-detail gate: look up viewer Enrollment.status FIRST, select meetingUrl/location ONLY when CONFIRMED [server-side omission not JSX-hide], reveal mode-dependent ONLINE→meetingUrl/IN_PERSON→location [sidesteps 2.3 stale-meetingUrl deferral]; "Pay with balance" button rendered INERT/disabled — live reserveSeat+wallet.mutate+BOOKING_CHARGE+UX-DR5 toast are Story 3.4 [AD-4 single reservation; mirrors 2.2→2.3 forward-affordance]; NO client island/Paystack/schema/migration/dep/write; dynamic /portal/classes/seed-class-acc-1 appended to e2e manifest; live-DB read+AD-10 reveal deferred CI ephemeral-Postgres)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -107,7 +108,7 @@ development_status:
   epic-3: in-progress
   3-1-view-wallet-balance-and-ledger: done
   3-2-browse-upcoming-classes-with-seats-left: done
-  3-3-class-detail-and-checkout-page: backlog
+  3-3-class-detail-and-checkout-page: review
   3-4-reserve-and-pay-a-seat-from-wallet-balance: backlog
   3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap: backlog
   epic-3-retrospective: optional

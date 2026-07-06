@@ -837,3 +837,53 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** The story is a pure read-only reader that faithfully mirrors the 2.2 admin-classes analog. All six ACs independently re-derived from the diff and confirmed: guard-first `requireSession()` before any fetch/JSX (AC5/AD-3), reused AD-5 single-source `occupiedEnrollmentWhere(now)`+`computeSeatsLeft` via filtered `_count` with no re-derivation (AC1), full-class "Class full" state with no dead CTA (AC2), token-styled gold CTA forward-linking `/portal/classes/[id]` (AC3), calm empty state (AC4), and a green chain (AC6). AD-9 integer-cents-at-UI-edge, AD-10 (`meetingUrl`/`location` deliberately not selected), AD-2 (`db` singleton), zero writes all verified. Chain re-run independently: `prisma validate` clean, `npm run build` clean with `/portal/classes ƒ Dynamic`, 223/223 vitest incl 4 new `formatSeatsLeft` boundaries. The single dismissed finding (per-card gold CTA repeated across the browse grid vs UX-DR2 "one gold accent CTA per view group") is the standard product-grid pattern — one primary action per Card — and the full-vs-available distinction is carried by label text, not colour alone (UX-DR6); no change warranted.
 - **Reversibility:** Status is data-only. To reopen: set `Status: review`/`in-progress` in the story file and the `development_status` entry in sprint-status.yaml back, and add a `### Review Findings` Patch bullet for dev-story to pick up next loop. No code was changed by this review, so nothing to revert in source.
 - **Files touched:** _bmad-output/implementation-artifacts/3-2-browse-upcoming-classes-with-seats-left.md (Status → done, Review Findings appended); _bmad-output/implementation-artifacts/sprint-status.yaml (3-2 → done, last_updated, comment line)
+
+### [2026-07-06T05:30:19Z] 3-3-class-detail-and-checkout-page — Scope split: 3.3 builds detail+checkout PRESENTATION, reserve action is 3.4
+- **Risk:** medium
+- **Workflow / step:** create-story step 2/5 (story scoping vs Story 3.4)
+- **Decision point:** Story 3.3 AC1 puts the "Pay with balance" checkout panel in this story, but the canonical seat reservation (`reserveSeat`/`wallet.mutate`/`BOOKING_CHARGE`, AD-4/AD-6) and the UX-DR5 success/error toast are Story 3.4's ACs. Where is the boundary?
+- **Options considered:** A) 3.3 renders a live "Pay with balance" button wired to a reserve action (duplicates/pulls 3.4 forward, AD-4 single reservation) / B) 3.3 builds a read-only detail+checkout page: server-computes balance≥price + full/enrolled states and renders the "Pay with balance" affordance as an INERT/disabled control; 3.4 converts the panel to a client island, adds reserveSeat + wiring + toast / C) 3.3 omits the checkout panel entirely (violates AC1)
+- **Chosen:** B — fully server-rendered detail page presenting the checkout states; the "Pay with balance" button is present but disabled/non-submitting in 3.3. Mirrors the 2.2→2.3 forward-reference precedent (ship the affordance to a target the next story makes live).
+- **Rationale:** Keeps AD-4's single `reserveSeat` owned by 3.4; keeps 3.3 write-free (AD-5 readers never write) and fully RSC (avoids the 1.5 RSC-500 trap); each story stays independently shippable. No dead action call at runtime.
+- **Reversibility:** If a live button is preferred in 3.3, add the reserve action + client island here instead — but that just relocates 3.4 work; the presentational split is trivially superseded when 3.4 wires the panel.
+- **Files touched:** _bmad-output/implementation-artifacts/3-3-class-detail-and-checkout-page.md
+
+### [2026-07-06T05:30:19Z] 3-3-class-detail-and-checkout-page — AD-10 join-detail gating: CONFIRMED-only, mode-dependent, omitted server-side
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture guardrail — FR6/AD-10)
+- **Decision point:** How to reveal meetingUrl/location only to a CONFIRMED enrollee without leaking the field to non-payers (AD-10: "omitted server-side, not merely hidden in the component").
+- **Options considered:** A) Always select meetingUrl+location, hide in JSX when not confirmed (leaks into RSC payload — violates AD-10) / B) Look up the viewer's Enrollment.status first; only when CONFIRMED select/pass the sensitive fields (conditional select or a second scoped findUnique), and reveal mode-dependently (ONLINE→meetingUrl, IN_PERSON→location per FR6, which also sidesteps the deferred "stale meetingUrl on IN_PERSON" data issue)
+- **Chosen:** B — query `enrollment.findUnique({ where: { studentId_groupSessionId } })`; `isConfirmed = status === "CONFIRMED"`; select meetingUrl/location ONLY when isConfirmed; render ONLINE→meetingUrl, IN_PERSON→location.
+- **Rationale:** Matches AD-10 literally (server-side omission so the field never reaches the client), satisfies FR6 both directions, and mode-gating the reveal avoids surfacing a stale Meet link left on an IN_PERSON row (deferred-work item from 2.3).
+- **Reversibility:** Single fetch site; the gating predicate can be recentred if enrollment/meet consumption changes. Low blast radius.
+- **Files touched:** _bmad-output/implementation-artifacts/3-3-class-detail-and-checkout-page.md
+
+### [2026-07-06T05:30:19Z] 3-3-class-detail-and-checkout-page — Dynamic e2e route uses seeded id seed-class-acc-1
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (e2e manifest wiring)
+- **Decision point:** The dynamic /portal/classes/[id] route (deliberately left to 3.3 by 3.2) needs a concrete path in the authenticated-route manifest.
+- **Options considered:** A) skip the dynamic route / B) use the deterministic seeded class id `seed-class-acc-1` (already used by the 2.3 edit-route manifest entry)
+- **Chosen:** B — append `{ path: "/portal/classes/seed-class-acc-1", role: "STUDENT" }`. Mirrors 2.3's `/admin/classes/seed-class-acc-1/edit` entry.
+- **Rationale:** Gives the RSC-500 smoke a real, seed-backed target; consistent with the established dynamic-route manifest convention.
+- **Reversibility:** One-line manifest edit.
+- **Files touched:** acce-nextjs/tests/e2e/authenticated-routes.ts (by dev in dev-story)
+
+### [2026-07-06T05:35:02Z] 3-3-class-detail-and-checkout-page — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit `a3210042ce00ef0c6d68ccebb8404367acb9cfd0` as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/3-3-class-detail-and-checkout-page.md
+
+### [2026-07-06T05:38:00Z] 3-3-class-detail-and-checkout-page — dev-story complete: status → review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (story completion and mark for review)
+- **Decision point:** All tasks complete; verify chain, update status.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** All 3 tasks complete; 223/223 vitest, build clean (`/portal/classes/[id]` ƒ Dynamic), prisma validate clean; story marked `review` in sprint-status.yaml and story file.
+- **Rationale:** All ACs satisfied: AC1 (detail page + checkout panel with 4 states), AC2 (meetingUrl/location omitted server-side for non-confirmed), AC3 (join details revealed mode-dependently for CONFIRMED), AC4 (full-class + insufficient-balance states), AC5 (requireSession first + notFound for missing id), AC6 (chain green, no writes, no schema change, /portal/classes/seed-class-acc-1 in e2e manifest).
+- **Reversibility:** Revert status to `in-progress`; delete the new page file.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/page.tsx, acce-nextjs/tests/e2e/authenticated-routes.ts, _bmad-output/implementation-artifacts/3-3-class-detail-and-checkout-page.md, _bmad-output/implementation-artifacts/sprint-status.yaml
