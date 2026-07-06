@@ -8,6 +8,48 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 
 ---
 
+### [2026-07-06T17:57:51Z] 4-3-no-oversell-under-concurrent-buyers — dev-story start: mark in-progress, baseline commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story was `ready-for-dev`; need to capture baseline_commit and transition to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit 7ff9f33f as baseline_commit; update sprint-status.yaml to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove YAML frontmatter from story file.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/4-3-no-oversell-under-concurrent-buyers.md
+
+### [2026-07-06T17:57:51Z] 4-3-no-oversell-under-concurrent-buyers — N=2 chosen for concurrency race size
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 3 implementation)
+- **Decision point:** Story says "small N (e.g. 2 or 3)". Which N to use for the concurrent race?
+- **Options considered:** A) N=2 (2 seats, 3 concurrent buyers); B) N=3 (3 seats, 4 concurrent buyers).
+- **Chosen:** A — N=2 (smallest tight race; faster test; N+1=3 concurrent txs enough to force at least one SSI abort per story guidance).
+- **Rationale:** Story guidance explicitly says "N=2 or 3" and "small N for deterministic"; N=2 minimises test duration while still exercising the race.
+- **Reversibility:** Change the `N` constant in the test file to 3; adjust helper call counts.
+- **Files touched:** acce-nextjs/tests/integration/no-oversell.integration.test.ts
+
+### [2026-07-06T17:57:51Z] 4-3-no-oversell-under-concurrent-buyers — describe.skipIf for database-gated skip pattern
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 2 — skip-gate pattern)
+- **Decision point:** Story says mirror tests/e2e/global-setup.ts skip-gate. Options: (A) `describe.skipIf(!hasDb())` at the describe level; (B) `test.skipIf(!hasDb())` per individual test case; (C) manual `if (!hasDb()) return` inside each test body.
+- **Options considered:** A / B / C.
+- **Chosen:** A — `describe.skipIf(!hasDb())` wraps the entire suite; all hooks (beforeAll/afterAll) and tests are skipped atomically; cleanest pattern matching the story's "skips cleanly (no throw)" requirement. Dynamic `await import("@/lib/db")` inside beforeAll prevents db.ts from loading when DATABASE_URL is unset.
+- **Rationale:** Whole-suite skipIf is the idiomatic Vitest pattern; per-test skipIf would still run the module-level dynamic import if beforeAll executed.
+- **Reversibility:** Replace `describe.skipIf(!hasDb())` with `describe(...)` + per-test `skip` calls; add `if (!process.env.DATABASE_URL) test.skip()` guard inside each it.
+- **Files touched:** acce-nextjs/tests/integration/no-oversell.integration.test.ts
+
+### [2026-07-06T17:57:51Z] 4-3-no-oversell-under-concurrent-buyers — AC2 PENDING insert: direct DB create to bypass capacity check
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 4 — AC2 implementation)
+- **Decision point:** To simulate a PENDING hold on a full class (others_occupied >= capacity), the test must insert a PENDING enrollment after the class is at capacity. This cannot go through reserveSeat (which would return class_full). Options: (A) direct db.enrollment.create bypass; (B) start with capacity N+1, fill N, then reduce capacity via direct db.groupSession.update.
+- **Options considered:** A / B.
+- **Chosen:** A — direct `db.enrollment.create` for the PENDING enrollment. Simpler, avoids a capacity-reduction step, matches Task 4's "create one extra student's PENDING hold" intent ("force it past capacity (its own row is the N+1th)").
+- **Rationale:** Test-only data setup — not production code. The test's goal is to assert what `confirmPaidSeat` does when it sees others_occupied >= capacity; the method of creating that state is a test-setup concern.
+- **Reversibility:** Switch to option B (capacity reduction) if a future constraint prevents direct Enrollment inserts.
+- **Files touched:** acce-nextjs/tests/integration/no-oversell.integration.test.ts
+
+---
+
 ### [2026-07-05T20:31:22Z] 1-1-database-prisma-foundation — Epic-1 branch + epic status transition
 - **Risk:** low
 - **Workflow / step:** create-story step 1 (target story) + step 6 (sprint status)
@@ -1256,3 +1298,13 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Only design that satisfies ALL binding invariants simultaneously — AD-6 (all mutations via wallet.mutate), AD-8 (one BOOKING_CHARGE), NFR4 (balance never negative), AD-9 (integer cents), AD-16 (charge uses immutable priceCents snapshot), and AD-15 symmetry (captured money conserved to wallet). Produces a transparent, auditable ledger: "paid RXXX (TOPUP) → charged RXXX for the class (BOOKING_CHARGE)". The spec/epic (epics.md:455) and spine (AD-7) under-described the confirm as "a BOOKING_CHARGE ledger row is written" without the funding leg; this fills the gap rather than contradicting it.
 - **Reversibility:** Fully reversible — revert the single edit block in `confirmPaidSeat` (remove the `mutate({type:"TOPUP", amountCents: args.amountCents, ...})` call and restore the lone BOOKING_CHARGE) plus the two docstring notes and the deferred-work.md wording. No schema/migration/enum change (TOPUP already exists in the LedgerType enum). If the money model is later re-architected (e.g. a real Paystack card-refund adapter, or treating card payments as non-wallet external settlements with the BOOKING_CHARGE recorded outside the balance ledger), this TOPUP leg is the single seam to change. To re-verify live: the CI ephemeral-Postgres round-trip (deferred-work.md item a) asserts TOPUP+BOOKING_CHARGE and net-non-negative.
 - **Files touched:** acce-nextjs/src/lib/enrollment.ts, _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T17:52:26Z] 4-3-no-oversell-under-concurrent-buyers — create-story: scope 4.3 as the AD-4 real-Postgres no-oversell concurrency integration test (both paths)
+- **Risk:** medium
+- **Workflow / step:** create-story step 2/5 (interpret ambiguous scope, write story)
+- **Decision point:** Story 4.3's AC1 says the N+1 concurrency proof is "(Vitest)", but ARCHITECTURE-SPINE AD-4 mandates a REAL-Postgres integration test ("unit mocks can't exercise 40001"). All of 3.4/4.1/4.2 deferred exactly this test to "CI ephemeral-Postgres". The reservation invariant itself (Serializable SSI + FOR UPDATE + P2034/40001 retry) is ALREADY implemented and `done` in reserveSeat (3.4/4.1) and confirmPaidSeat (4.2). So what does 4.3 actually build?
+- **Options considered:** A) Author a real-Postgres Vitest *integration* test (node env, new `tests/integration/**` + `vitest.integration.config.ts` + `test:integration` script) that fires N+1 concurrent `reserveSeat` calls at an N-seat class across BOTH the balance path (funded students → exactly N CONFIRMED + N BOOKING_CHARGE, rest class_full) AND the Paystack/PENDING path (R0 students → exactly N PENDING holds, rest class_full); gated to SKIP when DATABASE_URL is unset (mirrors tests/e2e/global-setup.ts). Consolidates the 3.4/4.1/4.2 deferred concurrency items. Live green run deferred to CI ephemeral-Postgres; the two-browser staging check is inherently manual. B) Write it as a unit test with mocked Prisma — REJECTED: cannot reproduce SSI/40001, would false-green the exact invariant AD-4 says must be proven against real pg. C) Modify production enrollment.ts — REJECTED: the invariant is already implemented+reviewed done; 4.3 is verification, not re-implementation. D) Build the full CI pipeline + testcontainers — REJECTED as scope creep: adds a Docker/testcontainers dependency (high risk, unavailable in sandbox) and the CI job's remit spans many stories' deferred items (a bmad-testarch-ci concern), not just 4.3's no-oversell test.
+- **Chosen:** A. The story authors the AD-4-mandated integration test + a dependency-free node-env integration harness (reads DATABASE_URL, uses the existing `@/lib/db` singleton + @prisma/adapter-pg — NO new dependency), skip-gated for the sandbox. In-sandbox bar: tsc/build clean + unit suite stays green + the integration test authored & gated; live execution deferred to CI ephemeral-Postgres. Manual two-browser staging verification recorded as a checklist item.
+- **Rationale:** Matches AC1's "(Vitest)" (a Vitest integration project) AND AD-4's real-Postgres mandate AND the whole codebase's established "deferred to CI ephemeral-Postgres" posture (1.1/1.5/2.x/3.4/4.1/4.2). Minimal reasonable interpretation: no new deps, no prod code change, no CI-pipeline build-out.
+- **Reversibility:** Delete `tests/integration/**`, `vitest.integration.config.ts`, and the `test:integration` script. If the test surfaces a real oversell defect, the fix lands in enrollment.ts (single reservation seam, AD-4). To re-architect toward testcontainers later, swap the DATABASE_URL-provided pg for a testcontainers-spun pg in the same harness file.
+- **Files touched:** _bmad-output/implementation-artifacts/4-3-no-oversell-under-concurrent-buyers.md (story), and (specified for dev) tests/integration/**, acce-nextjs/vitest.integration.config.ts, acce-nextjs/package.json, _bmad-output/implementation-artifacts/deferred-work.md
