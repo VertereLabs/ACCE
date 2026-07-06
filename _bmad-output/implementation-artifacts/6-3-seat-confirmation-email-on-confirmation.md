@@ -4,7 +4,7 @@ baseline_commit: cd713a3db009c3525ac9aa508a65ba81ac7df560
 
 # Story 6.3: Seat-confirmation email on confirmation
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
