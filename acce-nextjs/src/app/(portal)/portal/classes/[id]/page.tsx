@@ -174,7 +174,7 @@ export default async function ClassDetailPage({ params }: ClassDetailPageProps) 
   const balanceCents = await getBalance(studentId);
 
   // AC1: canPayFromBalance — true only when not full, not already confirmed, and
-  // wallet covers the price. The "Pay with balance" button is inert in this story.
+  // wallet covers the price. Gates the live PayWithBalanceButton client island (3.4).
   const canPayFromBalance =
     !isFull && !isConfirmed && balanceCents >= cls.priceCents;
 

@@ -977,3 +977,23 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** 4 retries within 3–5 range; 200ms max backoff keeps total serialization overhead ≤650ms well within 15s timeout.
 - **Reversibility:** Change the constants in enrollment.ts; no downstream impact.
 - **Files touched:** acce-nextjs/src/lib/enrollment.ts
+
+### [2026-07-06T06:16:30Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — Code review: fix-vs-action-items at <ask>
+- **Risk:** critical
+- **Workflow / step:** code-review step-04 (Present & Act — patch handling `<ask>`)
+- **Decision point:** The workflow HALTs to ask how to handle findings (apply patches / leave as action items / walk through). This is a MONEY + CONCURRENCY path (Serializable reserve + BOOKING_CHARGE debit), so tagged critical per the taxonomy even though the review came back clean.
+- **Options considered:** A) leave findings as action items → in-progress; B) auto-fix HIGH/MEDIUM then set status per outcome; C) dismiss everything and set done.
+- **Chosen:** B — but the FRESH adversarial pass produced 0 HIGH/MEDIUM/critical findings, so the only action was auto-fixing 1 LOW misleading comment and dismissing 2 LOW noise items; status set to `done`.
+- **Rationale:** Contract default is FIX AUTOMATICALLY all HIGH/MEDIUM and set `done` if clean. Independently re-verified the chain (prisma validate clean, build clean w/ `/portal/classes/[id]` ƒ Dynamic, 253/253 vitest) and the correctness-critical invariants by direct code read + grep rather than trusting the dev record: AD-14 (grep: no Enrollment.status write outside enrollment.ts), AD-6 (grep: no ledgerEntry.create outside wallet.ts), AD-8 enrollment-before-charge, WalletInsufficientFundsError propagating out of the tx callback → rollback → `insufficient_balance` (no orphaned CONFIRMED row), AD-4 Serializable + FOR UPDATE + P2034/40001 retry, AD-5 occupancy-under-lock via reused predicate, AD-3 requireSession-first keyed to session.user.id, AD-9 integer-cents `-priceCents`, AD-16 price snapshot from the locked row. No oversell / negative-balance path found; the last-seat race is blocked by SSI with the @@unique as backstop.
+- **Reversibility:** Revert status `done`→`review` in sprint-status.yaml + story frontmatter to reopen. The only code change is a comment edit in page.tsx (git revert the commit). No logic, schema, or data changed by the review.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/page.tsx (comment only); _bmad-output/implementation-artifacts/3-4-reserve-and-pay-a-seat-from-wallet-balance.md; _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-06T06:16:45Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — Dismiss two LOW findings vs deferring
+- **Risk:** low
+- **Workflow / step:** code-review step-03 (Triage — severity + routing)
+- **Decision point:** Two LOW observations: (1) server action maps a Zod parse failure to `not_available`; (2) trailing `return {ok:false,reason:"error"}` after the retry `while` looks like dead code.
+- **Options considered:** patch / defer (record in deferred-work + Review Follow-up) / dismiss.
+- **Chosen:** Dismiss both (dropped, not written to deferred-work).
+- **Rationale:** (1) The client island always sends a valid `{classId}` from `cls.id`; the parse-fail path is defensive-only and a generic rejection avoids leaking a distinct state — behaviourally harmless. (2) The trailing return is REQUIRED to satisfy TypeScript's return-path analysis for the `while (attempt <= MAX_RETRIES)` loop and is a correct retry-exhaustion safety net — not dead code. Neither warrants a code change or a follow-up.
+- **Reversibility:** N/A (no change). If desired later, add a distinct `invalid_input` reason and/or refactor the retry loop to a for-loop; both are local, reversible edits.
+- **Files touched:** none

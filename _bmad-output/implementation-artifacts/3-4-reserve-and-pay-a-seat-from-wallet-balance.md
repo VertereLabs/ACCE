@@ -4,7 +4,7 @@ baseline_commit: 92fa690b85f1bf4960ddea81e7b7388e97005c57
 
 # Story 3.4: Reserve and pay a seat from wallet balance
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -365,6 +365,15 @@ db.$transaction(Serializable, retry on P2034/40001):
 - [Source: acce-nextjs/src/app/(admin)/admin/classes/new/actions.ts + class-form.tsx (2.1 action + client-island/toast pattern)]
 - [Source: acce-nextjs/src/app/(portal)/portal/classes/[id]/page.tsx (3.3 detail page — inert button to replace)]
 - [Source: _bmad-output/implementation-artifacts/3-3-class-detail-and-checkout-page.md; 3-1-view-wallet-balance-and-ledger.md; 2-3-edit-an-existing-class.md; deferred-work.md]
+
+## Review Findings
+
+**Code review (2026-07-06, autopilot code-review, FRESH adversarial pass).** Reviewed the full baseline→HEAD diff (enrollment.ts, actions.ts, pay-with-balance-button.tsx, reserve-schema.ts, reserve-schema.test.ts, page.tsx) against all 5 ACs + AD-2/3/4/5/6/8/9/12/14/16 and UX-DR5/DR6. Independently re-verified: `npx prisma validate` clean (schema untouched), `npm run build` clean (`/portal/classes/[id]` ƒ Dynamic), `npm test` 253/253 green. Confirmed the AD-14 sole-status-writer invariant (grep: no `Enrollment` status write outside `enrollment.ts`) and the AD-6 sole-ledger-writer invariant (grep: no `ledgerEntry.create` outside `wallet.ts`). Confirmed enrollment-created-before-charge (AD-8), `WalletInsufficientFundsError` propagates OUT of the tx callback → rollback → outer catch → `insufficient_balance` (no orphaned CONFIRMED row), FOR-UPDATE + Serializable + P2034/40001 retry loop (AD-4), occupancy counted under the lock via reused `occupiedEnrollmentWhere` (AD-5), `requireSession()`-first keyed to `session.user.id` (AD-3), integer-cents charge `-priceCents` (AD-9), price snapshot from the locked row (AD-16), sonner toast per reason + `router.refresh()` + `revalidatePath` (AC4/UX-DR5), gold-token CTA with ≥44px/aria-busy/focus-ring (UX-DR6). The two 3.3-deferred items 3.4 was meant to close are addressed: reserve-time SCHEDULED+future state guard (real enforcement under the lock) and the inert→live focusable button.
+
+Result: **CLEAN — 0 HIGH, 0 MEDIUM, 0 critical.**
+
+- [x] [Review][Patch] Stale "button is inert in this story" comment on the money-path checkout eligibility calc — auto-fixed: updated to describe the live PayWithBalanceButton island [acce-nextjs/src/app/(portal)/portal/classes/[id]/page.tsx:177] (LOW)
+- Dismissed (noise): (1) server action maps a Zod parse failure to `not_available` rather than a distinct "invalid input" reason — the client island always sends a valid `{ classId }` from `cls.id`, so the path is defensive-only and a generic rejection avoids leaking a distinct state; (2) the trailing `return { ok: false, reason: "error" }` after the retry `while` loop looks like dead code but is required to satisfy TypeScript's return-path analysis and is a correct retry-exhaustion safety net.
 
 ## Dev Agent Record
 

@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-06T06:15:00Z
+last_updated: 2026-07-06T06:16:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -87,6 +87,7 @@ project: ACCE
 # 3-4 set ready-for-dev on 2026-07-06 (create-story: FIRST real seat purchase + first src/lib/enrollment.ts + first Serializable tx + first wallet.mutate CALL; reserveSeat balance-path = Serializable $transaction [AD-4, SSI blocks last-seat race, FOR UPDATE belt-and-braces, retry P2034/40001] → status=SCHEDULED+future-start guard → FR11 non-cancelled reject [AD-12, @@unique backstop] → occupiedEnrollmentWhere count-under-lock < capacity [AD-5, class_full] → create CONFIRMED priceCents-snapshot → wallet.mutate BOOKING_CHARGE -priceCents+enrollmentId [AD-6/8, insufficient_balance on WalletInsufficientFundsError rollback]; server action requireSession-first+Zod classId+revalidatePath [AD-3]; client-island Pay button + sonner toast [UX-DR5] plain-classId-prop [1.5 RSC-500 safe]; pure reserve-schema/reason→msg unit-tested; Paystack-PENDING-branch=Epic4 seam [NOT 2nd path], AD-8-vs-AD-12-reactivation-BOOKING_CHARGE collision flagged deferred [unreachable til Epic5 cancel]; enrollment.ts SOLE status writer [AD-14]; NO schema/migration/dep; live no-oversell/40001 concurrency + negative-balance integration test deferred CI ephemeral-Postgres [AD-4-mandated])
 # 3-4 set in-progress on 2026-07-06T06:00:31Z (dev-story)
 # 3-4 set review on 2026-07-06 (dev-story complete: enrollment.ts [reserveSeat Serializable-tx+retry+FOR UPDATE+AD-5/6/8/12/14], actions.ts [reserveSeatAction requireSession-first+Zod+revalidatePath], pay-with-balance-button.tsx [client island+sonner toast UX-DR5], reserve-schema.ts [pure Zod+message mapper], reserve-schema.test.ts [30 new tests]; 253/253 vitest, build clean, prisma validate clean)
+# 3-4 set done on 2026-07-06 (code-review: FRESH adversarial pass over all 5 ACs + AD-2/3/4/5/6/8/9/12/14/16 + UX-DR5/DR6; CLEAN — 0 HIGH/MEDIUM/critical, 1 LOW auto-fixed [stale "button is inert" comment on money-path eligibility calc → describes live PayWithBalanceButton island], 2 dismissed [Zod-fail→not_available is defensive-only generic rejection; trailing return after retry-while satisfies TS return-path]; independently re-verified prisma validate clean + build clean [/portal/classes/[id] ƒ Dynamic] + 253/253 vitest; grep-confirmed AD-14 sole Enrollment.status writer [none outside enrollment.ts] + AD-6 sole ledger writer [none outside wallet.ts]; verified enrollment-before-charge AD-8, WalletInsufficientFundsError propagates out→rollback→insufficient_balance [no orphan CONFIRMED], Serializable+FOR UPDATE+P2034/40001 retry AD-4, occupancy-under-lock AD-5, requireSession-first keyed session.user.id AD-3, integer-cents -priceCents AD-9, price snapshot from locked row AD-16; both 3.3-deferred items closed [reserve-time SCHEDULED+future guard + inert→live focusable button]; live no-oversell/40001 + negative-balance concurrency integration test still deferred CI ephemeral-Postgres [AD-4-mandated])
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -113,7 +114,7 @@ development_status:
   3-1-view-wallet-balance-and-ledger: done
   3-2-browse-upcoming-classes-with-seats-left: done
   3-3-class-detail-and-checkout-page: done
-  3-4-reserve-and-pay-a-seat-from-wallet-balance: review
+  3-4-reserve-and-pay-a-seat-from-wallet-balance: done
   3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap: backlog
   epic-3-retrospective: optional
 
