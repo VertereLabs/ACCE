@@ -60,8 +60,16 @@ export const auth = betterAuth({
     // Story 1.3 — admin plugin: surfaces `session.user.role` (STUDENT | ADMIN).
     // The schema columns (role, banned, banReason, banExpires, impersonatedBy) were
     // pre-migrated in Story 1.1 — adding this plugin is config-only, no migration.
-    // Default role is STUDENT (schema default: `role String? @default("STUDENT")`).
-    admin(),
+    //
+    // defaultRole: "STUDENT" — the admin plugin's user-create `before` hook injects
+    // `role: options.defaultRole ?? "user"` INTO the insert data, which BYPASSES the
+    // Prisma `@default("STUDENT")` column default. Without this option, every
+    // magic-link signup would be written with role "user" (not "STUDENT"), so the
+    // Story 3.5 admin students surface (`where: { role: "STUDENT" }`) — and the whole
+    // documented `session.user.role` = STUDENT | ADMIN model — would never match real
+    // students. Setting defaultRole aligns Better Auth with the schema default and the
+    // codebase's role model. (Story 3.5 code-review fix — root cause of the role gap.)
+    admin({ defaultRole: "STUDENT" }),
     nextCookies(), // MUST be last — after all other plugins including admin()
   ],
 });

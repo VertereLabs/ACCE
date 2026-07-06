@@ -4,7 +4,7 @@ baseline_commit: e8e054cd34086d81c0a713a8c102342fbe8aed0a
 
 # Story 3.5: Admin credits a student's wallet (resolves the balance-origin gap)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -390,3 +390,18 @@ _bmad-output/implementation-artifacts/sprint-status.yaml (UPDATED — in-progres
 ### Change Log
 
 - 2026-07-06: Story 3.5 implemented. Built admin student surface (list + per-student view with balance/ledger/credit form), creditWalletAction (ADJUSTMENT via wallet.mutate — the SECOND mutate caller), pure credit-schema + 22 unit tests, wiring to admin landing + e2e manifest. 275/275 vitest, build clean, prisma validate clean. Last story in Epic 3.
+- 2026-07-06: Code review (FRESH adversarial pass over all 5 ACs + AD-1/2/3/6/9 + NFR4/NFR5). 1 HIGH auto-fixed at root cause; 3 dismissed. 275/275 vitest, build clean (both /admin/students routes present), prisma validate clean, AD-6 sole-ledger-writer invariant grep-confirmed. Status → done.
+
+### Review Findings
+
+- [x] [Review][Patch] Real students get `role: "user"` not `"STUDENT"` — admin students surface would be empty/404 in production [acce-nextjs/src/lib/auth.ts:64] — **FIXED (critical/auth).** The Better Auth admin plugin's user-create `before` hook injects `role: options.defaultRole ?? "user"` into the insert data (verified `node_modules/better-auth/dist/plugins/admin/admin.mjs:29`), BYPASSING the Prisma `@default("STUDENT")`. So real magic-link signups are written with `role: "user"`, and 3.5's `where: { role: "STUDENT" }` list + the two `role !== "STUDENT"` re-checks would never match them → empty list + 404 on every per-student view in prod, making the whole story non-functional. Root-cause fix applied: `admin({ defaultRole: "STUDENT" })` — aligns Better Auth with the schema default and the codebase's documented `session.user.role` = STUDENT|ADMIN model. Seed sets Priyanka ADMIN explicitly so unaffected; no existing student rows to backfill on a fresh system. (Note: if the app already has live "user"-role students in prod, a one-time `UPDATE "user" SET role='STUDENT' WHERE role='user'` backfill would also be required — not applied, no evidence of live student data.)
+- Dismissed (3): (a) `creditWalletAction` trusts the client-submitted `studentId` rather than a route param — but it re-verifies the target is a real STUDENT and ADMINs are authorized to credit ANY student, so no privilege escalation (AC4 satisfied). (b) Redundant hidden `studentId` input in the form — `studentId` is already tracked via `defaultValues` + `register`; harmless. (c) No upper bound on credit amount — `amountCents` is Int4 (max ~R21.4M); admin is trusted; out of scope for positive-credit-only.
+
+### Verification (independently re-run at review)
+
+- `npx prisma validate` → schema valid (untouched).
+- `npm run build` → Compiled successfully; `/admin/students` and `/admin/students/[id]` both `ƒ Dynamic` in the route table.
+- `npx vitest run` → 275/275 green (incl. 22 credit-schema tests), re-run after the auth.ts fix.
+- AD-6 invariant: grep confirmed `ledgerEntry.create` exists ONLY in `src/lib/wallet.ts` (the `enrollment.ts` hit is a comment).
+- `requireAdmin()` fails closed (any role != "ADMIN" → /portal); `creditWalletAction` calls it FIRST, before parse/write (AD-3); credit routes through `wallet.mutate` under its per-student advisory lock (AD-6); Rand→cents converts once via `Math.round` (AD-9, float rounding spot-checked: 10.555→1056, 10.554→1055, 0.01→1).
+- Deferred (unchanged, environmental — already in deferred-work.md): live-authenticated `/admin/students/[id]` dynamic-route run + real ADJUSTMENT-credit round-trip → CI ephemeral-Postgres (no seeded student in sandbox). This deferred CI job will also transitively verify the role fix (a registered student must now appear in the admin list).

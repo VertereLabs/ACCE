@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-06T06:35:00Z
+last_updated: 2026-07-06T08:50:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -91,6 +91,7 @@ project: ACCE
 # 3-5 set ready-for-dev on 2026-07-06 (create-story: LAST Epic 3 story — resolves balance-origin gap M1; builds the MISSING admin student surface [(admin)/admin/students list + (admin)/admin/students/[id] view = balance Card via getBalance + read-only ledger reusing 3.1 rendering + client-island credit form] + creditWalletAction = requireAdmin-first→Zod→target-user STUDENT re-check [NFR5]→db.$transaction→wallet.mutate ADJUSTMENT positive cents [AD-6, the SECOND mutate caller after 3.4's BOOKING_CHARGE]; positive-credit only, NO Serializable/FOR UPDATE/retry [no oversell invariant — advisory lock in mutate suffices, do NOT cargo-cult 3.4]; toCents once [AD-9]; pure credit-schema unit-tested; nav link + /admin/students static e2e manifest; NO schema/migration/enum/dep, NO ledger write outside wallet.ts, NO debit/enrollment/cancel; live credit round-trip + dynamic /admin/students/[id] deferred CI ephemeral-Postgres [no seeded student — ADMIN-only seed])
 # 3-5 set in-progress on 2026-07-06T06:28:35Z (dev-story)
 # 3-5 set review on 2026-07-06 (dev-story complete: credit-schema.ts [pure Zod+toCents], credit-schema.test.ts [22 tests], creditWalletAction [requireAdmin→safeParse→STUDENT re-check→toCents→$transaction wallet.mutate ADJUSTMENT→revalidatePath], credit-wallet-form.tsx [client island+sonner+gold-token CTA], students/page.tsx [requireAdmin-first+findMany STUDENT+Table+empty-state], students/[id]/page.tsx [requireAdmin-first+notFound+parallel getBalance+ledger+CreditWalletForm island+ledger table mirrors 3.1], admin landing Manage students link + e2e manifest; 275/275 vitest, build clean, prisma validate clean)
+# 3-5 set done on 2026-07-06 (code-review: FRESH adversarial pass over all 5 ACs + AD-1/2/3/6/9 + NFR4/NFR5; 1 HIGH auto-fixed at ROOT [Better Auth admin plugin's user-create before-hook injects role:defaultRole??"user" → BYPASSES Prisma @default("STUDENT"), so real magic-link students get role="user" NOT "STUDENT" → 3.5's where:{role:"STUDENT"} list + role!=="STUDENT" re-checks would render empty list + 404 every student in prod = story non-functional; fixed with admin({defaultRole:"STUDENT"}) in auth.ts aligning Better Auth w/ schema default + documented STUDENT|ADMIN model; seed sets ADMIN explicit so unaffected, no student rows to backfill on fresh system], 3 dismissed [client-submitted studentId re-verified STUDENT+admin authorized-any so no escalation; redundant hidden input; no credit upper-bound]; independently re-verified prisma validate clean + build clean [/admin/students + /admin/students/[id] ƒ Dynamic] + 275/275 vitest incl 22 credit-schema; AD-6 sole-ledger-writer grep-confirmed [ledgerEntry.create only in wallet.ts]; requireAdmin-first AD-3 + wallet.mutate advisory-lock AD-6 + toCents-once AD-9 confirmed; live credit round-trip still deferred CI ephemeral-Postgres [will transitively verify role fix — a registered student must now appear in admin list]. EPIC 3 COMPLETE)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -118,7 +119,7 @@ development_status:
   3-2-browse-upcoming-classes-with-seats-left: done
   3-3-class-detail-and-checkout-page: done
   3-4-reserve-and-pay-a-seat-from-wallet-balance: done
-  3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap: review
+  3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap: done
   epic-3-retrospective: optional
 
   # Epic 4: Online Payment & Guaranteed Seats
