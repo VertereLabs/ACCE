@@ -1,12 +1,18 @@
-// Class detail + checkout page — Story 3.3 (AC1–AC5, AC6); updated Story 3.4 (AC1, AC4).
+// Class detail + checkout page — Story 3.3 (AC1–AC5, AC6); updated Story 3.4 (AC1, AC4);
+// updated Story 4.1 (AC5 — live "Pay online with Paystack" CTA).
 // Dynamic server component: guard → enrollment lookup → class fetch → checkout panel.
 //
 // Story 3.4 update: The inert "Pay with balance" button is replaced by the
 //   <PayWithBalanceButton> client island (pay-with-balance-button.tsx), which calls
 //   reserveSeatAction and shows a sonner toast on success/error (UX-DR5), then
 //   calls router.refresh() to re-render this page in the CONFIRMED state.
+//
+// Story 4.1 update: The static "Online payment is coming soon" copy in the
+//   insufficient-balance branch is replaced by the <PayOnlineButton> client island
+//   (pay-online-button.tsx), which calls payWithPaystackAction and performs a
+//   full-page redirect to Paystack's checkout URL (window.location.href, AC5).
 //   Everything else — AD-10 join-detail gating, AD-5 occupancy read, the enrolled/
-//   full/insufficient checkout states — is unchanged from Story 3.3.
+//   full/balance-sufficient branches — is unchanged.
 //
 // Security model (AD-3): requireSession() is the TRUSTED page-level guard.
 // It runs BEFORE any data fetch or JSX. The session.user.id drives ALL lookups —
@@ -40,6 +46,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PayWithBalanceButton } from "./pay-with-balance-button";
+import { PayOnlineButton } from "./pay-online-button";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (consistent with 2.2/2.3/3.2).
@@ -178,6 +185,11 @@ export default async function ClassDetailPage({ params }: ClassDetailPageProps) 
   const canPayFromBalance =
     !isFull && !isConfirmed && balanceCents >= cls.priceCents;
 
+  // Story 4.1 AC5: canPayOnline — true when the student has insufficient balance
+  // but the class is available (not full, not confirmed). Gates the PayOnlineButton.
+  // Mutually exclusive with canPayFromBalance (UX-DR2: one gold CTA per view).
+  const canPayOnline = !isFull && !isConfirmed && !canPayFromBalance;
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
@@ -303,18 +315,24 @@ export default async function ClassDetailPage({ params }: ClassDetailPageProps) 
             </div>
           )}
 
-          {/* ── AC4: Insufficient balance — calm message, no Pay button ── */}
-          {!isConfirmed && !isFull && !canPayFromBalance && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Insufficient wallet balance</p>
-              <p className="text-sm text-muted-foreground">
-                Your balance: {formatZar(balanceCents)} · Class price:{" "}
-                {formatZar(cls.priceCents)}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Online payment (Paystack) is coming soon (Epic 4). Top up your
-                wallet with an admin credit to book now.
-              </p>
+          {/* ── AC5 (Story 4.1): Insufficient balance — live "Pay online" CTA ── */}
+          {/*
+            canPayOnline is mutually exclusive with canPayFromBalance (UX-DR2).
+            Balance-sufficient users see PayWithBalanceButton above.
+            Insufficient-balance users see PayOnlineButton here.
+            PayOnlineButton calls payWithPaystackAction → PENDING hold → redirect to Paystack.
+            Pass a plain string prop (RSC-500 safe per 1.5 lesson).
+          */}
+          {canPayOnline && (
+            <div className="space-y-3">
+              <div className="text-sm">
+                <p className="font-medium">Pay online with Paystack</p>
+                <p className="text-muted-foreground">
+                  Your balance: {formatZar(balanceCents)} · Class price:{" "}
+                  {formatZar(cls.priceCents)}
+                </p>
+              </div>
+              <PayOnlineButton classId={cls.id} />
             </div>
           )}
         </CardContent>

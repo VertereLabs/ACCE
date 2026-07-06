@@ -24,6 +24,10 @@ import { Button } from "@/components/ui/button";
 import { reserveSeatAction } from "./actions";
 import { RESERVE_SUCCESS_MESSAGE, getReserveErrorMessage } from "@/lib/reserve-schema";
 
+// Story 4.1 note: reserveSeatAction now returns { ok: true, outcome: "confirmed", enrollmentId }
+// on success (not the old { ok: true, enrollmentId } shape). The result.ok check below still
+// works correctly since outcome:"confirmed" is the only ok:true case the balance action returns.
+
 // ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------

@@ -1047,3 +1047,102 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Fixes the defect at its source so the whole codebase's stated role model becomes true; keeps 3.5's precise `role === "STUDENT"` filter correct for all future signups. defaultRole is NOT validated against the plugin's `roles` map (only `adminRoles` is — admin.mjs:19), so "STUDENT" writes cleanly. Seed sets Priyanka's role to "ADMIN" explicitly (seed-data.ts:36), so this default never affects the admin. On a fresh/greenfield system there are no existing student rows to backfill (sandbox has none; ADMIN-only seed), so no migration/data concern.
 - **Reversibility:** Fully reversible — revert `admin({ defaultRole: "STUDENT" })` back to `admin()`. It only affects the role written to NEW users at signup going forward; it performs no migration and touches no existing rows. If the app already has live "user"-role students in production, a one-time backfill (`UPDATE "user" SET role='STUDENT' WHERE role='user'`) would be needed in addition — recorded as a note, not applied (no evidence of live student data at this development stage).
 - **Files touched:** acce-nextjs/src/lib/auth.ts
+
+### [2026-07-06T06:54:43Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — Epic-4 branch + epic status transition
+- **Risk:** low
+- **Workflow / step:** create-story step 1 (target story) + step 6 (sprint status)
+- **Decision point:** No `epic-4` git branch existed (HEAD was on `epic-3`); 4-1 is the first story of Epic 4, which requires marking the epic `in-progress`.
+- **Options considered:** A) `git checkout -b epic-4` off current HEAD (epic-3 tip); B) branch from main.
+- **Chosen:** A — created `epic-4` from the epic-3 tip (2fefcb9) per the dispatch VERSION CONTROL block (one branch per epic, chained off prior epic). Set `development_status.epic-4: in-progress` per create-story step-1 first-story rule.
+- **Rationale:** Contract mandates epic-4 chained off prior work, never main; skill mandates epic→in-progress on first story creation.
+- **Reversibility:** `git branch -D epic-4`; revert the sprint-status `epic-4` line to `backlog`.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-06T06:54:43Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — reserveSeat return-shape extended to carry the PENDING/Paystack outcome
+- **Risk:** medium
+- **Workflow / step:** create-story steps 2-3 (artifact + architecture analysis → story scoping)
+- **Decision point:** AD-4 mandates ONE `reserveSeat()` for both the balance and Paystack paths, extended in place (never a second reservation fn). The 3.4 `reserveSeat` returns `{ ok: true; enrollmentId } | { ok: false; reason }` and currently treats insufficient balance as a terminal `insufficient_balance` failure (caught from `WalletInsufficientFundsError`). 4.1 must turn the insufficient-balance case into a PENDING+hold success outcome. How should the result shape evolve so the caller can distinguish "confirmed now" from "go pay online"?
+- **Options considered:** A) widen the success arm to a discriminated `outcome`: `{ ok: true; outcome: "confirmed"; enrollmentId } | { ok: true; outcome: "pending_payment"; enrollmentId; paymentRef; amountCents }`, keep the `{ ok: false; reason }` arm; B) keep the flat shape and add an out-of-band flag; C) a second reservation fn for Paystack (rejected — violates AD-4).
+- **Chosen:** A. reserveSeat now reads balance UNDER the lock: `balance >= price` → existing CONFIRMED + BOOKING_CHARGE (unchanged); else → create/reactivate PENDING with `pendingExpiresAt = now+15min` + a unique `paymentRef`, and return the `pending_payment` outcome. The `insufficient_balance` reason is removed from the reachable set (balance shortfall is no longer a failure).
+- **Rationale:** Single canonical reservation (AD-4) with an honest discriminated result; balance decision made under the same lock that guarantees no-oversell; the 3.4 balance-path consumers (reserveSeatAction / PayWithBalanceButton) only need to map the new `outcome: "confirmed"` arm.
+- **Reversibility:** Result type is internal to enrollment.ts + its two entry actions; revert by collapsing the `outcome` arms and restoring the `insufficient_balance` terminal reason. No DB/schema impact (shape is code-only).
+- **Files touched:** (guidance only — implemented by dev-story) acce-nextjs/src/lib/enrollment.ts, .../(portal)/portal/classes/[id]/actions.ts, pay-with-balance-button.tsx
+
+### [2026-07-06T06:54:43Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — Paystack init runs OUTSIDE the Serializable tx
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture guardrails → sequencing)
+- **Decision point:** The Paystack `transaction/initialize` call is an external HTTP round-trip. Where does it run relative to the reserveSeat Serializable transaction that holds the `GroupSession FOR UPDATE` lock?
+- **Options considered:** A) call `paystack.init()` INSIDE reserveSeat's tx (holds the DB row lock across an external HTTP call — long lock, serialization-retry storms, tx timeout risk); B) reserveSeat COMMITS the PENDING enrollment + paymentRef in the tx, returns `pending_payment`, then the server action calls `paystack.init()` OUTSIDE the tx with the committed paymentRef as the Paystack `reference`, and returns the checkout URL to the client island for a full-page redirect.
+- **Chosen:** B. The domain tx does DB-only work (create PENDING hold + paymentRef under the lock); the server action orchestrates the external init afterward. If init fails after the row commits, the 15-min hold simply lazy-expires (AD-5) and frees the seat — the action returns an error toast.
+- **Rationale:** Never hold a DB lock across network I/O; keeps the Serializable tx short (critical for SSI + the P2034/40001 retry loop); paymentRef committed first so the 4.2 webhook can always join `Payment.reference → Enrollment.paymentRef` even if the browser never reaches Paystack. A top-level redirect to Paystack needs no CSP change (`form-action 'self'` only governs form submissions; server-side fetch is not browser-CSP-governed) — confirmed against next.config.ts and ARCHITECTURE-SPINE deployment notes.
+- **Reversibility:** Move the init call site; no persistent state affected.
+- **Files touched:** (guidance only) acce-nextjs/src/lib/paystack.ts (new), .../(portal)/portal/classes/[id]/actions.ts
+
+### [2026-07-06T06:54:43Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — own-PENDING resume vs expired-PENDING reactivation (AC2 nuance)
+- **Risk:** medium
+- **Workflow / step:** create-story step 2 (interpreting an ambiguous acceptance criterion)
+- **Decision point:** 3.4's existing-enrollment check rejects ANY non-CANCELLED own row as `already_enrolled`. With PENDING holds now real, the student's OWN PENDING row must be handled: an UNEXPIRED own PENDING (mid-payment) and an EXPIRED own PENDING (hold lapsed) are different, and neither is exactly `already_enrolled`. The epic AC ("seat isn't sold from under me mid-payment") and AD-5/AD-12 don't spell out the own-row resume/reactivate rule.
+- **Options considered:** A) treat all own non-CANCELLED (incl. PENDING) as already_enrolled (blocks legitimate resume + re-book after expiry); B) own UNEXPIRED PENDING → RESUME (return the existing paymentRef so the action re-inits Paystack with the same reference); own EXPIRED PENDING → treat as free/reactivate into a fresh hold (or confirmed if balance now suffices); own CONFIRMED/ATTENDED/NO_SHOW → already_enrolled.
+- **Chosen:** B (minimal reasonable interpretation). Under the lock, before counting occupancy, lazily flip OTHER students' expired PENDING rows on this class to CANCELLED (AD-5 "expiry flip only inside a locked mutation in enrollment.ts"); for the current student, branch on own-row status+expiry as above. Paystack `initialize` is effectively idempotent by `reference`, so re-initing with the same paymentRef safely resumes.
+- **Rationale:** Honours "seat held while I pay" (resume) and AD-12 (reactivate a lapsed hold rather than dead-ending), while preserving FR11 (one active seat per student). Keeps the expiry flip inside the lock per AD-5, so it can never race a 4.2 webhook confirm.
+- **Reversibility:** Localised to reserveSeat's existing-enrollment branch; collapse to option A if resume/reactivate proves out of scope. No schema impact.
+- **Files touched:** (guidance only) acce-nextjs/src/lib/enrollment.ts
+
+### [2026-07-06T07:01:00Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — dev-story start: mark in-progress + baseline commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Starting implementation of story 4-1. Current HEAD is 2fefcb91. Status transitions from ready-for-dev → in-progress.
+- **Options considered:** Single choice — follow the workflow.
+- **Chosen:** Record baseline_commit=2fefcb91ae184eae1c75318b2ef639d852c8d782 in story YAML frontmatter, update sprint-status.yaml to in-progress.
+- **Rationale:** Standard dev-story step 4 procedure.
+- **Reversibility:** Revert sprint-status.yaml line to ready-for-dev.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/4-1-paystack-init-with-a-15-minute-pending-seat-hold.md
+
+### [2026-07-06T07:01:01Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — ReserveSeatResult type widening: remove insufficient_balance reason
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5, Task 2
+- **Decision point:** The old ReserveSeatResult had `{ ok: false, reason: "insufficient_balance" }`. With PENDING holds, a balance shortfall is no longer a failure. The new union removes `insufficient_balance` and adds `{ ok: true; outcome: "pending_payment"; ... }`. The existing reserve-schema.ts, reserve-schema.test.ts, and pay-with-balance-button.tsx reference `insufficient_balance`.
+- **Options considered:** A) Keep `insufficient_balance` as a dead code path for defensive fallback; B) Remove it cleanly from result type and schema, update dependents.
+- **Chosen:** B — remove `insufficient_balance` from ReserveSeatResult and ReserveFailureReason, update reserve-schema.test.ts, update pay-with-balance-button.tsx to handle the new outcome-tagged result. The WalletInsufficientFundsError catch returns `{ ok: false, reason: "error" }` as a defensive net (story-mandated).
+- **Rationale:** Clean type system — the type accurately reflects possible outcomes. Keeping a dead reason would mislead future developers and cause incorrect toast messages. The story explicitly mandates this removal.
+- **Reversibility:** Add `insufficient_balance` back to the union type and re-add the RESERVE_ERROR_MESSAGES entry.
+- **Files touched:** acce-nextjs/src/lib/enrollment.ts, acce-nextjs/src/lib/reserve-schema.ts, acce-nextjs/tests/unit/reserve-schema.test.ts, acce-nextjs/src/app/(portal)/portal/classes/[id]/pay-with-balance-button.tsx
+
+### [2026-07-06T07:01:02Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — reserveSeatAction handling of pending_payment outcome from balance path
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5, Task 3
+- **Decision point:** The balance-path `reserveSeatAction` calls `reserveSeat`. With the new code, if a student's balance drops between page render and button click, `reserveSeat` returns `{ ok: true, outcome: "pending_payment" }` instead of the old `{ ok: false, reason: "insufficient_balance" }`. The balance button's action should NOT silently treat this as a success.
+- **Options considered:** A) Return `{ ok: true, outcome: "pending_payment", ... }` verbatim — PayWithBalanceButton interprets it incorrectly; B) Map `outcome: "pending_payment"` from the balance action → `{ ok: false, reason: "error" }` (unexpected for balance path); C) Map it to `{ ok: false, reason: "not_available" }`.
+- **Chosen:** B — `reserveSeatAction` wraps the result: if `r.ok && r.outcome === "confirmed"` → revalidate + return `{ ok: true, outcome: "confirmed", enrollmentId }`; if `r.ok && r.outcome === "pending_payment"` → return `{ ok: false, reason: "error" }` (edge case — balance was spent between render and click, hold was created, student gets error toast, hold will lazily expire); if `!r.ok` → return the error result.
+- **Rationale:** Keeps the balance button semantically correct. The pending_payment path requires the Paystack action, not the balance button. The created PENDING hold lazily expires (AC2) and frees the seat. Rare race condition — balance changing between render and click.
+- **Reversibility:** Remove the `pending_payment` mapping from reserveSeatAction, accept the odd success toast.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/actions.ts
+
+### [2026-07-06T07:01:03Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — payWithPaystackAction name + placement
+- **Risk:** low
+- **Workflow / step:** dev-story step 5, Task 3
+- **Decision point:** The story says "Add the Paystack entry to actions.ts (or a colocated payWithPaystackAction)." Name and placement choice.
+- **Options considered:** A) `initializePaystackAction`; B) `payWithPaystackAction`; C) `reserveWithPaystackAction`.
+- **Chosen:** B — `payWithPaystackAction` placed in the existing actions.ts. Mirrors `reserveSeatAction` naming style (verb + noun + Action), descriptive of user intent ("pay with Paystack"). Colocated for symmetry.
+- **Rationale:** Consistent naming convention, minimal footprint (no new file needed for the action).
+- **Reversibility:** Rename; export is the public surface.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/actions.ts
+
+### [2026-07-06T07:01:04Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — Paystack money path: critical classification
+- **Risk:** critical
+- **Workflow / step:** dev-story step 5, Tasks 1–3
+- **Decision point:** This story touches the payments path (Paystack initialize, PENDING enrollment creation, paymentRef generation). Per the taxonomy: "payments/billing" → critical.
+- **Options considered:** A) Log as high; B) Log as critical (correct per contract).
+- **Chosen:** B — critical. Key invariants being maintained: (1) No BOOKING_CHARGE/wallet.mutate on the PENDING path (AD-8); (2) Paystack init runs OUTSIDE the transaction (no lock held across HTTP); (3) PAYSTACK_SECRET_KEY fail-fast (never logged); (4) amount is integer cents passed straight through (AD-9); (5) paymentRef is crypto.randomUUID()-based (unique, Paystack-safe charset); (6) requireSession() called FIRST in the action (AD-3).
+- **Reversibility:** The PENDING enrollment can be soft-deleted or manually expired; the Paystack transaction (if initialized) can be abandoned (it auto-expires on Paystack's side if not completed). No money moves until the 4.2 webhook confirms.
+- **Files touched:** acce-nextjs/src/lib/paystack.ts, acce-nextjs/src/lib/enrollment.ts, acce-nextjs/src/app/(portal)/portal/classes/[id]/actions.ts
+
+### [2026-07-06T07:15:00Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — story completion → review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (story completion)
+- **Decision point:** All 6 tasks complete, all ACs satisfied, 303/303 vitest tests pass (28 new Paystack + 30 reserve-schema), build clean, prisma validate clean. Updating sprint-status.yaml to "review".
+- **Options considered:** Single choice — follow step 9 workflow.
+- **Chosen:** Update sprint-status.yaml development_status[4-1-paystack-init-with-a-15-minute-pending-seat-hold] = "review". Update story file Status to "review". Proceed to git commit + push.
+- **Rationale:** All acceptance criteria met. Definition-of-done satisfied. Deferred items recorded.
+- **Reversibility:** Revert sprint-status.yaml line to "in-progress".
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/4-1-paystack-init-with-a-15-minute-pending-seat-hold.md

@@ -1,21 +1,29 @@
 /**
- * Story 3.4 AC5 — Unit tests for the pure reserve-seat schema and message mapper.
+ * Story 3.4 AC5 + Story 4.1 AC6 — Unit tests for the pure reserve-seat schema
+ * and message mapper.
  *
  * Imports ONLY src/lib/reserve-schema.ts (a pure module — no db/Prisma/DATABASE_URL
  * dependency) so this suite runs safely in the jsdom environment without any live DB.
  *
  * Mirrors the pattern of class-form-schema.test.ts / class-occupancy.test.ts.
  *
+ * Story 4.1 update:
+ *   - "insufficient_balance" removed from ReserveFailureReason and RESERVE_ERROR_MESSAGES.
+ *     A balance shortfall now creates a PENDING hold (Paystack path) rather than an error.
+ *   - PAYSTACK_REDIRECT_MESSAGE added and tested.
+ *   - Reason count updated from 5 to 4.
+ *
  * Coverage:
  *   - reserveInputSchema: valid input, invalid classId (empty, missing, non-string)
  *   - RESERVE_SUCCESS_MESSAGE: present and non-empty
- *   - RESERVE_ERROR_MESSAGES: all five reason keys covered
+ *   - PAYSTACK_REDIRECT_MESSAGE: present and non-empty (4.1)
+ *   - RESERVE_ERROR_MESSAGES: all four reason keys covered (no insufficient_balance)
  *   - getReserveErrorMessage: returns correct message for each reason, and the
  *     fallback "error" message for an unknown reason string
  *
  * NOT unit-tested here (by design — see Dev Notes):
  *   - reserveSeat() — imports db, needs real Postgres + Serializable lock + 40001
- *   - reserveSeatAction() — imports requireSession + db + reserveSeat
+ *   - reserveSeatAction() / payWithPaystackAction() — import requireSession + db
  *   These are the CI ephemeral-Postgres concurrency integration tests (deferred, AD-4).
  */
 
@@ -23,6 +31,7 @@ import { describe, expect, it } from "vitest";
 import {
   reserveInputSchema,
   RESERVE_SUCCESS_MESSAGE,
+  PAYSTACK_REDIRECT_MESSAGE,
   RESERVE_ERROR_MESSAGES,
   getReserveErrorMessage,
   type ReserveFailureReason,
@@ -112,21 +121,39 @@ describe("RESERVE_SUCCESS_MESSAGE", () => {
 });
 
 // ---------------------------------------------------------------------------
-// RESERVE_ERROR_MESSAGES — all five reasons covered
+// PAYSTACK_REDIRECT_MESSAGE — Story 4.1 (UX-DR6: label text carries state)
+// ---------------------------------------------------------------------------
+
+describe("PAYSTACK_REDIRECT_MESSAGE", () => {
+  it("is a non-empty string", () => {
+    expect(typeof PAYSTACK_REDIRECT_MESSAGE).toBe("string");
+    expect(PAYSTACK_REDIRECT_MESSAGE.length).toBeGreaterThan(0);
+  });
+
+  it("communicates the redirect action to the user (UX-DR6)", () => {
+    expect(PAYSTACK_REDIRECT_MESSAGE.toLowerCase()).toMatch(/redirect|paystack/i);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RESERVE_ERROR_MESSAGES — all four reasons covered (insufficient_balance removed in 4.1)
 // ---------------------------------------------------------------------------
 
 describe("RESERVE_ERROR_MESSAGES", () => {
   const reasons: ReserveFailureReason[] = [
     "class_full",
-    "insufficient_balance",
     "already_enrolled",
     "not_available",
     "error",
   ];
 
-  it("contains exactly the five expected reason keys", () => {
+  it("contains exactly the four expected reason keys (no insufficient_balance — removed in 4.1)", () => {
     const keys = Object.keys(RESERVE_ERROR_MESSAGES).sort();
     expect(keys).toEqual([...reasons].sort());
+  });
+
+  it("does NOT contain insufficient_balance (Story 4.1: balance shortfall is now the Paystack path)", () => {
+    expect("insufficient_balance" in RESERVE_ERROR_MESSAGES).toBe(false);
   });
 
   for (const reason of reasons) {
@@ -139,10 +166,6 @@ describe("RESERVE_ERROR_MESSAGES", () => {
 
   it("class_full message references class being full", () => {
     expect(RESERVE_ERROR_MESSAGES.class_full.toLowerCase()).toMatch(/full|filled/);
-  });
-
-  it("insufficient_balance message references balance", () => {
-    expect(RESERVE_ERROR_MESSAGES.insufficient_balance.toLowerCase()).toContain("balance");
   });
 
   it("already_enrolled message communicates existing enrollment", () => {
@@ -166,12 +189,6 @@ describe("getReserveErrorMessage", () => {
   it("returns the class_full message for 'class_full'", () => {
     expect(getReserveErrorMessage("class_full")).toBe(
       RESERVE_ERROR_MESSAGES.class_full,
-    );
-  });
-
-  it("returns the insufficient_balance message for 'insufficient_balance'", () => {
-    expect(getReserveErrorMessage("insufficient_balance")).toBe(
-      RESERVE_ERROR_MESSAGES.insufficient_balance,
     );
   });
 
