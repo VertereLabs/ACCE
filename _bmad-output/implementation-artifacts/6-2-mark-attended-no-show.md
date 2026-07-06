@@ -4,7 +4,7 @@ baseline_commit: 8277014271ac57213e2a673c721d218fbd291fc2
 
 # Story 6.2: Mark attended / no-show
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -218,6 +218,22 @@ No debug issues encountered. All tasks implemented cleanly on first attempt.
 - `acce-nextjs/src/app/(admin)/admin/classes/[id]/page.tsx` — UPDATED: added Actions column + MarkAttendanceButtons island for CONFIRMED rows
 - `acce-nextjs/tests/unit/attendance-schema.test.ts` — NEW: 32 unit tests for pure schema + mapper + AC3 outcome-enum guard
 
+
+## Review Findings
+
+**Code review (2026-07-06, autopilot fresh adversarial pass over diff 8277014..HEAD — dev record NOT trusted):**
+
+✅ **Clean review** — 0 HIGH/MEDIUM/critical, 0 patch, 0 decision-needed, 0 defer, 3 dismissed as noise.
+
+Independently re-verified all 5 ACs + AD-2/3/6/14 + UX-DR2/DR5/DR6/NFR10:
+- **AC1/AC2** — Actions column renders `MarkAttendanceButtons` on CONFIRMED rows only (others `—`); `updateMany({where:{id,status:"CONFIRMED"},data:{status:outcome}})` is the atomic idempotency guard — a stale/concurrent double-mark yields `count===0` → `not_markable` no-op, never an incorrect overwrite.
+- **AC3** — grep-confirmed AD-14 sole `Enrollment.status` writer (every `enrollment.update/updateMany/create` lives in `enrollment.ts`); `markAttendance` is a plain atomic `updateMany` with NO GroupSession FOR UPDATE / NO Serializable / NO retry / NO `wallet.mutate` / NO LedgerEntry (no-show forfeits the already-taken BOOKING_CHARGE — absence of a refund, not a new debit); `z.enum(["ATTENDED","NO_SHOW"])` guard pinned by 32 unit tests rejects CONFIRMED/CANCELLED/PENDING/""/numeric/missing.
+- **AC4** — `requireAdmin()` called FIRST before any parse/write (matches `creditWalletAction` recipe); NEXT_REDIRECT propagates unswallowed; both `enrollmentId` and `outcome` Zod-validated server-side.
+- **AC5** — independently re-ran `npx prisma validate` clean + `npm run build` clean (`/admin/classes/[id]` ƒ Dynamic) + `npm test` 472/472 (incl 32 new attendance-schema).
+
+Dismissed (noise, no action): (1) Zod parse-fail returns `not_found` reason — per Task 3 spec, defensive-only path; the island always sends a valid shape. (2) client-supplied `classId` used in `revalidatePath` without matching it to the enrollment's session — cache-only + admin-only op, and `router.refresh()` re-fetches the current route regardless, so no correctness/security impact. (3) `MARK_ATTENDANCE_SUCCESS` SCREAMING_CASE function name — matches the story's explicit naming request; cosmetic.
+
+Live CONFIRMED→ATTENDED/NO_SHOW write round-trip + roster re-render remain deferred to CI ephemeral-Postgres (seed = ADMIN only → fresh-seed roster is the empty state; no CONFIRMED row to click locally). No code changes made this review.
 
 ## Change Log
 

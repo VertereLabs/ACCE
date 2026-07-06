@@ -1667,3 +1667,15 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All completion gates passed. Live write round-trip deferred to CI ephemeral-Postgres per established sandbox policy (same as all prior stories).
 - **Reversibility:** Revert sprint-status.yaml line to "in-progress".
 - **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+---
+
+### [2026-07-06T22:32:00Z] 6-2-mark-attended-no-show — code-review: clean pass, set done
+- **Risk:** low
+- **Workflow / step:** code-review step 3-4 (triage + present/act) + step 6 (sprint-status sync)
+- **Decision point:** Fresh adversarial review of the `review` story (dev record NOT trusted). At the fix-vs-action-items `<ask>`: default is FIX all HIGH/MEDIUM findings. Determine final status (done vs in-progress).
+- **Options considered:** (A) set `done` — no HIGH/MEDIUM/critical findings, chain independently green; (B) set `in-progress` with Review Follow-ups — only if patch/decision-needed findings remained.
+- **Chosen:** A — status `done`. 0 HIGH/MEDIUM/critical, 0 patch, 0 decision-needed, 0 defer, 3 dismissed as noise.
+- **Rationale:** Re-verified all 5 ACs + AD-2/3/6/14 + UX-DR2/DR5/DR6/NFR10 against actual source. grep-confirmed AD-14 sole `Enrollment.status` writer (every `enrollment.update/updateMany/create` in `enrollment.ts`); `markAttendance` is a plain atomic status-guarded `updateMany` with NO FOR UPDATE / Serializable / retry / `wallet.mutate` / LedgerEntry (correct — attendance is not seat-affecting; no-show forfeits the already-taken BOOKING_CHARGE = absence of a refund, not a new debit); `z.enum` outcome guard pinned by 32 tests; `requireAdmin()` called first before any parse/write. Independently re-ran `prisma validate` clean + `npm run build` clean (`/admin/classes/[id]` ƒ Dynamic) + `npm test` 472/472. No code changes required. 3 dismissed: Zod-fail→`not_found` (per-spec defensive path), client-supplied `classId` in `revalidatePath` (cache-only + admin-only, `router.refresh()` covers UI), `MARK_ATTENDANCE_SUCCESS` naming (matches story request).
+- **Reversibility:** No source changed this review; fully reversible by reverting the story-file Status and sprint-status.yaml `6-2 → review` edits. To re-open, set `development_status[6-2-mark-attended-no-show]` back to `review`.
+- **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md (Status→done + Review Findings), _bmad-output/implementation-artifacts/sprint-status.yaml (6-2→done + comment + last_updated)
