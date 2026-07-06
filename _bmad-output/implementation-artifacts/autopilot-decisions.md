@@ -1324,3 +1324,62 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
   - Only observation: AC1a test uses scope label `"ac1b"` (cosmetic — reads confusingly but no id collision since AC1b uses `"ac1p"`). Severity LOW → dismissed as noise; not worth a patch to a verification-only artifact.
 - **Reversibility:** Purely a status transition + doc updates. To reopen: set `development_status[4-3-...]` back to `review`/`in-progress` in sprint-status.yaml and the story Status header. No code was patched, so nothing to revert in the app.
 - **Files touched:** _bmad-output/implementation-artifacts/4-3-no-oversell-under-concurrent-buyers.md, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/autopilot-decisions.md
+
+### [2026-07-06T20:44:04Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — epic-5 opened + story scoping
+- **Risk:** medium
+- **Workflow / step:** create-story step 1 (epic transition) + step 5 (story scoping)
+- **Decision point:** 5-1 is the first story of Epic 5 (Cancellations & Refunds). Multiple scoping choices: (a) what the read-only "my classes" page lists, (b) whether the cancel button is live or an inert forward affordance, (c) whether 5-1 builds the pure AD-11 cancellation-tier module now (consumed by 5-2's mutation), (d) AD-10 join-detail handling on the list.
+- **Options considered:**
+  - A) Build ONLY the page + inline tier % (no reusable module); 5-2 rebuilds tier logic. Rejected — duplicates AD-11's single-source tier constant, violates DRY, risks divergent comparators.
+  - B) Make the cancel action LIVE in 5-1 (write CANCELLATION_REFUND + status flip). Rejected — that is Story 5.2's ACs (FR13/FR14); AD-6/AD-11/AD-14 mutation belongs to the enrollment.ts#cancel seam built in 5.2. 5-1's ACs are strictly the read-only list + advisory preview.
+  - C) 5-1 builds the read-only `(portal)/portal/my-classes` page + a NEW pure `src/lib/cancellation.ts` (CANCELLATION_TIERS constant + `hoursUntilStart` + `refundTierForHours` + `computeRefund` decomposition), unit-tested; the cancel button is an INERT forward affordance (disabled), exactly mirroring 3.3's inert Pay button → 3.4. 5-2 reuses `computeRefund` server-side under the lock. Chosen.
+- **Chosen:** C.
+- **Rationale:** Mirrors the codebase's established "pure helper built + unit-tested ahead of its mutating consumer" pattern (occupiedEnrollmentWhere in 2.2 before reserveSeat consumed it; reserve-schema in 3.4). AD-11 mandates a single `CANCELLATION_TIERS` constant with pinned comparators (h≥48→100%, 24≤h<48→70%, h<24→0%) and a single refund/fee decomposition (`refundCents` from tier, `feeCents = priceCents − refundCents`) — building it once in 5-1 and reusing in 5-2 guarantees the preview % and the cancel-time computation can never diverge. AD-11 explicitly says "the preview % in the UI is advisory; the server recomputes at cancel-time" — so 5-1 legitimately owns the advisory preview and the pure tier module while writing nothing.
+- **Scoping sub-decisions (all logged here):**
+  - List = `status = CONFIRMED AND session.start > now`, ordered start asc. FR12 says "confirmed/upcoming enrollments." PENDING (mid-payment holds) are NOT "my classes" yet; past classes are not cancellable. Minimal reasonable interpretation.
+  - Join details (AD-10): 5-1 does NOT select `meetingUrl`/`location` into the list (avoids re-implementing the AD-10 gate); each row links to the existing `/portal/classes/[id]` detail page which already reveals join details for a CONFIRMED viewer (built in 3.3). Keeps the AD-10 surface single-sourced.
+  - Cancel affordance = inert/disabled forward affordance; 5-2 converts it to a client island + confirm + `cancelEnrollmentAction` + UX-DR5 toast.
+- **Reversibility:** Story file + sprint-status only (create-story writes no app code). To re-scope, edit the story markdown before dev-story runs. If the pure module boundary is wrong, dev-story can inline it; if 5-1 should show PENDING rows too, widen the `where` clause. Nothing is committed to code yet.
+- **Files touched:** _bmad-output/implementation-artifacts/5-1-my-classes-with-cancel-and-refund-tier-preview.md (new), _bmad-output/implementation-artifacts/sprint-status.yaml (epic-5 → in-progress, 5-1 → ready-for-dev)
+
+---
+
+### [2026-07-06T20:48:11Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit `8b9d49d7b6ba5035182f317d6285f4b01df4eee0` as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/5-1-my-classes-with-cancel-and-refund-tier-preview.md
+
+### [2026-07-06T22:54:00Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — refundTierForHours loop-first vs switch approach
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — refundTierForHours implementation)
+- **Decision point:** AC5 says `refundTierForHours` must apply the pinned comparators exactly. Options: (A) for-loop over `CANCELLATION_TIERS` — walks in order, first match wins, automatically stays in sync with the constant; (B) hardcoded switch/if-else with magic numbers duplicating the tier values.
+- **Options considered:** A (loop) / B (switch).
+- **Chosen:** A — for-loop over `CANCELLATION_TIERS`. The loop is the single source of truth: if a tier entry changes or a new tier is added, `refundTierForHours` automatically uses it.
+- **Rationale:** AD-11 says "a per-variant table swaps in later" — the loop approach makes that swap trivial. Hardcoded switch would duplicate the tier comparators, violating the single-source rule and risking drift when 5.2 or later stories add per-variant tiers.
+- **Reversibility:** Replace the for-loop with an if-else chain. No external impact — the function contract (inputs/outputs) is unchanged.
+- **Files touched:** acce-nextjs/src/lib/cancellation.ts
+
+### [2026-07-06T22:54:00Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — optional refund amount preview included
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 3 — page rendering)
+- **Decision point:** AC2 says the cancel button MUST show the refund %. It also says "(optionally show the previewed refund amount via formatZar(computeRefund(...).refundCents))". Include optional amount or not?
+- **Options considered:** A) show % only in button label; B) show % in button label + advisory refund amount below the price (small text, clearly labelled as advisory).
+- **Chosen:** B — include the optional refund amount preview as subordinate text below the per-seat price when refundPct > 0. Labelled "(advisory — recomputed at cancel time)" per AD-11.
+- **Rationale:** Gives the student the most useful information (both % and Rand amount) while clearly labelling it advisory. UX-DR6 is satisfied by the button label text alone; the amount is additive.
+- **Reversibility:** Remove the refund amount span from the page template. No logic change.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/my-classes/page.tsx
+
+### [2026-07-06T22:54:00Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — story marked review; all ACs satisfied
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (story completion and mark for review)
+- **Decision point:** All tasks [x], all ACs verified, test suite green (405/405), build clean, prisma validate clean, no schema/migration/dep change, file list complete. Mark review.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Set story Status: review; sprint-status.yaml 5-1 → review.
+- **Rationale:** Definition of done satisfied: all 5 tasks checked, 54 new unit tests passing, build + prisma validate clean, no regressions, file list complete, dev agent record complete with implementation notes.
+- **Reversibility:** Revert sprint-status.yaml and story Status to in-progress if code-review finds issues requiring re-work.
+- **Files touched:** _bmad-output/implementation-artifacts/5-1-my-classes-with-cancel-and-refund-tier-preview.md, _bmad-output/implementation-artifacts/sprint-status.yaml

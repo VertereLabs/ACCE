@@ -45,6 +45,13 @@ export function PortalNav() {
           >
             Classes
           </Link>
+          {/* Story 5.1 — My classes page (STUDENT+, keyboard-operable, ≥44px touch) */}
+          <Link
+            href="/portal/my-classes"
+            className="flex h-11 items-center rounded-md px-3 text-sm font-medium text-foreground/80 hover:bg-accent/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            My classes
+          </Link>
           {/* Story 3.1 — Wallet balance page (STUDENT+, keyboard-operable, ≥44px touch) */}
           <Link
             href="/portal/wallet"
