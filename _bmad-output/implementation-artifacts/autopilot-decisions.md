@@ -767,3 +767,63 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Neither reaches LOW-worth-fixing; both are explicitly within spec / harmless.
 - **Reversibility:** n/a (no change made).
 - **Files touched:** none
+
+### [2026-07-06T05:07:03Z] 3-2-browse-upcoming-classes-with-seats-left — Card grid vs Table for the student browse listing
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (story authoring / UX layout choice)
+- **Decision point:** Story 2.2 (admin listing) used a shadcn `Table`; 3.2 is the student-facing browse. The AC ("each card shows subject, date/time, per-seat price, and 'N seats left' … using shadcn Card/Badge", UX-DR2/DR3) explicitly calls for cards.
+- **Options considered:** A) reuse the 2.2 `Table` layout; B) render a responsive `Card` grid per UX-DR2/DR3.
+- **Chosen:** B — a responsive `Card` grid (one Card per class, Badge for seats-left / mode / "Class full").
+- **Rationale:** UX-DR2 says the class *listing* reuses `Card` + `Badge`; UX-DR3 says each *card* shows a "N seats left" Badge. The admin table is an ops view; the student browse is a marketing-grade card grid. AC wording is explicit.
+- **Reversibility:** Layout-only, single file `(portal)/portal/classes/page.tsx`. Swap the grid for a Table without touching data/occupancy logic.
+- **Files touched:** story file only (dev implements later).
+
+### [2026-07-06T05:07:03Z] 3-2-browse-upcoming-classes-with-seats-left — Book CTA forward-links to the Story 3.3 detail route
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (scope interpretation of the "Book action")
+- **Decision point:** UX-DR3 mentions a "Book button" on non-full classes, but the class detail/checkout page is Story 3.3 and does not exist yet. Does 3.2 render an active CTA, and does it link anywhere?
+- **Options considered:** A) render a "View class" / "Book" CTA on available cards that links to `/portal/classes/[id]` (built by 3.3) — forward reference, 404s until 3.3; B) render seats-left + "Class full" state with NO active link, deferring all linking to 3.3; C) build the detail route now (scope creep into 3.3).
+- **Chosen:** A — available cards get a token-styled "View class" CTA (`<Link href="/portal/classes/${id}">`); full cards show a "Class full" state and NO active Book CTA (UX-DR3). Add ONLY `/portal/classes` to the e2e authenticated-route manifest (the dynamic detail route is added by 3.3, mirroring how 2.2 left the edit route to 2.3).
+- **Rationale:** Directly mirrors the established 2.2→2.3 pattern (2.2 rendered a per-row Edit link to the 2.3-owned route and left the dynamic manifest entry to 2.3). Keeps 3.2 shippable and gives 3.3 a natural entry point. Not building the detail page keeps scope minimal (contract rule 4).
+- **Reversibility:** The CTA is a single `<Link>` in the page; retarget or remove it in 3.3 if the route shape changes. No data or schema impact.
+- **Files touched:** story file only.
+
+### [2026-07-06T05:07:03Z] 3-2-browse-upcoming-classes-with-seats-left — New pure helper formatSeatsLeft in class-display.ts
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (testable-seam design)
+- **Decision point:** The "N seats left" / "1 seat left" / "Class full" label needs a home that vitest can unit-test without a live DB (mirrors the 3.1/2.2 pure-helper pattern for AC5).
+- **Options considered:** A) inline the label logic in the RSC page (untestable without DB); B) add a pure `formatSeatsLeft(seatsLeft: number): string` to the existing `src/lib/class-display.ts` (already the shared display module — `formatZar`/`formatMode` reused by 3.2); C) create a brand-new portal-only display module.
+- **Chosen:** B — extend `class-display.ts` with `formatSeatsLeft` (0 → "Class full", 1 → "1 seat left", n → "N seats left"). Occupancy math itself keeps reusing `occupiedEnrollmentWhere` + `computeSeatsLeft` from `class-occupancy.ts` (AD-5, single source).
+- **Rationale:** `class-display.ts` is already the shared display-label home and is imported by both admin and portal; one new pure function keeps the seam unit-testable and avoids a redundant module. No new occupancy logic — AD-5 predicate stays the single source.
+- **Reversibility:** Pure additive export; delete or relocate the function freely.
+- **Files touched:** story file only.
+
+### [2026-07-06T05:11:59Z] 3-2-browse-upcoming-classes-with-seats-left — Starting dev-story: mark in-progress
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark in-progress)
+- **Decision point:** Story 3-2 is `ready-for-dev`; baseline_commit must be captured and story marked in-progress.
+- **Options considered:** A) Capture HEAD as baseline_commit and mark in-progress; B) Skip baseline capture.
+- **Chosen:** A — capture HEAD `48faff6e724df6652da4f20636ba52d3831c120f` as baseline_commit, update sprint-status to in-progress.
+- **Rationale:** Skill step 4 requires this before implementation begins.
+- **Reversibility:** Revert sprint-status line to `ready-for-dev`, remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/3-2-browse-upcoming-classes-with-seats-left.md
+
+### [2026-07-06T05:11:59Z] 3-2-browse-upcoming-classes-with-seats-left — Implementation approach: Card grid mirrors 2.2 data-fetch shape
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (implement tasks 1-5)
+- **Decision point:** Portal classes page design — Card grid vs Table; CTA label ("View class" vs "Book"); nav link position (before or after Wallet).
+- **Options considered:** A) Card grid with "View class" CTA, Classes link before Wallet; B) Table like admin page; C) "Book" CTA label.
+- **Chosen:** A — Card grid (UX-DR2/DR3 distinct from admin Table), "View class" CTA (clearer student intent, not booking yet), Classes nav link placed before Wallet (logical browse-first order).
+- **Rationale:** Story explicitly mandates Card grid (UX-DR2/DR3 = distinct from 2.2 admin Table). "View class" matches Story 3.3 intent (detail/checkout, not the booking action itself). Nav ordering: Classes is the primary browsing action, Wallet is secondary — left-to-right mirrors user journey.
+- **Reversibility:** Change CTA label in page.tsx line; swap nav link order in portal-nav.tsx.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/page.tsx, acce-nextjs/src/app/(portal)/portal-nav.tsx
+
+### [2026-07-06T05:11:59Z] 3-2-browse-upcoming-classes-with-seats-left — Story complete: marked review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (completion + sprint-status update)
+- **Decision point:** All 5 tasks complete, all ACs satisfied, 223/223 vitest pass, build clean, prisma validate clean. Mark story review.
+- **Options considered:** A) Mark review; B) Keep in-progress.
+- **Chosen:** A — story marked review in both story file and sprint-status.yaml.
+- **Rationale:** All validation gates pass per skill step 9.
+- **Reversibility:** Revert story Status + sprint-status line back to in-progress.
+- **Files touched:** _bmad-output/implementation-artifacts/3-2-browse-upcoming-classes-with-seats-left.md, _bmad-output/implementation-artifacts/sprint-status.yaml

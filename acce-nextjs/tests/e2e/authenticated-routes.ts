@@ -56,4 +56,9 @@ export const AUTHENTICATED_ROUTES: AuthenticatedRoute[] = [
   // Story 3.1 — read-only student wallet page (RSC-500 smoke guard, 1.5 pattern).
   // Live authenticated run is DB-bound → deferred to CI ephemeral-Postgres.
   { path: "/portal/wallet", role: "STUDENT" },
+  // Story 3.2 — read-only student classes browse page (RSC-500 smoke guard, 1.5 pattern).
+  // Only the static listing route is added here; the dynamic /portal/classes/[id] detail
+  // route belongs to Story 3.3 (mirrors 2.2 leaving the edit route to 2.3).
+  // Live authenticated run is DB-bound → deferred to CI ephemeral-Postgres.
+  { path: "/portal/classes", role: "STUDENT" },
 ];
