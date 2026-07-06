@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-07T00:00:00Z
+last_updated: 2026-07-07T22:08:55Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -108,6 +108,7 @@ project: ACCE
 # epic-6 marked in-progress and 6-1 set ready-for-dev on 2026-07-06 (create-story: FIRST Epic 6 story + FIRST admin class-detail/roster surface; read-only (admin)/admin/classes/[id]/page.tsx = dynamic server RSC [params awaited Next16, requireAdmin-first AD-3, findUnique class + notFound mirrors 2.3/3.5], lists that class's enrollments with student name/email + status label paid[CONFIRMED]/Pending[PENDING]/Attended/No-show; roster queries Enrollment DIRECTLY — spine line101 says roster is NOT bound by AD-5 occupancy, so it shows PENDING+CONFIRMED[+ATTENDED/NO_SHOW forward-affordance] and EXCLUDES CANCELLED [returned-to-pool, not enrolled]; expired PENDING still labelled Pending [readers NEVER write — AD-5, no lazy expiry flip]; NEW pure db-free src/lib/enrollment-display.ts [formatEnrollmentStatus + badge-variant, mirrors class-display.ts testability, reused by 6-2 mark-attended/no-show] unit-tested; empty-state Card when 0 enrollments [FR17 AC2]; per-row "Roster/View" link added to /admin/classes list to reach it; dynamic /admin/classes/seed-class-acc-1 appended to e2e manifest [seeded id, mirrors 2.3 edit-route entry]; NO status WRITE [attendance mark is 6-2, AD-14]/NO email[6.3]/NO schema/migration/enum/dep; live populated-roster read deferred CI ephemeral-Postgres [seed has ADMIN only, no enrollments → empty-state on fresh seed])
 # 6-1 set in-progress on 2026-07-07 (dev-story)
 # 6-1 set review on 2026-07-07 (dev-story complete: enrollment-display.ts [pure formatEnrollmentStatus+enrollmentStatusBadgeVariant, type-only Prisma import], (admin)/admin/classes/[id]/page.tsx [server RSC, requireAdmin-first AD-3, findUnique+notFound, direct enrollment read status!=CANCELLED ordered createdAt asc, header+empty-state Card+Table+Badge], per-row Roster link in 2.2 index, e2e manifest +seed-class-acc-1 ADMIN; 10 new unit tests, 440/440 vitest, build clean [/admin/classes/[id] ƒ Dynamic], prisma validate clean; live populated-roster read deferred CI ephemeral-Postgres)
+# 6-1 set done on 2026-07-07 (code-review: FRESH 3-lens adversarial pass [Blind/EdgeCase/AcceptanceAuditor] over diff 070df51..HEAD, dev record NOT trusted; CLEAN — 0 HIGH/MEDIUM/critical, 0 patch/0 decision-needed/0 new-defer, 3 LOW dismissed [inline class-status ternary == 2.2 local statusVariant; unused `end` over-select; name||email double-email belt-and-braces]; timezone-display cross-cutting defer already tracked 2.2/2.3, story notes forbid unilateral pin; re-verified all 5 ACs + AD-2/3/5/9/10/14: requireAdmin-first before any fetch/JSX [AC4/AD-3], direct enrollment read status:{not:CANCELLED} ordered createdAt asc — NOT occupiedEnrollmentWhere, expired PENDING still Pending, zero writes/no enrollment.ts|wallet.ts import [AC3/AD-5/AD-14], notFound on unknown id [AC4], no meetingUrl/location selected [AD-10], formatZar integer-cents at edge [AD-9], pure type-only EnrollmentStatus helper [class-occupancy.ts pattern], plain div under layout-owned single main [1.3 a11y], index Roster link + e2e manifest seed-class-acc-1 [AC5]; independently re-ran prisma validate clean + next build clean [/admin/classes/[id] ƒ Dynamic] + vitest 440/440 incl 10 new enrollment-display; NO code change this review; live populated-roster read still deferred CI ephemeral-Postgres [seed ADMIN-only → fresh-seed roster = empty-state AC2])
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -153,7 +154,7 @@ development_status:
 
   # Epic 6: Class-Day Operations (Roster, Attendance & Confirmation Email)
   epic-6: in-progress
-  6-1-enrollment-roster-with-paid-pending-status: review
+  6-1-enrollment-roster-with-paid-pending-status: done
   6-2-mark-attended-no-show: backlog
   6-3-seat-confirmation-email-on-confirmation: backlog
   6-4-portal-polish-seats-left-states-empty-states-error-toasts: backlog

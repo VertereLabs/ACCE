@@ -4,7 +4,7 @@ baseline_commit: 070df5196315e8131a501f4ebe795fcc877672ee
 
 # Story 6.1: Enrollment roster with paid / pending status
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -184,6 +184,20 @@ acce-nextjs/tests/unit/enrollment-display.test.ts (NEW)
 acce-nextjs/src/app/(admin)/admin/classes/page.tsx (MODIFIED — added Roster link)
 acce-nextjs/tests/e2e/authenticated-routes.ts (MODIFIED — added /admin/classes/seed-class-acc-1)
 
+### Review Findings
+
+Code review (2026-07-07, autopilot, FRESH 3-lens adversarial pass — Blind Hunter / Edge Case Hunter / Acceptance Auditor — over `git diff 070df51..HEAD`; dev record NOT trusted). **Result: CLEAN — 0 decision-needed, 0 patch, 0 defer (new), 3 dismissed as noise. Status → done.**
+
+Dismissed (LOW, no consequence, consistent with prior-story dismissals):
+- [x] [Review][Dismiss] Class-header status badge uses an inline ternary rather than reusing 2.2's local `statusVariant` — logic is identical (SCHEDULED→default / CANCELLED→destructive / else→secondary) and `statusVariant` is an un-exported page-local helper; duplication is harmless and matches the per-page `formatDateTime` convention.
+- [x] [Review][Dismiss] `db.groupSession.findUnique` selects `end: true` but the header never renders it — over-select, harmless (mirrors 2.2's dismissed over-select finding).
+- [x] [Review][Dismiss] `student.name || student.email` then always shows email muted below → email shown twice if `name` is empty; `name` is non-null (Better Auth), belt-and-braces per story guidance.
+
+Not re-logged (already-tracked cross-cutting): `toLocaleString("en-ZA")` display without an explicit `timeZone` — the display-timezone hardening is a cross-cutting deferred item from 2.2/2.3; story Dev Notes explicitly forbid unilaterally pinning it here.
+
+Independently re-verified (not trusting the dev record): all 5 ACs + AD-2/3/5/9/10/14 against actual source — `requireAdmin()` first before any fetch/JSX (AC4/AD-3); direct enrollment read `status:{not:"CANCELLED"}` ordered `createdAt` asc, NOT `occupiedEnrollmentWhere`, expired PENDING still "Pending", zero writes / no `enrollment.ts`|`wallet.ts` import (AC3/AD-5/AD-14); `notFound()` on unknown id (AC4); no `meetingUrl`/`location` selected (AD-10); `formatZar` integer-cents at UI edge (AD-9); pure type-only `EnrollmentStatus` helper (mirrors `class-occupancy.ts`); plain `<div>` under layout-owned single `<main>` (1.3 a11y); index Roster link + e2e manifest `seed-class-acc-1` wired (AC5). Re-ran `prisma validate` clean, `next build` clean (`/admin/classes/[id]` ƒ Dynamic), full vitest **440/440** incl 10 new enrollment-display assertions. Live populated-roster read remains deferred to CI ephemeral-Postgres (seed = ADMIN only → fresh-seed roster = empty-state AC2).
+
 ## Change Log
 
+- 2026-07-07: Story 6.1 code-review — CLEAN, no code changes; status review → done (3 LOW dismissed, 0 patch/defer; chain independently re-verified 440/440 + build + prisma validate).
 - 2026-07-07: Story 6.1 implemented — enrollment roster page at /admin/classes/[id] with paid/pending status (pure helper + roster page + unit tests + index wiring + e2e manifest). 440/440 vitest, build clean, prisma validate clean.
