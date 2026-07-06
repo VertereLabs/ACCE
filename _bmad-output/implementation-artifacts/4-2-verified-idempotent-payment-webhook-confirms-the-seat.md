@@ -4,7 +4,7 @@ baseline_commit: a4a428092e9e7de9145ae84f38345ed1ff1cd12d
 
 # Story 4.2: Verified, idempotent payment webhook confirms the seat
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 

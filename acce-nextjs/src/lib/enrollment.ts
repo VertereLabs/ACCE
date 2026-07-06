@@ -10,8 +10,12 @@
 // Story 4.2 ADDITIONS:
 //   - `confirmPaidSeat(args)` — the webhook confirm seam (AD-7/8/14/15).
 //     Owns the entire Serializable tx: Payment idempotency gate (P2002 → already_processed)
-//     → GroupSession FOR UPDATE re-check → PENDING+room→CONFIRMED+BOOKING_CHARGE |
+//     → GroupSession FOR UPDATE re-check → PENDING+room→CONFIRMED+TOPUP(captured)+BOOKING_CHARGE |
 //     PENDING-refilled/CANCELLED→CANCELLATION_REFUND wallet credit (AD-15).
+//     NOTE: the confirm path credits the captured card amount as a TOPUP BEFORE the
+//     BOOKING_CHARGE debit — the Paystack path is only taken when balance < priceCents,
+//     so debiting a wallet that never received the card money would trip mutate's NFR4
+//     non-negative guard and fail every confirm forever. TOPUP funds the wallet first.
 //     Reuses the same retry loop, lock pattern, and helpers as reserveSeat.
 //   - `decideConfirmOutcome(args)` — pure exported decision function (unit-testable).
 //   - Lock order: GroupSession FOR UPDATE → wallet advisory lock (same as reserveSeat → no deadlock).
@@ -547,7 +551,10 @@ export function decideConfirmOutcome(args: {
  *      PENDING & othersOccupied >= capacity → refund_to_wallet (AD-15)
  *      CANCELLED                            → refund_to_wallet (AD-15)
  *   5. confirm:  Enrollment→CONFIRMED, pendingExpiresAt=null
+ *                wallet.mutate TOPUP +amountCents (captured card payment funds the wallet)
  *                wallet.mutate BOOKING_CHARGE -priceCents (snapshot, AD-16), enrollmentId, paymentRef
+ *                (TOPUP first so the debit never trips the NFR4 non-negative guard — the
+ *                 Paystack path is only entered when balance < priceCents)
  *      refund:   if still PENDING → Enrollment→CANCELLED, pendingExpiresAt=null (AD-14)
  *                wallet.mutate CANCELLATION_REFUND +amountCents (captured), enrollmentId, paymentRef
  *   commit
@@ -686,10 +693,31 @@ export async function confirmPaidSeat(args: {
 
           // ── Step 5 (confirm path) ──────────────────────────────────────────────
           if (decision === "confirm") {
-            // PENDING → CONFIRMED + BOOKING_CHARGE (snapshot priceCents, AD-16)
+            // PENDING → CONFIRMED (AD-14), then fund-and-charge the wallet ledger (AD-6).
             await tx.enrollment.update({
               where: { id: enr.id },
               data: { status: "CONFIRMED", pendingExpiresAt: null },
+            });
+
+            // ── Fund the wallet with the captured card payment (TOPUP) BEFORE the charge ──
+            // The Paystack path is entered ONLY when wallet balance < priceCents
+            // (reserveSeat's balance decision under the lock), and the card money is
+            // captured by Paystack — it does NOT enter the wallet ledger. Writing the
+            // BOOKING_CHARGE debit against a wallet that never received the card money
+            // would drive the balance negative and trip wallet.mutate's NFR4 non-negative
+            // guard (WalletInsufficientFundsError) — the whole confirm tx would roll back
+            // on EVERY delivery, the route would return 500, and Paystack would retry
+            // forever: the student pays by card but never gets their seat. So we first
+            // credit the captured amount as a TOPUP (money in), then debit the class-price
+            // snapshot as the single BOOKING_CHARGE (AD-8, AD-16). Net wallet effect =
+            // captured − priceCents (0 when captured == price; any residual stays as
+            // conserved balance). This mirrors the AD-15 orphan path, which also credits
+            // the captured amount to the wallet.
+            await mutate(tx, enr.studentId, {
+              type: "TOPUP",
+              amountCents: args.amountCents, // positive = credit the captured card payment (AD-9)
+              enrollmentId: enr.id,
+              paymentRef: args.reference,
             });
             await mutate(tx, enr.studentId, {
               type: "BOOKING_CHARGE",
