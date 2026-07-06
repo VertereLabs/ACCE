@@ -4,7 +4,7 @@ baseline_commit: 48faff6e724df6652da4f20636ba52d3831c120f
 
 # Story 3.2: Browse upcoming classes with seats-left
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -168,6 +168,22 @@ are modified. `/portal/classes` is appended to the 1.5 authenticated-route manif
   - [x] Live-DB read of the listing (real occupancy `_count` over seeded classes) → **deferred to CI
     ephemeral-Postgres** (same wall as 1.1/1.5/2.2/2.3/3.1). Do NOT fake a live query. Static verification
     (`prisma validate` + `build` + vitest) is the bar here.
+
+## Review Findings
+
+**Code review (2026-07-06, autopilot subagent — FRESH adversarial pass):** CLEAN — no `decision-needed`, no `patch`, no `defer`. 1 finding dismissed as noise.
+
+Independently re-derived all six ACs from the diff (not trusting the Dev Agent Record) and re-ran the full chain:
+- **AC1** ✓ — `db.groupSession.findMany({ where: { status: "SCHEDULED", start: { gt: now } }, orderBy: { start: "asc" }, … })` renders each class as a shadcn `Card` with subject name (CardTitle), title (CardDescription), `formatDateTime(start)`, `formatZar(priceCents)` (AD-9 cents→Rand at UI edge), `formatMode(mode)`, and a `Badge` reading `formatSeatsLeft(seatsLeft)` where `seatsLeft = computeSeatsLeft(capacity, cls._count.enrollments)` and the count uses the reused `occupiedEnrollmentWhere(now)` (AD-5 single source — not re-derived). Chronological order confirmed.
+- **AC2** ✓ — `isFull = seatsLeft === 0` renders the `secondary` "Class full" Badge and a calm "This class is fully booked." line with NO active CTA — no dead/misleading Book button.
+- **AC3** ✓ — available cards render a token-styled gold CTA (`bg-accent text-accent-foreground hover:bg-accent/90`, ≥44px) as `<Button asChild><Link href={`/portal/classes/${cls.id}`}>` — deliberate forward reference to the Story 3.3 detail route (mirrors the 2.2→2.3 edit-link precedent).
+- **AC4** ✓ — `classes.length === 0` renders a calm empty-state Card ("No upcoming classes right now. Check back soon.") — no grid, no error styling.
+- **AC5** ✓ — `await requireSession()` is the first statement in the page, before `now`, the query, and any JSX (AD-3 trusted page guard). Query is NOT keyed to `session.user.id` (shared catalogue).
+- **AC6** ✓ — re-ran independently: `npx prisma validate` clean (schema untouched), `npm run build` compiles with `/portal/classes` present as `ƒ (Dynamic)` in the route table, `npx vitest run` 223/223 green including the 4 new `formatSeatsLeft` boundary assertions (0/1/2/6). `/portal/classes` appended to the 1.5 authenticated-route manifest (STUDENT). No schema/migration/dependency change.
+
+Architecture guardrails re-verified: AD-2 (imports `{ db }` singleton, no `new PrismaClient()`), AD-3 (guard-first), AD-5 (pure reader, zero writes, reused occupancy predicate), AD-9 (integer cents formatted only at UI edge), AD-10 (`meetingUrl`/`location` deliberately NOT selected or rendered — join-detail gating stays in 3.3). Fully server-rendered, no client island → not exposed to the 1.5 RSC non-children-prop 500 trap; plain `<div>` wrapper, not a nested `<main>` (1.3 a11y). "Classes" nav link mirrors the 3.1 Wallet link (h-11 ≥44px, focus-visible ring, token-styled).
+
+- [x] [Review][Dismiss] Per-card gold accent CTA repeated across the browse grid vs UX-DR2 "one gold accent CTA per view group" — dismissed as noise. In a catalogue browse grid each Card is its own view unit with a single primary action; the rule targets competing golds *within* a group/card, not the standard product-grid pattern of one primary CTA per card. Label text (not colour alone) carries the full-vs-available distinction (UX-DR6). No change.
 
 ## Dev Notes
 
