@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-06T06:16:00Z
+last_updated: 2026-07-06T06:35:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -88,6 +88,9 @@ project: ACCE
 # 3-4 set in-progress on 2026-07-06T06:00:31Z (dev-story)
 # 3-4 set review on 2026-07-06 (dev-story complete: enrollment.ts [reserveSeat Serializable-tx+retry+FOR UPDATE+AD-5/6/8/12/14], actions.ts [reserveSeatAction requireSession-first+Zod+revalidatePath], pay-with-balance-button.tsx [client island+sonner toast UX-DR5], reserve-schema.ts [pure Zod+message mapper], reserve-schema.test.ts [30 new tests]; 253/253 vitest, build clean, prisma validate clean)
 # 3-4 set done on 2026-07-06 (code-review: FRESH adversarial pass over all 5 ACs + AD-2/3/4/5/6/8/9/12/14/16 + UX-DR5/DR6; CLEAN — 0 HIGH/MEDIUM/critical, 1 LOW auto-fixed [stale "button is inert" comment on money-path eligibility calc → describes live PayWithBalanceButton island], 2 dismissed [Zod-fail→not_available is defensive-only generic rejection; trailing return after retry-while satisfies TS return-path]; independently re-verified prisma validate clean + build clean [/portal/classes/[id] ƒ Dynamic] + 253/253 vitest; grep-confirmed AD-14 sole Enrollment.status writer [none outside enrollment.ts] + AD-6 sole ledger writer [none outside wallet.ts]; verified enrollment-before-charge AD-8, WalletInsufficientFundsError propagates out→rollback→insufficient_balance [no orphan CONFIRMED], Serializable+FOR UPDATE+P2034/40001 retry AD-4, occupancy-under-lock AD-5, requireSession-first keyed session.user.id AD-3, integer-cents -priceCents AD-9, price snapshot from locked row AD-16; both 3.3-deferred items closed [reserve-time SCHEDULED+future guard + inert→live focusable button]; live no-oversell/40001 + negative-balance concurrency integration test still deferred CI ephemeral-Postgres [AD-4-mandated])
+# 3-5 set ready-for-dev on 2026-07-06 (create-story: LAST Epic 3 story — resolves balance-origin gap M1; builds the MISSING admin student surface [(admin)/admin/students list + (admin)/admin/students/[id] view = balance Card via getBalance + read-only ledger reusing 3.1 rendering + client-island credit form] + creditWalletAction = requireAdmin-first→Zod→target-user STUDENT re-check [NFR5]→db.$transaction→wallet.mutate ADJUSTMENT positive cents [AD-6, the SECOND mutate caller after 3.4's BOOKING_CHARGE]; positive-credit only, NO Serializable/FOR UPDATE/retry [no oversell invariant — advisory lock in mutate suffices, do NOT cargo-cult 3.4]; toCents once [AD-9]; pure credit-schema unit-tested; nav link + /admin/students static e2e manifest; NO schema/migration/enum/dep, NO ledger write outside wallet.ts, NO debit/enrollment/cancel; live credit round-trip + dynamic /admin/students/[id] deferred CI ephemeral-Postgres [no seeded student — ADMIN-only seed])
+# 3-5 set in-progress on 2026-07-06T06:28:35Z (dev-story)
+# 3-5 set review on 2026-07-06 (dev-story complete: credit-schema.ts [pure Zod+toCents], credit-schema.test.ts [22 tests], creditWalletAction [requireAdmin→safeParse→STUDENT re-check→toCents→$transaction wallet.mutate ADJUSTMENT→revalidatePath], credit-wallet-form.tsx [client island+sonner+gold-token CTA], students/page.tsx [requireAdmin-first+findMany STUDENT+Table+empty-state], students/[id]/page.tsx [requireAdmin-first+notFound+parallel getBalance+ledger+CreditWalletForm island+ledger table mirrors 3.1], admin landing Manage students link + e2e manifest; 275/275 vitest, build clean, prisma validate clean)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -115,7 +118,7 @@ development_status:
   3-2-browse-upcoming-classes-with-seats-left: done
   3-3-class-detail-and-checkout-page: done
   3-4-reserve-and-pay-a-seat-from-wallet-balance: done
-  3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap: backlog
+  3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap: review
   epic-3-retrospective: optional
 
   # Epic 4: Online Payment & Guaranteed Seats

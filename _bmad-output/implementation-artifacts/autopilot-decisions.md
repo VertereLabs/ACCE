@@ -997,3 +997,43 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** (1) The client island always sends a valid `{classId}` from `cls.id`; the parse-fail path is defensive-only and a generic rejection avoids leaking a distinct state — behaviourally harmless. (2) The trailing return is REQUIRED to satisfy TypeScript's return-path analysis for the `while (attempt <= MAX_RETRIES)` loop and is a correct retry-exhaustion safety net — not dead code. Neither warrants a code change or a follow-up.
 - **Reversibility:** N/A (no change). If desired later, add a distinct `invalid_input` reason and/or refactor the retry loop to a for-loop; both are local, reversible edits.
 - **Files touched:** none
+
+### [2026-07-06T06:22:45Z] 3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap — create-story: shape of the (missing) admin student view + credit path
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (author story) — interpreting an ambiguous AC + scoping a surface that does not yet exist
+- **Decision point:** Epic AC1 says "I am an authenticated ADMIN **on a student's admin view**" — but NO admin student list/detail view exists in the codebase today (admin has only /admin/classes*). The story must decide what "a student's admin view" is and how the admin reaches a specific student to credit.
+- **Options considered:** A) single static /admin/students page with a student-select dropdown + amount (no dynamic route); B) a /admin/students list page + a per-student /admin/students/[id] detail-with-credit view (mirrors 2.2 list → 2.3 detail); C) bolt a credit form onto some existing page.
+- **Chosen:** B — /admin/students (read-only list of role=STUDENT users, requireAdmin, empty-state) linking to /admin/students/[id] (the "student's admin view": student identity + current wallet balance via getBalance + read-only ledger + a client-island credit form). Credit runs through creditWalletAction → db.$transaction → wallet.mutate ADJUSTMENT (positive cents), mirroring the 2.1 create-action + 2.2 list + 3.1 wallet-read patterns already in the app.
+- **Rationale:** B matches the epic's "on a student's admin view" wording literally, reuses the established list→detail admin pattern (2.2→2.3) and the wallet-read UI (3.1), and gives a real per-student surface Priyanka can use once students self-register (Story 1.2 magic-link). A would satisfy the AC too but diverges from the epic's per-student framing and the app's list/detail convention. The ADJUSTMENT credit goes through the ONE vetted AD-6 seam (wallet.mutate: per-student advisory lock → read-under-lock → NFR4 non-negative guard → immutable append) — no new money primitive is introduced; 3.5 is the seam's ADJUSTMENT caller exactly as 3.4 was its BOOKING_CHARGE caller.
+- **Reversibility:** All new files under (admin)/admin/students/** + a pure credit-schema + one nav link + one e2e manifest line. To collapse to option A: drop the [id] route, move the credit form onto the list page with a student-select. No schema/migration/dependency change, so reversal is local file deletion.
+- **Files touched:** _bmad-output/implementation-artifacts/3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap.md (this create-story)
+
+### [2026-07-06T06:23:09Z] 3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap — create-story: no seeded student → e2e dynamic-route + live-credit coverage deferred
+- **Risk:** low
+- **Workflow / step:** create-story step 5/6 — testing scope + e2e manifest wiring
+- **Decision point:** The seed provisions only Priyanka (ADMIN); there is NO seeded STUDENT user (confirmed in prisma/seed-data.ts — ADMIN_USER only). So /admin/students renders an empty list on a fresh seed, and there is no deterministic seeded student id to pin the dynamic /admin/students/[id] route (unlike 2.3/3.3 which used seed-class-acc-1) or to run a live ADJUSTMENT credit against.
+- **Options considered:** A) add a seeded student to prisma/seed-data.ts so the dynamic route + live credit can be pinned now; B) add only the static /admin/students route to the e2e manifest (empty-state → 200 RSC-500 smoke) and defer the dynamic-route + live-credit coverage to the CI ephemeral-Postgres job (same wall as 1.1/1.5/2.2/2.3/3.4); C) add nothing to the manifest.
+- **Chosen:** B — /admin/students added to authenticated-routes manifest (static, empty-state safe); the dynamic /admin/students/[id] live-authenticated run + the real ADJUSTMENT-credit round-trip (balance increases, ledger row appears) recorded as deferred to CI ephemeral-Postgres. Pure credit-schema gets full unit-test coverage in-sandbox.
+- **Rationale:** Option A (seed a student) mutates shared seed state that four done stories reason about ("no seeded student; no balance until 3.5" — 3.4 Dev Notes) and is a higher-blast-radius change than this story needs; the balance-origin capability is real the moment a student self-registers via 1.2, so a seeded fixture is not required to satisfy the ACs. B matches the established sandbox wall (prod DB creds blocked; live DB writes + auth e2e deferred to CI) and keeps 3.5 schema/seed/dependency-free. Static RSC-500 coverage still lands for the new list route.
+- **Reversibility:** If a seeded student is later wanted (e.g. to demo end-to-end without self-registration), add it to seed-data.ts and pin /admin/students/[seeded-id] in the manifest — additive, no migration.
+- **Files touched:** _bmad-output/implementation-artifacts/3-5-...md; _bmad-output/implementation-artifacts/deferred-work.md (deferred entry, added during this create-story)
+
+### [2026-07-06T06:28:35Z] 3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap — dev-story start: mark in-progress, capture baseline_commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; need to capture baseline_commit and transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit `e8e054cd34086d81c0a713a8c102342fbe8aed0a` as baseline_commit; update sprint-status.yaml and story file to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove baseline_commit from story frontmatter.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap.md
+
+### [2026-07-06T06:28:35Z] 3-5-admin-credits-a-students-wallet-resolves-the-balance-origin-gap — credit-schema.ts colocated under students/[id]/
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — schema file placement)
+- **Decision point:** Story allows either colocated `(admin)/admin/students/[id]/credit-schema.ts` or `src/lib/credit-schema.ts`. Both are pure, db-free.
+- **Options considered:** A) Colocate with action/form at `src/app/(admin)/admin/students/[id]/credit-schema.ts`; B) Global lib at `src/lib/credit-schema.ts`.
+- **Chosen:** A — colocated, mirrors the 2.1 `class-form-schema.ts` precedent (colocated with its action+form). Only the action/form under `students/[id]/` need this schema.
+- **Rationale:** Colocated schema keeps module cohesion tight. If reused elsewhere, trivially movable to `src/lib/`.
+- **Reversibility:** `git mv` + update two import paths.
+- **Files touched:** src/app/(admin)/admin/students/[id]/credit-schema.ts

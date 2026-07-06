@@ -65,4 +65,9 @@ export const AUTHENTICATED_ROUTES: AuthenticatedRoute[] = [
   // Mirrors 2.3's /admin/classes/seed-class-acc-1/edit dynamic-route manifest entry.
   // Live authenticated run is DB-bound → deferred to CI ephemeral-Postgres.
   { path: "/portal/classes/seed-class-acc-1", role: "STUDENT" },
+  // Story 3.5 — read-only admin students index (RSC-500 smoke guard, 1.5 pattern).
+  // Renders empty-state on a fresh seed (no seeded student — ADMIN_USER only in 1.4).
+  // The dynamic /admin/students/[id] route has no deterministic seeded student id to pin
+  // (unlike seed-class-acc-1 for 2.3/3.3) — live run deferred to CI ephemeral-Postgres.
+  { path: "/admin/students", role: "ADMIN" },
 ];

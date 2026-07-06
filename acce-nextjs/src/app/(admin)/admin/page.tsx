@@ -28,6 +28,10 @@ export default async function AdminPage() {
         <Button asChild variant="outline">
           <Link href="/admin/classes/new">New class</Link>
         </Button>
+        {/* Story 3.5 — Manage students link for wallet credit (admin only) */}
+        <Button asChild variant="outline">
+          <Link href="/admin/students">Manage students</Link>
+        </Button>
       </div>
     </div>
   );
