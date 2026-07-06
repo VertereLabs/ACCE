@@ -4,7 +4,7 @@ baseline_commit: d7b071911c8c7d1addae36136548fb4bfdce72df
 
 # Story 5.2: Cancel enrollment → tiered refund to wallet, seat returns to pool
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -170,6 +170,18 @@ The append-only wallet ledger is `balance = Σ LedgerEntry.amountCents` (AD-6). 
 - [Source: acce-nextjs/src/lib/cancellation.ts (computeRefund/hoursUntilStart — reuse); src/lib/wallet.ts (mutate/getBalance — AD-6); src/lib/enrollment.ts (reserveSeat/confirmPaidSeat envelope + helpers); src/lib/reserve-schema.ts (schema/mapper pattern); src/lib/auth-guards.ts (requireSession); src/lib/class-display.ts (formatZar)]
 - [Source: acce-nextjs/src/app/(portal)/portal/classes/[id]/pay-with-balance-button.tsx + actions.ts (island + action template); acce-nextjs/src/app/(portal)/portal/my-classes/page.tsx (5.1 page to update)]
 - [Source: _bmad-output/implementation-artifacts/deferred-work.md#AD-12; 5-1-…md; 3-4-…md; 3-5-…md; 4-2-…md; autopilot-decisions.md 2026-07-06 (5.2 ledger-model / re-guard / AD-12-defer decisions)]
+
+## Review Findings
+
+Adversarial code review (2026-07-06, autopilot) — 3-lens pass (Blind Hunter / Edge Case Hunter / Acceptance Auditor) over the 5.2 diff `d7b0719..HEAD`, with FRESH re-verification (dev record NOT trusted). **Result: CLEAN — 0 HIGH/MEDIUM/critical. No patches applied. Status → done.**
+
+Independently re-verified: `npx prisma validate` clean, `npm test` 430/430 green (incl 25 new `cancel-schema.test.ts`), `npm run build` clean (`/portal/my-classes ƒ Dynamic`). AC1 authoritative tiered refund via the single `computeRefund`; ledger model (CANCELLATION_REFUND=+refundCents, CANCELLATION_FEE amountCents=0) re-derived correct → getBalance rises by exactly refundCents; AC2 seat returns via derived AD-5 occupancy (no counter write); AC4 IDOR `findFirst({id,studentId})` + TOCTOU re-read of status UNDER the FOR UPDATE lock (double-cancel no-ops, zero ledger rows) + `start<=now` guard; AC5 live island RSC-500-safe (plain props), AlertDialog + sonner + router.refresh + a11y; AC6 pure schema + schema untouched. grep-confirmed AD-14 (all `Enrollment.status` writes in enrollment.ts) + AD-6 (all `ledgerEntry.create` in wallet.ts).
+
+LOW observations (below the auto-fix HIGH/MEDIUM bar — recorded, not actioned; all cosmetic / by-design):
+- [x] [Review][Dismiss] AlertDialog copy quotes the advisory-preview `refundCents` (page-render time) — a tier boundary crossed before the click could make the dialog promise marginally more than the authoritative cancel-time recompute delivers. By-design: preview is explicitly advisory, success toast quotes no amount, AC1 mandates cancel-time authority.
+- [x] [Review][Dismiss] `revalidatePath` (x2) + `router.refresh()` is belt-and-braces redundant — harmless.
+- [x] [Review][Dismiss] `pendingExpiresAt: null` on the CONFIRMED→CANCELLED flip is a redundant no-op (already null on a CONFIRMED row) — harmless.
+- [x] [Review][Defer] AD-12⇄AD-8 re-book-after-cancel collision is now reachable but intentionally deferred; fails safe via the AD-8 partial-unique index (P2002 → generic error, never a double charge). Already carried in `deferred-work.md#AD-12`.
 
 ## Dev Agent Record
 
