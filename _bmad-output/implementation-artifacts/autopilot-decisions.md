@@ -8,6 +8,36 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 
 ---
 
+### [2026-07-06T22:45:10Z] 6-3-seat-confirmation-email-on-confirmation — dev-story start: mark in-progress
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story was `ready-for-dev`; baseline_commit already set in frontmatter (cd713a3db009c3525ac9aa508a65ba81ac7df560); transition to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Update sprint-status.yaml to `in-progress`; preserve existing baseline_commit.
+- **Rationale:** Required by workflow contract; baseline_commit already present from create-story.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/6-3-seat-confirmation-email-on-confirmation.md
+
+### [2026-07-06T22:45:10Z] 6-3-seat-confirmation-email-on-confirmation — JoinDetail discriminated union design
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1)
+- **Decision point:** The story explicitly specifies a discriminated union `type JoinDetail = { mode: "ONLINE"; url: string | null } | { mode: "IN_PERSON"; location: string | null }`. No ambiguity.
+- **Options considered:** A) Discriminated union as specified; B) Single object with both optional fields.
+- **Chosen:** A — discriminated union exactly as specified.
+- **Rationale:** Story spec is explicit; discriminated union is type-safe and matches the mode-gated reveal pattern from the 3.3 detail page.
+- **Reversibility:** Replace with single object type; update all call sites.
+- **Files touched:** acce-nextjs/src/lib/meeting.ts
+
+### [2026-07-06T22:45:10Z] 6-3-seat-confirmation-email-on-confirmation — email trigger placement: post-commit at entry layer
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (Task 5)
+- **Decision point:** Story spec (AD-13 + Dev Notes) mandates trigger at entry layer (two server actions + webhook route), NOT inside enrollment.ts tx body. Already confirmed in autopilot-decisions.md [2026-07-06T22:39:48Z].
+- **Options considered:** A) Entry-layer post-commit (mandated); B) Inside enrollment.ts tx (rejected — would add email I/O to Serializable core).
+- **Chosen:** A — entry-layer post-commit with try/catch log-only, preserving seat CONFIRMED regardless of email result.
+- **Rationale:** AD-13 mandates email failure never rolls back seat; must be outside the transaction.
+- **Reversibility:** Move three calls into post-commit if (result.outcome==="confirmed") blocks inside enrollment.ts.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/actions.ts, acce-nextjs/src/app/api/webhooks/paystack/route.ts
+
 ### [2026-07-06T21:55:11Z] 6-1-enrollment-roster-with-paid-pending-status — dev-story start: mark in-progress
 - **Risk:** low
 - **Workflow / step:** dev-story step 4 (mark story in-progress)
@@ -1679,3 +1709,27 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Re-verified all 5 ACs + AD-2/3/6/14 + UX-DR2/DR5/DR6/NFR10 against actual source. grep-confirmed AD-14 sole `Enrollment.status` writer (every `enrollment.update/updateMany/create` in `enrollment.ts`); `markAttendance` is a plain atomic status-guarded `updateMany` with NO FOR UPDATE / Serializable / retry / `wallet.mutate` / LedgerEntry (correct — attendance is not seat-affecting; no-show forfeits the already-taken BOOKING_CHARGE = absence of a refund, not a new debit); `z.enum` outcome guard pinned by 32 tests; `requireAdmin()` called first before any parse/write. Independently re-ran `prisma validate` clean + `npm run build` clean (`/admin/classes/[id]` ƒ Dynamic) + `npm test` 472/472. No code changes required. 3 dismissed: Zod-fail→`not_found` (per-spec defensive path), client-supplied `classId` in `revalidatePath` (cache-only + admin-only, `router.refresh()` covers UI), `MARK_ATTENDANCE_SUCCESS` naming (matches story request).
 - **Reversibility:** No source changed this review; fully reversible by reverting the story-file Status and sprint-status.yaml `6-2 → review` edits. To re-open, set `development_status[6-2-mark-attended-no-show]` back to `review`.
 - **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md (Status→done + Review Findings), _bmad-output/implementation-artifacts/sprint-status.yaml (6-2→done + comment + last_updated)
+
+---
+
+### [2026-07-06T22:39:48Z] 6-3-seat-confirmation-email-on-confirmation — create-story: confirmation-email trigger placement
+- **Risk:** medium
+- **Workflow / step:** create-story step 3-5 (architecture analysis → author story guidance)
+- **Decision point:** Story 6.3 must fire a seat-confirmation email "when an enrollment becomes CONFIRMED (via balance-pay in Epic 3 or the webhook in Epic 4)". CONFIRMED is written in exactly two domain functions in `enrollment.ts` — `reserveSeat` (balance path, `outcome:"confirmed"`) and `confirmPaidSeat` (webhook path, `decision:"confirm"`). Where should the email dispatch be triggered, given AD-13 requires it to run OUTSIDE the transaction (a failed email must never roll back the seat)?
+- **Options considered:**
+  - A) **Entry-layer trigger (chosen):** call a new `email.sendSeatConfirmationEmail(enrollmentId)` from the three entry points that observe a `confirmed` outcome — `reserveSeatAction`, `payWithPaystackAction` (its "balance became sufficient" confirmed branch), and the Paystack webhook route (after `confirmPaidSeat` returns confirmed). Requires a minimal additive widening of `ConfirmResult` so the confirmed variant carries `enrollmentId` (the route needs it; `reserveSeat`'s confirmed result already carries it). `enrollment.ts`'s transition/tx core is otherwise untouched.
+  - B) **Domain-centralized in `enrollment.ts`:** dispatch post-commit inside `reserveSeat` and `confirmPaidSeat` themselves (2 sites, can't-forget-a-caller). Rejected: pushes email/presentation I/O and a fresh DB read into the concurrency-critical sole-status-writer module, and changes the behaviour of the function exercised by the 4.3 no-oversell concurrency integration test.
+- **Chosen:** A — trigger at the entry layer (2 server actions + webhook route), alongside the existing `revalidatePath` side-effects; `sendSeatConfirmationEmail` is a domain helper in `email.ts` that owns load+build+send and returns a `SendResult` (never throws). Email runs after the tx has committed → seat is durable regardless of email outcome (AD-13); failure is logged and swallowed.
+- **Rationale:** Side-effect orchestration (revalidate, notify) already lives at the entry layer; keeping it there preserves the clean domain boundary and leaves `enrollment.ts`'s Serializable/retry core (and the 4.3 concurrency test path) pristine. The set of callers that can observe a `confirmed` outcome is closed and small (AD-4 one canonical reservation; AD-7 one webhook), and the story enumerates all three explicitly, mitigating the "forgot-a-caller" risk. `ConfirmResult` widening is additive/back-compat (existing consumers only read `.ok`/`.outcome`).
+- **Reversibility:** To switch to approach B, move the three `sendSeatConfirmationEmail` calls into post-commit blocks inside `reserveSeat`/`confirmPaidSeat` (after `await db.$transaction(...)`, gated on `result.outcome === "confirmed"`, in try/catch) and drop the entry-layer calls; the `email.ts`/`meeting.ts` modules and the `ConfirmResult.enrollmentId` field are unchanged either way.
+- **Files touched:** (guidance only — authored into) _bmad-output/implementation-artifacts/6-3-seat-confirmation-email-on-confirmation.md
+
+### [2026-07-06T22:39:48Z] 6-3-seat-confirmation-email-on-confirmation — create-story: meeting.ts provider shape + email module ownership
+- **Risk:** low
+- **Workflow / step:** create-story step 3-5 (author story guidance)
+- **Decision point:** How to shape the new `src/lib/meeting.ts` `MeetingProvider`/`ManualProvider` (AD-13) and where the email data-load/HTML-build lives.
+- **Options considered:** (meeting) a provider that GENERATES links now vs a `ManualProvider` that surfaces the manually-entered `meetingUrl`/`location`; (email) load-and-build inside `email.ts#sendSeatConfirmationEmail(enrollmentId)` vs the callers assembling and passing a payload.
+- **Chosen:** `meeting.ts` exposes a `MeetingProvider` interface with a single `getJoinDetail(session)` that returns a discriminated `{ mode:"ONLINE"; url } | { mode:"IN_PERSON"; location }`, implemented by `ManualProvider` (returns the stored fields as-is; `GoogleMeetProvider` slots in later with no call-site change per AD-13) and exported as a `meetingProvider` singleton. `email.ts#sendSeatConfirmationEmail(enrollmentId)` owns the single `db` read (enrollment → student email/name, session subject/title/start/mode/meetingUrl/location, priceCents snapshot), builds the HTML via a pure exported `buildSeatConfirmationHtml(...)`, and sends via the existing `sendEmail`. Reuse `formatZar` (AD-9) and the existing `escapeHtml`/`escapeHtmlAttr`; mirror the mode-gated reveal (ONLINE→meetingUrl, IN_PERSON→location) that the 3.3 detail page already uses (consistent with the deferred `meetingUrl`-on-IN_PERSON write-side item). Add a defensive confirmed-status guard so a mis-call cannot email join details for a non-confirmed enrollment (AD-10 spirit).
+- **Rationale:** Single load+build+send keeps the three call sites one-liners and the join-detail/format logic DRY and unit-testable (pure `ManualProvider.getJoinDetail` + pure `buildSeatConfirmationHtml`); the live send is a no-op in the sandbox (no `RESEND_API_KEY` → `sendEmail` logs and returns ok), so no new env/dep and CI-deferred live send matches every prior story. HTML-escaping user-provided fields (title/location/meetingUrl/name) prevents email HTML injection.
+- **Reversibility:** Local, additive new modules/functions; drop or reshape freely — no persistent state, no schema, no dependency.
+- **Files touched:** (guidance only — authored into) _bmad-output/implementation-artifacts/6-3-seat-confirmation-email-on-confirmation.md

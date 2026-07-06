@@ -34,6 +34,7 @@ import { requireSession } from "@/lib/auth-guards";
 import { reserveSeat } from "@/lib/enrollment";
 import { initializeTransaction } from "@/lib/paystack";
 import { reserveInputSchema, type ReserveFailureReason } from "@/lib/reserve-schema";
+import { sendSeatConfirmationEmail } from "@/lib/email";
 
 // ---------------------------------------------------------------------------
 // reserveSeatAction — balance path (Story 3.4; updated Story 4.1 for new outcome type)
@@ -70,6 +71,13 @@ export async function reserveSeatAction(
     // Revalidate so the CONFIRMED state + updated wallet ledger render on refresh.
     revalidatePath(`/portal/classes/${classId}`);
     revalidatePath("/portal/wallet");
+    // Post-commit side-effect: send seat-confirmation email (AD-13 — outside tx).
+    // A failed email must NOT fail the action; the seat is already CONFIRMED.
+    try {
+      await sendSeatConfirmationEmail(result.enrollmentId);
+    } catch (emailErr) {
+      console.error("[reserveSeatAction] seat confirmation email error:", emailErr);
+    }
     return { ok: true, outcome: "confirmed", enrollmentId: result.enrollmentId };
   }
 
@@ -150,6 +158,13 @@ export async function payWithPaystackAction(
     // Revalidate so the CONFIRMED state renders on router.refresh().
     revalidatePath(`/portal/classes/${classId}`);
     revalidatePath("/portal/wallet");
+    // Post-commit side-effect: send seat-confirmation email (AD-13 — outside tx).
+    // A failed email must NOT fail the action; the seat is already CONFIRMED.
+    try {
+      await sendSeatConfirmationEmail(result.enrollmentId);
+    } catch (emailErr) {
+      console.error("[payWithPaystackAction] seat confirmation email error:", emailErr);
+    }
     return { ok: true, confirmed: true, enrollmentId: result.enrollmentId };
   }
 

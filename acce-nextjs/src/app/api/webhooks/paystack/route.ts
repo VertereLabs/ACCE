@@ -26,6 +26,7 @@ export const runtime = "nodejs";
 
 import { verifySignature, parseWebhookEvent } from "@/lib/paystack";
 import { confirmPaidSeat } from "@/lib/enrollment";
+import { sendSeatConfirmationEmail } from "@/lib/email";
 
 export async function POST(request: Request): Promise<Response> {
   // ── Step 1: Read the raw body BEFORE any JSON parse ────────────────────────
@@ -95,6 +96,16 @@ export async function POST(request: Request): Promise<Response> {
   // ok:true (confirmed / already_processed / noop / refunded_to_wallet) → 200
   // ok:false (error / transient failure) → 500 so Paystack retries (AC5, NFR3)
   if (confirmResult.ok) {
+    // Post-commit side-effect: send seat-confirmation email on the confirmed path (AC1, AD-13).
+    // A failed email must NOT change the HTTP status — the seat is already CONFIRMED;
+    // Paystack must still receive 200 (not 500) so it does not retry the webhook (AC2).
+    if (confirmResult.outcome === "confirmed") {
+      try {
+        await sendSeatConfirmationEmail(confirmResult.enrollmentId);
+      } catch (emailErr) {
+        console.error("[webhooks/paystack] seat confirmation email error:", emailErr);
+      }
+    }
     return new Response(null, { status: 200 });
   }
 

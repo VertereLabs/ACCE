@@ -486,7 +486,8 @@ class AlreadyProcessedError extends Error {
  *   "error"              — unrecoverable error; route returns 500 for Paystack retry
  */
 export type ConfirmResult =
-  | { ok: true; outcome: "confirmed" | "refunded_to_wallet" | "already_processed" | "noop" }
+  | { ok: true; outcome: "confirmed"; enrollmentId: string }
+  | { ok: true; outcome: "refunded_to_wallet" | "already_processed" | "noop" }
   | { ok: false; reason: "error" };
 
 /**
@@ -726,7 +727,7 @@ export async function confirmPaidSeat(args: {
               enrollmentId: enr.id,
               paymentRef: args.reference,
             });
-            return { ok: true as const, outcome: "confirmed" as const };
+            return { ok: true as const, outcome: "confirmed" as const, enrollmentId: enr.id };
           }
 
           // ── Step 5 (refund_to_wallet path, AD-15) ─────────────────────────────
