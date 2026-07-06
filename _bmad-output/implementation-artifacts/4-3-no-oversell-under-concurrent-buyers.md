@@ -4,7 +4,7 @@ baseline_commit: 7ff9f33f581ca5e191934dba961b4af7613a982d
 
 # Story 4.3: No-oversell under concurrent buyers
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -355,6 +355,14 @@ click Pay simultaneously). Do not build a Playwright multi-context automation fo
 - [Source: acce-nextjs/vitest.config.ts (default jsdom unit run — must stay unchanged); acce-nextjs/package.json (scripts)]
 - [Source: _bmad-output/implementation-artifacts/deferred-work.md#story-3.4 (item a), #story-4.1, #story-4.2 (the deferred concurrency items this story authors)]
 - [Source: _bmad-output/implementation-artifacts/4-1-…md; 4-2-…md (Epic 4 prior-story context)]
+
+### Review Findings
+
+**Code review (2026-07-06) — CLEAN. 0 decision-needed, 0 patch, 0 defer, 1 dismissed.**
+
+FRESH adversarial review (Blind Hunter + Edge Case Hunter + Acceptance Auditor lenses) over all 5 ACs, re-verifying the test suite against the ACTUAL production code (`reserveSeat`, `confirmPaidSeat`, `decideConfirmOutcome`, `wallet.mutate`, `occupiedEnrollmentWhere`) rather than trusting the dev record. No production code changed (`git diff --stat` = new test files + integration config + `test:integration` script + docs only). Independently re-ran the full sandbox bar: `prisma validate` valid, `next build` clean (all routes incl `/api/webhooks/paystack`; new `tests/integration/**` type-check via tsconfig `**/*.ts`), `npm test` 351/351 green with the integration file NOT collected, `npm run test:integration` 6 skipped cleanly (exit 0). AC1a's `BOOKING_CHARGE`-by-`enrollmentId` count and AC2's `refund_to_wallet` decision (`othersOccupied N < capacity N` false) both confirmed correct against the source. deferred-work.md records the CI live-run + two-browser manual staging deferrals (superseding 3.4/4.1/4.2 concurrency items).
+
+- [x] [Review][Dismiss] AC1a test uses scope label `"ac1b"` for the balance path (AC1b PENDING uses `"ac1p"`) — cosmetic mislabel, no id collision, no functional impact. LOW → dismissed (not worth a patch to a verification-only artifact).
 
 ## Dev Agent Record
 
