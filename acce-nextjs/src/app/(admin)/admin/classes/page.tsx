@@ -186,15 +186,26 @@ export default async function AdminClassesPage() {
                       </Badge>
                     </TableCell>
                     {/* Story 2.3 — per-row Edit link (secondary/ghost, keeps gold CTA dominant) */}
+                    {/* Story 6.1 — per-row Roster/View link to class detail / enrollment roster */}
                     <TableCell>
-                      <Button
-                        asChild
-                        variant="ghost"
-                        size="sm"
-                        className="min-h-[44px]"
-                      >
-                        <Link href={`/admin/classes/${cls.id}/edit`}>Edit</Link>
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="sm"
+                          className="min-h-[44px]"
+                        >
+                          <Link href={`/admin/classes/${cls.id}`}>Roster</Link>
+                        </Button>
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="sm"
+                          className="min-h-[44px]"
+                        >
+                          <Link href={`/admin/classes/${cls.id}/edit`}>Edit</Link>
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );

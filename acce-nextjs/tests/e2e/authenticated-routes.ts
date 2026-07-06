@@ -75,4 +75,9 @@ export const AUTHENTICATED_ROUTES: AuthenticatedRoute[] = [
   // Renders empty-state on a fresh seed (no seeded student / no enrollments).
   // Live authenticated+populated-list run deferred to CI ephemeral-Postgres.
   { path: "/portal/my-classes", role: "STUDENT" },
+  // Story 6.1 — dynamic admin class roster page (uses deterministic seeded id seed-class-acc-1).
+  // Mirrors 2.3's /admin/classes/seed-class-acc-1/edit dynamic-route manifest entry.
+  // Renders empty-state on a fresh seed (seed has ADMIN only — no enrollments).
+  // Live authenticated+populated-roster run deferred to CI ephemeral-Postgres.
+  { path: "/admin/classes/seed-class-acc-1", role: "ADMIN" },
 ];

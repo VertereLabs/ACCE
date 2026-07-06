@@ -8,6 +8,26 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 
 ---
 
+### [2026-07-06T21:55:11Z] 6-1-enrollment-roster-with-paid-pending-status — dev-story start: mark in-progress
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story was `ready-for-dev`; baseline_commit already set in frontmatter (070df519); need to transition to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Update sprint-status.yaml to `in-progress`; preserve existing baseline_commit in story frontmatter.
+- **Rationale:** Required by workflow contract; baseline_commit already present from create-story.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/6-1-enrollment-roster-with-paid-pending-status.md
+
+### [2026-07-06T21:55:11Z] 6-1-enrollment-roster-with-paid-pending-status — pure enrollment-display.ts module design
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1)
+- **Decision point:** Story says export both `formatEnrollmentStatus` and `enrollmentStatusBadgeVariant` from `enrollment-display.ts`. The story also says "or keep the variant mapping local to the page". Since step 6 requires unit-testable exports and 6.2 may reuse them, export both.
+- **Options considered:** A) Export both label + variant from module; B) Keep variant local to page.
+- **Chosen:** A — export both so both are unit-testable and reusable by Story 6.2.
+- **Rationale:** Story explicitly prefers the module-level export for testability and 6.2 reuse; the label MUST live in the pure module.
+- **Reversibility:** Move variant map inline to the page; remove export from enrollment-display.ts.
+- **Files touched:** acce-nextjs/src/lib/enrollment-display.ts
+
 ### [2026-07-06T17:57:51Z] 4-3-no-oversell-under-concurrent-buyers — dev-story start: mark in-progress, baseline commit
 - **Risk:** low
 - **Workflow / step:** dev-story step 4 (mark story in-progress)
@@ -1517,3 +1537,43 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
   - LOW observations recorded (NOT fixed — cosmetic / by-design, below the auto-fix HIGH/MEDIUM bar): (1) AlertDialog copy quotes the advisory-preview refundCents from page-render time — if a tier boundary is crossed before the click the dialog may promise slightly more than the authoritative cancel-time recompute delivers; by-design (preview is explicitly advisory; success toast quotes no amount; AC1 mandates cancel-time authority). (2) `revalidatePath` (x2) + `router.refresh()` is belt-and-braces redundant — harmless. (3) `pendingExpiresAt: null` on the CONFIRMED→CANCELLED flip is a redundant no-op (already null on a CONFIRMED row) — harmless. (4) AD-12⇄AD-8 re-book-after-cancel collision is now reachable but intentionally deferred and fails safe via the AD-8 partial-unique index (P2002 → generic error, never a double charge) — already carried in deferred-work.md.
 - **Reversibility:** Status-only outcome. To reopen: set `5-2…: review` (or `in-progress`) in sprint-status.yaml and revert the story `Status:` line. No code was modified by the review (clean pass), so there is nothing to revert in source. Any of the four LOW items can be picked up later without touching the cancel invariants.
 - **Files touched:** _bmad-output/implementation-artifacts/5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool.md (Status + Review Findings); _bmad-output/implementation-artifacts/sprint-status.yaml (5-2 → done); _bmad-output/implementation-artifacts/autopilot-decisions.md (this entry)
+
+### [2026-07-06T21:49:06Z] 6-1-enrollment-roster-with-paid-pending-status — Branch epic-6 created off epic-5 tip
+- **Risk:** low
+- **Workflow / step:** create-story activation (VERSION CONTROL block)
+- **Decision point:** dispatch requires being on `epic-6` before editing; HEAD was `epic-5`, `epic-6` did not exist
+- **Options considered:** A) checkout existing epic-6 / B) create epic-6 from current HEAD (epic-5 tip) / C) branch from main
+- **Chosen:** B — `git checkout -b epic-6` from epic-5 tip (one-branch-per-epic chaining, per dispatch)
+- **Rationale:** epic-6 absent; dispatch mandates chaining off previous epic's work, never main
+- **Reversibility:** `git branch -D epic-6` while on another branch
+- **Files touched:** none (branch only)
+
+### [2026-07-06T21:49:06Z] 6-1-enrollment-roster-with-paid-pending-status — Roster route path = (admin)/admin/classes/[id]/page.tsx
+- **Risk:** low
+- **Workflow / step:** create-story step 3 (architecture analysis)
+- **Decision point:** the epic AC says "open its admin detail/roster page" but does not pin a path
+- **Options considered:** A) new `(admin)/admin/classes/[id]/page.tsx` (class detail = roster) / B) `(admin)/admin/classes/[id]/roster/page.tsx` / C) a tab on the edit page
+- **Chosen:** A — the class detail index page at `[id]` IS the roster
+- **Rationale:** ARCHITECTURE-SPINE source tree + Capability map explicitly name `(admin)/admin/classes/[id] roster` (spine lines 252, 291); mirrors the existing `[id]/edit` sibling
+- **Reversibility:** move the page file; update the manifest entry + any nav link
+- **Files touched:** story spec only (dev creates the page)
+
+### [2026-07-06T21:49:06Z] 6-1-enrollment-roster-with-paid-pending-status — Roster shows PENDING+CONFIRMED(+ATTENDED/NO_SHOW), excludes CANCELLED; expired PENDING still labelled Pending
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (interpreting ambiguous AC)
+- **Decision point:** AC says "each enrolled student with their status — paid (CONFIRMED) vs pending"; which enrollment statuses appear, and how to treat expired PENDING holds
+- **Options considered:** A) only CONFIRMED+PENDING / B) all statuses incl. CANCELLED / C) PENDING+CONFIRMED now, tolerate ATTENDED/NO_SHOW for 6-2, exclude CANCELLED
+- **Chosen:** C — query enrollments directly (spine: roster is NOT bound by AD-5 occupancy), show non-CANCELLED rows, map status→label (CONFIRMED=Paid, PENDING=Pending, ATTENDED=Attended, NO_SHOW=No-show). Expired PENDING is still shown as Pending (readers never write — AD-5); no lazy expiry flip.
+- **Rationale:** matches Priyanka's need ("who to expect, who's mid-payment"); CANCELLED seats returned to pool and are not "enrolled"; making the label helper cover ATTENDED/NO_SHOW gives 6-2 (mark attended/no-show) a ready seam without rework. Read-only page must not write (AD-5/AD-14).
+- **Reversibility:** adjust the `where`/label map in one pure helper + the page query
+- **Files touched:** story spec only
+
+### [2026-07-06T21:49:06Z] 6-1-enrollment-roster-with-paid-pending-status — New pure db-free helper enrollment-display.ts for status labels/badges
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (file structure)
+- **Decision point:** where the enrollment-status → label/badge-variant mapping lives (no such helper exists yet; my-classes only ever shows CONFIRMED)
+- **Options considered:** A) inline in the roster page / B) add to class-display.ts / C) new pure module src/lib/enrollment-display.ts
+- **Chosen:** C — dedicated pure, db-free `enrollment-display.ts` (mirrors class-display.ts testability pattern)
+- **Rationale:** distinct concern (enrollment vs class formatting), vitest-testable without a live DB, and 6-2 reuses it for ATTENDED/NO_SHOW
+- **Reversibility:** delete/merge the module into class-display.ts
+- **Files touched:** story spec only
