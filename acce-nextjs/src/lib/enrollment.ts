@@ -989,3 +989,87 @@ export async function cancelEnrollment(
   });
   return { ok: false, reason: "error" };
 }
+
+// ---------------------------------------------------------------------------
+// markAttendance (Story 6.2 — Task 2, AC1, AC2, AC3, AD-14)
+// ---------------------------------------------------------------------------
+//
+// AD-14 — ATTENDANCE TAKES NO SEAT LOCK:
+//   Attendance is NOT seat-affecting (no occupancy read, no wallet.mutate, no
+//   GroupSession FOR UPDATE, no Serializable isolation, no retry loop).
+//   The transition guard lives in the WHERE clause:
+//     updateMany({ where: { id, status: "CONFIRMED" }, data: { status: outcome } })
+//   Postgres applies this as a single atomic statement. Two concurrent marks on the
+//   same row: exactly one observes status="CONFIRMED" and writes (count===1); the
+//   other sees the already-changed row and writes nothing (count===0 → not_markable).
+//   No lost update, no oversell surface. This is textbook "conditional update" idempotency.
+//
+// AD-14 says verbatim: "none needed for ATTENDED/NO_SHOW" — do NOT cargo-cult
+// reserveSeat's Serializable/FOR UPDATE/retry envelope here.
+//
+// NO wallet.mutate / NO LedgerEntry / NO BOOKING_CHARGE / NO refund:
+//   A no-show forfeits the already-taken BOOKING_CHARGE (0% back = the absence of
+//   a refund, not a new debit). FR14's "0% refund" is the AD-11 cancellation tier
+//   constant on the cancel path (Story 5.2) — not runtime-coupled to attendance (AD-6).
+
+/**
+ * Result type for markAttendance (Story 6.2).
+ *
+ * ok:true  → { status: "ATTENDED" | "NO_SHOW" }
+ * ok:false → { reason: "not_found" | "not_markable" | "error" }
+ */
+export type MarkAttendanceResult =
+  | { ok: true; status: "ATTENDED" | "NO_SHOW" }
+  | { ok: false; reason: "not_found" | "not_markable" | "error" };
+
+/**
+ * Marks an enrollment ATTENDED or NO_SHOW (AD-14 sole status writer).
+ *
+ * Uses a plain atomic status-guarded updateMany — NO GroupSession FOR UPDATE,
+ * NO Serializable isolation, NO retry loop, NO wallet.mutate.
+ *
+ * @param enrollmentId  — the Enrollment.id to mark
+ * @param outcome       — "ATTENDED" | "NO_SHOW" (Zod-restricted upstream)
+ */
+export async function markAttendance(
+  enrollmentId: string,
+  outcome: "ATTENDED" | "NO_SHOW"
+): Promise<MarkAttendanceResult> {
+  try {
+    // Single atomic conditional UPDATE — the WHERE status guard is the idempotency lock.
+    // Only CONFIRMED rows are markable (AC2); a concurrent double-mark is safe (one
+    // writer observes count===1; the other count===0 → not_markable, no incorrect overwrite).
+    const res = await db.enrollment.updateMany({
+      where: { id: enrollmentId, status: "CONFIRMED" },
+      data: { status: outcome },
+    });
+
+    if (res.count === 1) {
+      // Successfully flipped CONFIRMED → outcome.
+      return { ok: true, status: outcome };
+    }
+
+    // count===0: either the enrollment is not CONFIRMED (already marked or PENDING/CANCELLED)
+    // or it does not exist. Disambiguate with a cheap existence check.
+    const existing = await db.enrollment.findUnique({
+      where: { id: enrollmentId },
+      select: { id: true },
+    });
+
+    if (existing) {
+      // Row exists but was not CONFIRMED — already marked ATTENDED/NO_SHOW, or PENDING/CANCELLED.
+      return { ok: false, reason: "not_markable" };
+    }
+
+    // Row does not exist at all.
+    return { ok: false, reason: "not_found" };
+  } catch (err) {
+    // Observability: log the error server-side (never swallow).
+    console.error("[enrollment.markAttendance] unexpected error:", {
+      enrollmentId,
+      outcome,
+      error: err,
+    });
+    return { ok: false, reason: "error" };
+  }
+}

@@ -1587,3 +1587,83 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** FRESH 3-lens adversarial pass (Blind/EdgeCase/AcceptanceAuditor) over git diff 070df51..HEAD, dev record NOT trusted. All 5 ACs + AD-2/3/5/9/10/14 independently re-verified against actual source: requireAdmin-first before any fetch/JSX (AC4/AD-3), direct enrollment read `status:{not:"CANCELLED"}` ordered createdAt asc — NOT occupiedEnrollmentWhere, expired PENDING still labelled Pending, zero writes / no enrollment.ts|wallet.ts import (AC3/AD-5/AD-14), notFound() on unknown id (AC4), no meetingUrl/location selected (AD-10), formatZar integer-cents at edge (AD-9), pure type-only EnrollmentStatus helper mirrors class-occupancy.ts, plain <div> under layout-owned single <main> (1.3 a11y), index Roster link + e2e manifest seed-class-acc-1 wired (AC5). Independently RE-RAN: `prisma validate` clean, `next build` clean (/admin/classes/[id] ƒ Dynamic), full vitest 440/440 incl 10 new enrollment-display assertions. LOW noise dismissed (inline class-status ternary == 2.2 statusVariant logic; local formatDateTime dup; unused `end` select — all harmless, mirror prior dismissals). Timezone-display cross-cutting defer already tracked from 2.2/2.3; story notes forbid unilateral pin here — not re-logged.
 - **Reversibility:** No code changed this review. To reopen: set 6-1 back to in-progress in sprint-status.yaml and re-run dev-story. Live populated-roster read remains deferred to CI ephemeral-Postgres (seed = ADMIN only, fresh-seed roster = empty-state AC2).
 - **Files touched:** _bmad-output/implementation-artifacts/6-1-enrollment-roster-with-paid-pending-status.md (Status→done + Review Findings), _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-06T22:13:32Z] 6-2-mark-attended-no-show — Story scope: what the attendance-mark story owns
+- **Risk:** medium
+- **Workflow / step:** create-story steps 2–5 (scope from epics.md Story 6.2 + ARCHITECTURE-SPINE AD-14)
+- **Decision point:** Epic AC for 6.2 is a single minimal Given/When/Then ("mark a CONFIRMED enrollment ATTENDED or NO_SHOW; status updates and reflects on the roster"). Needed to fix the concrete surface (new domain fn + admin action + client island + roster wiring) without over-scoping.
+- **Options considered:** A) Minimal: one `enrollment.markAttendance` domain fn (AD-14 sole writer) + `markAttendanceAction` (admin) + per-row client-island buttons on the 6.1 roster + reuse 6.1's `formatEnrollmentStatus`/badge for the reflected label. B) Add a bulk "mark all" / attendance sheet. C) Add class-day filtering, attendance history/audit log.
+- **Chosen:** A.
+- **Rationale:** Epic AC is per-enrollment and roster-scoped; 6.1 already built the label helpers (ATTENDED→"Attended", NO_SHOW→"No-show") and reserved reuse for 6.2. Bulk marking, audit log and class-day filters are explicitly listed as open/deferred items in the spine ("admin-action audit trail … open item"). Polish is Story 6.4; email is 6.3.
+- **Reversibility:** Additive — new fn/action/island/schema + one Actions column on the roster page. No schema/migration. Removing the column + files reverts.
+- **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md
+
+### [2026-07-06T22:13:32Z] 6-2-mark-attended-no-show — No lock / no Serializable tx for the attendance transition
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture guardrails — AD-14)
+- **Decision point:** reserveSeat/confirmPaidSeat/cancelEnrollment all run inside a Serializable + GroupSession FOR UPDATE + retry envelope. Should `markAttendance` copy that envelope?
+- **Options considered:** A) Plain atomic conditional `updateMany({ where:{ id, status:"CONFIRMED" }, data:{ status: outcome } })` — count===1 = success, count===0 = not-markable/not-found; no lock, no retry. B) Cargo-cult the full Serializable + FOR UPDATE + P2034 retry loop from reserveSeat.
+- **Chosen:** A.
+- **Rationale:** AD-14 states verbatim that each transition "takes the appropriate lock (GroupSession row for seat-affecting transitions; **none needed for `ATTENDED`/`NO_SHOW`**)." Attendance does not change occupancy, price or the ledger, so there is no oversell/last-seat invariant to protect. A status-guarded `updateMany` is itself atomic and makes a concurrent double-mark safe (only one row-write wins count===1). Adding Serializable/FOR UPDATE would be the exact "cargo-cult 3.4" mistake the 3.5 credit action warns against.
+- **Reversibility:** If a future seat-affecting side effect is added to attendance, wrap the same fn in the reserveSeat envelope; contained to `enrollment.ts#markAttendance`.
+- **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md
+
+### [2026-07-06T22:13:32Z] 6-2-mark-attended-no-show — Markable set = CONFIRMED only; ATTENDED↔NO_SHOW correction deferred
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (acceptance-criteria interpretation)
+- **Decision point:** The AC starts "Given a CONFIRMED enrollment." Should the transition also allow re-marking an already-marked row (fix a misclick: ATTENDED→NO_SHOW or back to CONFIRMED)?
+- **Options considered:** A) Guard `status === "CONFIRMED"` only — PENDING/CANCELLED/already-marked rows are not markable. B) Allow correction among {CONFIRMED, ATTENDED, NO_SHOW}. C) Allow any→any.
+- **Chosen:** A (CONFIRMED-only), with correction flagged as an explicit out-of-scope deferral in the story.
+- **Rationale:** Minimal reasonable interpretation of the spec (contract rule 4). PENDING = unpaid (nothing to attend); CANCELLED = seat returned. Correction is real-world useful but additive scope and unmentioned by the AC — safer to defer than to widen an admin status-write surface unprompted. Guard is written as a single WHERE clause so widening later is a one-line change.
+- **Reversibility:** Broaden the `updateMany` WHERE `status` filter (e.g. `status: { in: ["CONFIRMED","ATTENDED","NO_SHOW"] }`) in `markAttendance`; no data migration.
+- **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md
+
+### [2026-07-06T22:13:32Z] 6-2-mark-attended-no-show — NO_SHOW mark writes NO ledger/refund; FR14 coupling is tier-constant-only
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (cross-FR interpretation — FR14 "no-show → 0%")
+- **Decision point:** FR14 ties no-show into the cancellation refund tiers ("<24h or no-show → 0%"). Does marking NO_SHOW here trigger any wallet.mutate / refund / fee?
+- **Options considered:** A) Attendance mark is a pure status record — zero wallet/ledger writes; the "no-show → 0% refund" clause is already satisfied statically by the AD-11 tier constant and only bites when a student cancels (Story 5.2 path). B) Marking NO_SHOW additionally runs a refund/fee ledger entry.
+- **Chosen:** A.
+- **Rationale:** BOOKING_CHARGE was already taken at reservation; a no-show forfeits it (0% back) which is the *absence* of any refund, not a new debit. Writing any ledger row on NO_SHOW would double-count or invent a charge with no invariant behind it. Keeps AD-6 (wallet.mutate sole ledger path) untouched by the attendance surface. Marking NO_SHOW therefore does NOT call wallet.ts at all.
+- **Reversibility:** If a future policy needs a forfeiture audit row, add it in `enrollment.ts#markAttendance` via wallet.mutate (amount 0 audit-only, mirroring 5.2's CANCELLATION_FEE); no schema change.
+- **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md
+
+### [2026-07-06T22:19:36Z] 6-2-mark-attended-no-show — dev-story start: mark in-progress
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story was `ready-for-dev`; no baseline_commit in frontmatter; must capture current HEAD and transition to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Add `baseline_commit: 8277014271ac57213e2a673c721d218fbd291fc2` to story frontmatter; update sprint-status.yaml to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove frontmatter from story file.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md
+
+### [2026-07-06T22:26:24Z] 6-2-mark-attended-no-show — classId included in schema input
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (Task 1/3 implementation)
+- **Decision point:** The story recommended adding `classId` to the Zod schema so `revalidatePath` is precise. The island needs `classId` as a prop and sends it in the action input.
+- **Options considered:** A) Derive `classId` from DB (extra query inside the action) / B) Include `classId` in the Zod input schema as a plain string (recommended by Dev Notes)
+- **Chosen:** B — `classId: z.string().min(1)` added to `markAttendanceInputSchema`; island receives `classId` as a prop from the roster page; action revalidates `/admin/classes/${classId}`.
+- **Rationale:** Dev Notes explicitly recommend this. No extra DB query. RSC-500-safe (plain string prop). Zod-covered so server-side validated.
+- **Reversibility:** Remove `classId` from schema + island props + action; derive from a `findUnique` call inside the action instead.
+- **Files touched:** acce-nextjs/src/lib/attendance-schema.ts, acce-nextjs/src/app/(admin)/admin/classes/[id]/actions.ts, acce-nextjs/src/app/(admin)/admin/classes/[id]/mark-attendance-buttons.tsx
+
+### [2026-07-06T22:26:24Z] 6-2-mark-attended-no-show — MARK_ATTENDANCE_SUCCESS as function not constants
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 implementation)
+- **Decision point:** Dev Notes say "a `MARK_ATTENDANCE_SUCCESS(outcome)` helper (or two constants)". Chose one of the two options.
+- **Options considered:** A) Two separate constants (`MARK_ATTENDANCE_SUCCESS_ATTENDED`, `MARK_ATTENDANCE_SUCCESS_NO_SHOW`) / B) Single function `MARK_ATTENDANCE_SUCCESS(outcome)` returning outcome-specific string
+- **Chosen:** B — single function with `outcome` parameter, consistent with the `getMarkAttendanceErrorMessage` pattern in the same module.
+- **Rationale:** One import in the island and action; cleaner to call `MARK_ATTENDANCE_SUCCESS(result.status)` when the outcome is in hand. Mirrors the "mapper function" pattern of the module.
+- **Reversibility:** Split into two constants if the calling code is cleaner with them.
+- **Files touched:** acce-nextjs/src/lib/attendance-schema.ts
+
+### [2026-07-06T22:26:24Z] 6-2-mark-attended-no-show — story complete: marked review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (story completion)
+- **Decision point:** All 7 tasks checked, all ACs satisfied (AC1-AC5), prisma validate clean, 472/472 vitest (32 new), build clean with /admin/classes/[id] ƒ Dynamic. Mark story review.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Update story Status to "review", update sprint-status.yaml to "review".
+- **Rationale:** All completion gates passed. Live write round-trip deferred to CI ephemeral-Postgres per established sandbox policy (same as all prior stories).
+- **Reversibility:** Revert sprint-status.yaml line to "in-progress".
+- **Files touched:** _bmad-output/implementation-artifacts/6-2-mark-attended-no-show.md, _bmad-output/implementation-artifacts/sprint-status.yaml

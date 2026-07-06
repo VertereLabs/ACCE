@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-07T22:08:55Z
+last_updated: 2026-07-07T00:00:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -109,6 +109,9 @@ project: ACCE
 # 6-1 set in-progress on 2026-07-07 (dev-story)
 # 6-1 set review on 2026-07-07 (dev-story complete: enrollment-display.ts [pure formatEnrollmentStatus+enrollmentStatusBadgeVariant, type-only Prisma import], (admin)/admin/classes/[id]/page.tsx [server RSC, requireAdmin-first AD-3, findUnique+notFound, direct enrollment read status!=CANCELLED ordered createdAt asc, header+empty-state Card+Table+Badge], per-row Roster link in 2.2 index, e2e manifest +seed-class-acc-1 ADMIN; 10 new unit tests, 440/440 vitest, build clean [/admin/classes/[id] ƒ Dynamic], prisma validate clean; live populated-roster read deferred CI ephemeral-Postgres)
 # 6-1 set done on 2026-07-07 (code-review: FRESH 3-lens adversarial pass [Blind/EdgeCase/AcceptanceAuditor] over diff 070df51..HEAD, dev record NOT trusted; CLEAN — 0 HIGH/MEDIUM/critical, 0 patch/0 decision-needed/0 new-defer, 3 LOW dismissed [inline class-status ternary == 2.2 local statusVariant; unused `end` over-select; name||email double-email belt-and-braces]; timezone-display cross-cutting defer already tracked 2.2/2.3, story notes forbid unilateral pin; re-verified all 5 ACs + AD-2/3/5/9/10/14: requireAdmin-first before any fetch/JSX [AC4/AD-3], direct enrollment read status:{not:CANCELLED} ordered createdAt asc — NOT occupiedEnrollmentWhere, expired PENDING still Pending, zero writes/no enrollment.ts|wallet.ts import [AC3/AD-5/AD-14], notFound on unknown id [AC4], no meetingUrl/location selected [AD-10], formatZar integer-cents at edge [AD-9], pure type-only EnrollmentStatus helper [class-occupancy.ts pattern], plain div under layout-owned single main [1.3 a11y], index Roster link + e2e manifest seed-class-acc-1 [AC5]; independently re-ran prisma validate clean + next build clean [/admin/classes/[id] ƒ Dynamic] + vitest 440/440 incl 10 new enrollment-display; NO code change this review; live populated-roster read still deferred CI ephemeral-Postgres [seed ADMIN-only → fresh-seed roster = empty-state AC2])
+# 6-2 set in-progress on 2026-07-07 (dev-story)
+# 6-2 set review on 2026-07-07 (dev-story complete: attendance-schema.ts [pure Zod+outcome-enum AC3 guard+MARK_ATTENDANCE_SUCCESS+mapper], markAttendance in enrollment.ts [AD-14 plain atomic updateMany no lock no wallet], markAttendanceAction [requireAdmin-first+safeParse+markAttendance+revalidatePath /admin/classes/[id]], MarkAttendanceButtons client island [plain string props RSC-500-safe, sonner toast UX-DR5, router.refresh], Actions column in 6.1 roster page [CONFIRMED rows only AC2]; 32 new unit tests, 472/472 vitest, build clean, prisma validate clean; live CONFIRMED→ATTENDED/NO_SHOW write round-trip deferred CI ephemeral-Postgres [seed ADMIN-only → fresh-seed roster=empty-state])
+# 6-2 set ready-for-dev on 2026-07-07 (create-story: makes the 6.1 roster actionable — NEW enrollment.ts#markAttendance [AD-14 sole status writer, but NOT seat-affecting → PLAIN atomic status-guarded updateMany({where:{id,status:"CONFIRMED"},data:{status:outcome}}), NO GroupSession FOR UPDATE / NO Serializable / NO retry / NO wallet.mutate per AD-14 verbatim "none needed for ATTENDED/NO_SHOW"; count===1=ok, count===0→disambiguate not_markable|not_found] + markAttendanceAction [requireAdmin-first AD-3, Zod outcome=enum(ATTENDED,NO_SHOW) so action can't be coerced to write any other status, revalidatePath /admin/classes/[id]] + MarkAttendanceButtons client island [two token-variant buttons on CONFIRMED rows only, plain-string props RSC-500-safe, sonner toast UX-DR5, router.refresh] wired into 6.1 roster's NEW Actions column + pure attendance-schema.ts unit-tested; NO_SHOW writes ZERO ledger [forfeits already-taken BOOKING_CHARGE = absence-of-refund not new debit; FR14 0%-refund is AD-11 tier-constant/cancel-path only, not runtime-coupled here]; markable set=CONFIRMED-only, ATTENDED↔NO_SHOW correction + class-start-time guard intentionally DEFERRED [minimal AC interpretation]; reuses 6.1 formatEnrollmentStatus/badge unchanged; NO schema/migration/enum [EnrollmentStatus already has both]/dep, NO email[6.3]/NO polish[6.4]; roster route already in e2e manifest [6.1]; live CONFIRMED→ATTENDED/NO_SHOW write round-trip deferred CI ephemeral-Postgres [seed ADMIN-only → fresh-seed roster=empty-state, no CONFIRMED row to click locally])
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -155,7 +158,7 @@ development_status:
   # Epic 6: Class-Day Operations (Roster, Attendance & Confirmation Email)
   epic-6: in-progress
   6-1-enrollment-roster-with-paid-pending-status: done
-  6-2-mark-attended-no-show: backlog
+  6-2-mark-attended-no-show: review
   6-3-seat-confirmation-email-on-confirmation: backlog
   6-4-portal-polish-seats-left-states-empty-states-error-toasts: backlog
   epic-6-retrospective: optional

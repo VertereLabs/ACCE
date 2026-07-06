@@ -41,6 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { MarkAttendanceButtons } from "./mark-attendance-buttons";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (story constraint, 2.2/3.5 convention)
@@ -185,34 +186,54 @@ export default async function ClassRosterPage({ params }: ClassRosterPageProps) 
                 <TableHead>Student</TableHead>
                 <TableHead>Enrolled</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {enrollments.map((enrollment) => (
-                <TableRow key={enrollment.id}>
-                  {/* Student column: name prominent, email muted below (UX-DR8) */}
-                  <TableCell>
-                    <div className="font-medium">
-                      {enrollment.student.name || enrollment.student.email}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {enrollment.student.email}
-                    </div>
-                  </TableCell>
+              {enrollments.map((enrollment) => {
+                const studentLabel =
+                  enrollment.student.name || enrollment.student.email;
+                return (
+                  <TableRow key={enrollment.id}>
+                    {/* Student column: name prominent, email muted below (UX-DR8) */}
+                    <TableCell>
+                      <div className="font-medium">
+                        {enrollment.student.name || enrollment.student.email}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {enrollment.student.email}
+                      </div>
+                    </TableCell>
 
-                  {/* Enrolled-at: native toLocaleString, no date library */}
-                  <TableCell className="whitespace-nowrap text-muted-foreground">
-                    {formatDateTime(enrollment.createdAt)}
-                  </TableCell>
+                    {/* Enrolled-at: native toLocaleString, no date library */}
+                    <TableCell className="whitespace-nowrap text-muted-foreground">
+                      {formatDateTime(enrollment.createdAt)}
+                    </TableCell>
 
-                  {/* Status badge: formatEnrollmentStatus + variant from enrollment-display.ts */}
-                  <TableCell>
-                    <Badge variant={enrollmentStatusBadgeVariant(enrollment.status)}>
-                      {formatEnrollmentStatus(enrollment.status)}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    {/* Status badge: formatEnrollmentStatus + variant from enrollment-display.ts */}
+                    <TableCell>
+                      <Badge variant={enrollmentStatusBadgeVariant(enrollment.status)}>
+                        {formatEnrollmentStatus(enrollment.status)}
+                      </Badge>
+                    </TableCell>
+
+                    {/* Actions column: Attended/No-show buttons for CONFIRMED rows only (AC2).
+                        Already-marked (ATTENDED/NO_SHOW) and PENDING rows show nothing —
+                        the status Badge carries the state (UX-DR6). */}
+                    <TableCell>
+                      {enrollment.status === "CONFIRMED" ? (
+                        <MarkAttendanceButtons
+                          enrollmentId={enrollment.id}
+                          classId={session.id}
+                          studentLabel={studentLabel}
+                        />
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
