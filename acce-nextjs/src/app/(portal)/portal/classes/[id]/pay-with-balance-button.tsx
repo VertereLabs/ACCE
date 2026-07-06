@@ -76,7 +76,6 @@ export function PayWithBalanceButton({ classId }: PayWithBalanceButtonProps) {
     // UX-DR2: bg-accent/text-accent-foreground tokens (gold + navy per light/dark).
     <Button
       onClick={handleClick}
-      disabled={isPending}
       aria-busy={isPending}
       className="min-h-[44px] w-full bg-accent text-accent-foreground hover:bg-accent/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >

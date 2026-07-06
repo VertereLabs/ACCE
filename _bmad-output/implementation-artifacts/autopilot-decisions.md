@@ -1146,3 +1146,33 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All acceptance criteria met. Definition-of-done satisfied. Deferred items recorded.
 - **Reversibility:** Revert sprint-status.yaml line to "in-progress".
 - **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/4-1-paystack-init-with-a-15-minute-pending-seat-hold.md
+
+### [2026-07-06T07:21:33Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — Code review: autonomous fix-vs-action-items resolution
+- **Risk:** low
+- **Workflow / step:** code-review step-04 (present & act) — the fix-vs-action-items `<ask>`
+- **Decision point:** Workflow HALTs to ask how to handle `patch` findings. Autopilot overrides the HALT.
+- **Options considered:** A) Apply every patch automatically · B) Leave as action items (in-progress) · C) Walk through each
+- **Chosen:** A — apply the one medium patch automatically; defer the low findings.
+- **Rationale:** Dispatch mandate: fix HIGH/MEDIUM automatically. Only one substantive (medium) finding surfaced; the rest are low/by-design/unreachable. After fixing, no unresolved high/medium remain → status `done`.
+- **Reversibility:** Re-add `disabled={isPending}` to the two Button elements to restore prior behavior; revert story status to `in-progress`.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/pay-online-button.tsx, acce-nextjs/src/app/(portal)/portal/classes/[id]/pay-with-balance-button.tsx
+
+### [2026-07-06T07:21:33Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — Fix: pay buttons no longer disabled while pending (NFR10)
+- **Risk:** low
+- **Workflow / step:** code-review step-04 (patch application)
+- **Decision point:** MEDIUM finding — `disabled={isPending}` contradicts the inline comment ("Not disabled while pending … so it remains keyboard-focusable") and NFR10 keyboard-operability; a disabled button drops out of tab order. Present in the NEW pay-online-button.tsx and, identically, in the 3.4 pay-with-balance-button.tsx (both in the epic-4 diff).
+- **Options considered:** A) Remove `disabled`, keep `aria-busy` + the existing `if(isPending) return` double-submit guard (align code to comment/NFR10) · B) Fix the comment instead and keep `disabled` · C) Fix only the new 4.1 button and leave 3.4 inconsistent
+- **Chosen:** A, applied to BOTH islands for consistency.
+- **Rationale:** NFR10 wants the CTA keyboard-operable with `aria-busy` state, not removed from the tab order; double-submit is already guarded synchronously. Fixing both keeps the two islands consistent (they are byte-identical in this respect and both live in the branch diff).
+- **Reversibility:** Re-add `disabled={isPending}` to each `<Button>`; purely local UI/a11y change, no data/interface impact.
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/pay-online-button.tsx, acce-nextjs/src/app/(portal)/portal/classes/[id]/pay-with-balance-button.tsx
+
+### [2026-07-06T07:21:33Z] 4-1-paystack-init-with-a-15-minute-pending-seat-hold — Final status: done
+- **Risk:** low
+- **Workflow / step:** code-review step-04 section 6 (status + sprint sync)
+- **Decision point:** Set final story status. Fresh adversarial review found the money-path invariants clean (no BOOKING_CHARGE on pending path, single reserveSeat, expiry flip only under the lock, requireSession first, email from session, integer cents, secret fail-fast + never logged, no oversell via FOR UPDATE+SSI). One medium finding fixed; remaining findings are low (unreachable/by-design) and deferred.
+- **Options considered:** A) `done` (clean after fix) · B) `in-progress` with Review Follow-ups
+- **Chosen:** A — `done`. No unresolved high/medium findings; chain green (prisma valid · build compiled, /portal/classes/[id] Dynamic present · 303 vitest pass).
+- **Rationale:** All ACs (AC1–AC6) satisfied; the single actionable finding was auto-fixed and re-verified.
+- **Reversibility:** Set sprint-status development_status[4-1-…] back to `review`/`in-progress` and re-open findings if needed.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/4-1-paystack-init-with-a-15-minute-pending-seat-hold.md, _bmad-output/implementation-artifacts/deferred-work.md

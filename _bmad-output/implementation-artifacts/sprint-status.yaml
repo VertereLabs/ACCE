@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-06T09:00:00Z
+last_updated: 2026-07-06T09:25:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -125,7 +125,7 @@ development_status:
 
   # Epic 4: Online Payment & Guaranteed Seats
   epic-4: in-progress
-  4-1-paystack-init-with-a-15-minute-pending-seat-hold: review
+  4-1-paystack-init-with-a-15-minute-pending-seat-hold: done
   4-2-verified-idempotent-payment-webhook-confirms-the-seat: backlog
   4-3-no-oversell-under-concurrent-buyers: backlog
   epic-4-retrospective: optional

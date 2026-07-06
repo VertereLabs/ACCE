@@ -4,7 +4,7 @@ baseline_commit: 2fefcb91ae184eae1c75318b2ef639d852c8d782
 
 # Story 4.1: Paystack init with a 15-minute pending seat hold
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -464,3 +464,13 @@ No debug issues encountered. All 303 vitest tests pass. Build clean. Prisma sche
 - _bmad-output/implementation-artifacts/deferred-work.md (UPDATED — deferred items for 4.1)
 - _bmad-output/implementation-artifacts/sprint-status.yaml (UPDATED — 4-1 → review)
 - _bmad-output/implementation-artifacts/4-1-paystack-init-with-a-15-minute-pending-seat-hold.md (UPDATED — status, tasks, agent record)
+
+## Review Findings
+
+Adversarial code review (2026-07-06, autopilot code-review, fresh reasoning). Money-path invariants verified clean: no BOOKING_CHARGE on the pending path (AD-7/AD-8), single `reserveSeat` extended in place (AD-4), PENDING→CANCELLED expiry flip only inside the lock and excluding the own row (AD-5/AD-14), `requireSession()` first with email from the session (AD-3), integer-cents passed straight to Paystack (AD-9), `PAYSTACK_SECRET_KEY` fail-fast + never logged, no oversell (FOR UPDATE + Serializable SSI serializes the last-seat race). No client bundle imports `paystack.ts` (build-verified). `prisma validate` ✅ · `npm run build` ✅ (`/portal/classes/[id]` ƒ Dynamic) · 303/303 vitest ✅.
+
+- [x] [Review][Patch] Pay CTAs were `disabled={isPending}`, contradicting their own comment and NFR10 keyboard-operability (a disabled button leaves the tab order; double-submit is already guarded by `if (isPending) return`) — removed `disabled`, kept `aria-busy`. Applied to both islands for consistency. [pay-online-button.tsx:91, pay-with-balance-button.tsx:79] — FIXED
+- [x] [Review][Defer] `email ?? ""` would send an empty email to Paystack if `session.user.email` were null [actions.ts:126] — deferred: unreachable under passwordless email auth (email always present); Paystack returns a graceful init error if ever empty. Low.
+- [x] [Review][Defer] `existing.paymentRef!` non-null assertion in the resume path [enrollment.ts:262] — deferred: unreachable in 4.1 (every PENDING row is created with a `paymentRef`); defensive-only. Low.
+- [x] [Review][Defer] Balance-button click after the balance dropped since render creates an orphan PENDING seat hold while showing a generic "error" toast [actions.ts:76] — deferred: by-design (the one `reserveSeat` decides path under the lock); self-heals via the 15-min lazy expiry; documented in the action. Low.
+- [x] [Review][Defer] `APP_URL` undefined would yield a malformed `callback_url` [actions.ts:124] — deferred: `APP_URL` is a required env already consumed by `auth.ts`; the callback is display-only (AD-7). Low.
