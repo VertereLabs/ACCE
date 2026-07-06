@@ -35,7 +35,7 @@ import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import { occupiedEnrollmentWhere, computeSeatsLeft } from "@/lib/class-occupancy";
-import { formatZar, formatMode, formatSeatsLeft } from "@/lib/class-display";
+import { formatZar, formatMode, formatSeatsLeft, CLASS_FULL_MESSAGE } from "@/lib/class-display";
 import { getBalance } from "@/lib/wallet";
 import {
   Card,
@@ -284,11 +284,12 @@ export default async function ClassDetailPage({ params }: ClassDetailPageProps) 
           )}
 
           {/* ── AC4: Full class state — no Pay affordance ─────────────── */}
+          {/* Uses CLASS_FULL_MESSAGE (single source, AC1, UX-DR3, Story 6.4). */}
           {!isConfirmed && isFull && (
             <div className="space-y-2">
               <p className="text-sm font-medium">Class full</p>
               <p className="text-sm text-muted-foreground">
-                This class is fully booked. Check back in case a seat opens up.
+                {CLASS_FULL_MESSAGE}
               </p>
             </div>
           )}

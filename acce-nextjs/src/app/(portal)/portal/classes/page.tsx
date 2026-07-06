@@ -27,7 +27,7 @@ import Link from "next/link";
 import { requireSession } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import { occupiedEnrollmentWhere, computeSeatsLeft } from "@/lib/class-occupancy";
-import { formatZar, formatMode, formatSeatsLeft } from "@/lib/class-display";
+import { formatZar, formatMode, formatSeatsLeft, CLASS_FULL_MESSAGE } from "@/lib/class-display";
 import {
   Card,
   CardContent,
@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (story constraint).
@@ -108,13 +109,7 @@ export default async function PortalClassesPage() {
 
       {/* ── Empty state (AC4, UX-DR4) ─────────────────────────────────────── */}
       {isEmpty && (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-4 py-16 text-center">
-            <p className="text-muted-foreground">
-              No upcoming classes right now. Check back soon.
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState message="No upcoming classes right now. Check back soon." />
       )}
 
       {/* ── Card grid (AC1, AC2, AC3, UX-DR2, UX-DR3) ────────────────────── */}
@@ -177,9 +172,10 @@ export default async function PortalClassesPage() {
                     </Button>
                   )}
                   {isFull && (
-                    // Calm "Class full" acknowledgement — no dead/misleading CTA (AC2, UX-DR3)
+                    // Calm "Class full" acknowledgement — no dead/misleading CTA (AC2, UX-DR3).
+                    // Uses CLASS_FULL_MESSAGE constant (single source, AC1, UX-DR3).
                     <p className="text-sm text-muted-foreground">
-                      This class is fully booked.
+                      {CLASS_FULL_MESSAGE}
                     </p>
                   )}
                 </CardFooter>

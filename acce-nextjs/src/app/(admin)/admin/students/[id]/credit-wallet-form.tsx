@@ -92,7 +92,8 @@ export function CreditWalletForm({ studentId }: CreditWalletFormProps) {
       form.reset({ studentId, amountRand: undefined });
       router.refresh();
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      // UX-DR5: canonical generic fallback wording (matches all other islands' catch blocks).
+      toast.error("Something went wrong — please try again");
     } finally {
       setIsSubmitting(false);
     }

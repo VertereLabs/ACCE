@@ -37,6 +37,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CreditWalletForm } from "./credit-wallet-form";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (3.1/2.2 convention)
@@ -101,9 +102,10 @@ export default async function StudentAdminPage({ params }: StudentAdminPageProps
     // Plain <div> — the (admin) layout owns the single <main> landmark (1.3 a11y fix).
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
       {/* ── Back navigation ─────────────────────────────────────────────── */}
+      {/* NFR10/UX-DR6: focus-visible ring so keyboard navigation is visible */}
       <Link
         href="/admin/students"
-        className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
+        className="mb-4 inline-block rounded-sm text-sm text-muted-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         ← Back to students
       </Link>
@@ -140,13 +142,7 @@ export default async function StudentAdminPage({ params }: StudentAdminPageProps
       {/* ── Ledger section (mirrors 3.1 wallet page rendering) ───────────── */}
       <h2 className="mb-4 text-lg font-semibold">Transaction history</h2>
 
-      {isEmpty && (
-        <Card>
-          <CardContent className="flex items-center justify-center py-16 text-center">
-            <p className="text-muted-foreground">No wallet activity yet.</p>
-          </CardContent>
-        </Card>
-      )}
+      {isEmpty && <EmptyState message="No wallet activity yet." />}
 
       {!isEmpty && (
         <div className="overflow-x-auto rounded-md border">

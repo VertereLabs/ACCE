@@ -37,6 +37,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (story constraint + 2.2/2.3
@@ -103,13 +104,7 @@ export default async function WalletPage() {
       <h2 className="mb-4 text-lg font-semibold">Transaction history</h2>
 
       {/* ── Empty state (AC2) ─────────────────────────────────────────── */}
-      {isEmpty && (
-        <Card>
-          <CardContent className="flex items-center justify-center py-16 text-center">
-            <p className="text-muted-foreground">No wallet activity yet.</p>
-          </CardContent>
-        </Card>
-      )}
+      {isEmpty && <EmptyState message="No wallet activity yet." />}
 
       {/* ── Ledger table (AC1) ────────────────────────────────────────── */}
       {!isEmpty && (

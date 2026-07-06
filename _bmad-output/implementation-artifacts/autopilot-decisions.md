@@ -1743,3 +1743,63 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** FRESH pass (dev record NOT trusted). AC1: send fires on all three confirmed entry points (reserveSeatAction, payWithPaystackAction, webhook route) post-commit alongside revalidatePath; replayed webhook returns already_processed (not confirmed) → no double-send (exactly-once). AC2: send runs outside the tx, wrapped in log-only try/catch, sendSeatConfirmationEmail never throws, webhook still returns 200. AC3: native fetch only (no resend/axios import), MeetingProvider + ManualProvider exported, no link generation (GoogleMeetProvider deferred behind same iface). AC4: mode-gated reveal (ONLINE→url / IN_PERSON→location), defensive confirmed-family status guard {CONFIRMED,ATTENDED,NO_SHOW}, all user fields escaped (escapeHtml text / escapeHtmlAttr href), null-meetingUrl fallback line. AC5: `npx prisma validate` clean, `npm run build` compiled successfully (/portal/classes/[id] ƒ Dynamic, /api/webhooks/paystack ƒ present), vitest 499/499 incl 27 new (8 meeting + 19 seat-confirmation-email). LOW observations dismissed: escapeHtmlAttr escapes only quotes (sufficient — quote is the only href breakout vector; link text uses full escapeHtml); `mode as "ONLINE"|"IN_PERSON"` cast redundant/harmless (Prisma already types it); webhook awaits Resend synchronously before 200 (per-spec MVP — no after()/queue in scope for 1a); admin-authored `javascript:` meetingUrl is trusted-author + email clients don't execute. No code changed this review.
 - **Reversibility:** No code edits made; status-only transition. To reopen, set 6-3 back to `in-progress` in sprint-status.yaml + story Status header and add Review Follow-ups under Tasks/Subtasks.
 - **Files touched:** _bmad-output/implementation-artifacts/6-3-seat-confirmation-email-on-confirmation.md (Status → done), _bmad-output/implementation-artifacts/sprint-status.yaml (6-3 → done, last_updated)
+
+### [2026-07-06T23:05:00Z] 6-4-portal-polish-seats-left-states-empty-states-error-toasts — Scope of the "portal polish" story
+- **Risk:** medium
+- **Workflow / step:** create-story steps 2–5 (interpret an ambiguous, broadly-worded polish AC)
+- **Decision point:** Epics AC1 = "'Class full' state, empty state, and sonner error toast are shown CONSISTENTLY" (UX-DR3/4/5); AC2 = NFR10 a11y floor on "any new portal/admin control". These states already EXIST inline on every screen (formatSeatsLeft helper, per-page empty-state Cards, per-island toast mappers, per-control 44px/focus-ring). The story is therefore a CONSISTENCY/consolidation pass, not net-new features — but "consistently" is open-ended and could sprawl into a full-app refactor.
+- **Options considered:** (A) Broad refactor — extract shared primitives AND rewrite every portal+admin screen's markup; (B) Minimal — extract a shared `EmptyState` primitive + one canonical full-class copy constant, adopt across all portal empty/full states (required) and the identical admin duplications (low-risk), verify the toast-mapper + a11y-floor consistency and fix only real gaps; (C) Audit-only — document inconsistencies, change nothing.
+- **Chosen:** B.
+- **Rationale:** B satisfies "shown consistently" by making the three states render from a single source (removes the 7+ inline duplicated empty-state Cards and the divergent full-class copy) while staying purely PRESENTATIONAL — no domain/enrollment/wallet/paystack logic, no schema/migration/enum/dep, no new routes, no timezone pin (explicitly deferred cross-cutting per deferred-work.md). A is unbounded and regression-prone for the last story before the epic retrospective; C leaves the stated AC unmet. Loading/skeleton states are excluded — the epics ACs name only full/empty/error (UX-DR3/4/5), so adding them would be invented scope.
+- **Reversibility:** All changes are additive presentational components + call-site swaps; revert by restoring inline JSX (git). No data or interface shape changes.
+- **Files touched:** _bmad-output/implementation-artifacts/6-4-portal-polish-seats-left-states-empty-states-error-toasts.md (new)
+
+### [2026-07-06T23:05:00Z] 6-4 — Shared EmptyState component: shape & location
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (developer guardrails)
+- **Decision point:** Where the shared empty-state primitive lives and its API, since it will be imported by both (portal) and (admin) screens.
+- **Options considered:** (A) `src/components/ui/empty-state.tsx` (alongside shadcn primitives); (B) `src/components/portal/empty-state.tsx` (portal-scoped); (C) a bare exported function per page.
+- **Chosen:** A — `src/components/ui/empty-state.tsx`, a presentational server component wrapping shadcn `Card`/`CardContent` with props `{ title?, message, action? }` where `action` is an optional `{ href, label }` (NOT a Client element — RSC-500 safe, 1.5 lesson) rendered as a shadcn `Button asChild` link meeting the NFR10 floor (min-h-44px, focus-visible ring, token colours).
+- **Rationale:** It is used by BOTH route groups so it must be neutral/shared, not portal-scoped; ui/ is where the existing shared presentational primitives live. Passing `action` as plain data (href+label) not a JSX element keeps every Server Component call-site RSC-500-safe (the exact trap in lessons-learned). Keeping it a Server Component avoids needless client bundle.
+- **Reversibility:** Delete the file and re-inline; low effort, presentational only.
+- **Files touched:** acce-nextjs/src/components/ui/empty-state.tsx (new, dev-created)
+
+### [2026-07-06T23:05:00Z] 6-4 — Canonical "Class full" copy + toast-mapper consistency
+- **Risk:** low
+- **Workflow / step:** create-story step 3
+- **Decision point:** Full-class messaging diverges (browse footer "This class is fully booked." vs detail "Class full" + "…Check back in case a seat opens up."); four toast mappers each define their own generic fallback string.
+- **Options considered:** (A) leave divergent; (B) unify full-class copy via the single `formatSeatsLeft` badge ("Class full") + one shared supporting sentence constant, and confirm every toast mapper's generic fallback is the identical "Something went wrong — please try again" (already true) without refactoring the domain-specific reason maps.
+- **Chosen:** B.
+- **Rationale:** `formatSeatsLeft` is already the AD-5-aligned single source for the badge; the only inconsistency is the supporting sentence — unify it. The toast mappers are already consistent (verified: reserve/cancel/attendance all share the "Something went wrong — please try again" fallback); a cross-domain merge would add coupling for no user-visible gain, so leave the per-domain reason maps intact.
+- **Reversibility:** Trivial (constant/string edits).
+- **Files touched:** dev-created constant in class-display.ts; portal page call-sites.
+
+### [2026-07-06T23:10:09Z] 6-4-portal-polish-seats-left-states-empty-states-error-toasts — Implement shared EmptyState component + full polish pass
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (implementation start)
+- **Decision point:** How to implement the shared EmptyState component without the RSC-500 non-children-prop trap
+- **Options considered:** A) Accept plain `{href,label}` object as action prop (serialisable) / B) Accept a ReactNode as action prop (RSC-500 unsafe)
+- **Chosen:** A — plain `{ href: string; label: string }` data prop, rendered as Button asChild wrapping next/link inside the Server Component itself
+- **Rationale:** Lessons-learned RSC-500 trap: a Server Component must never pass a Client Component element through a non-children prop. The action is plain data; the component owns the rendering of the CTA link.
+- **Reversibility:** If CTA needs richer composition, convert to children pattern or a named slot.
+- **Files touched:** acce-nextjs/src/components/ui/empty-state.tsx (to be created)
+
+### [2026-07-06T23:10:09Z] 6-4-portal-polish-seats-left-states-empty-states-error-toasts — Toast islands audit
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (task 5)
+- **Decision point:** Audit-only vs refactor of toast islands
+- **Options considered:** A) Audit then fix only genuine gaps / B) Refactor all islands
+- **Chosen:** A — audit and fix gaps only; if all comply, record "verified — no change"
+- **Rationale:** Story spec says "audited, not restructured"; manufactured edits would be invented scope
+- **Reversibility:** N/A — no structural change
+- **Files touched:** (toast island files if gaps found)
+
+### [2026-07-06T23:10:09Z] 6-4-portal-polish-seats-left-states-empty-states-error-toasts — credit-wallet-form catch message
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (task 5)
+- **Decision point:** credit-wallet-form.tsx catch block uses "Something went wrong. Please try again." (period, not em-dash) vs canonical "Something went wrong — please try again"
+- **Options considered:** A) Fix to match canonical fallback exactly / B) Leave as-is (no domain mapper in credit-wallet-form)
+- **Chosen:** A — fix to use exact canonical wording with em-dash per UX-DR5 spec
+- **Rationale:** AC3 requires identical generic fallback. The period variant is a divergence from the spec's required wording.
+- **Reversibility:** Revert the one-line catch string.
+- **Files touched:** acce-nextjs/src/app/(admin)/admin/students/[id]/credit-wallet-form.tsx

@@ -21,7 +21,6 @@ import { occupiedEnrollmentWhere, computeSeatsLeft } from "@/lib/class-occupancy
 import { formatZar, formatMode, formatStatus } from "@/lib/class-display";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -30,6 +29,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // ---------------------------------------------------------------------------
 // Badge variant helpers
@@ -122,20 +122,12 @@ export default async function AdminClassesPage() {
       </div>
 
       {/* ── Empty state (AC2) ────────────────────────────────────────────── */}
+      {/* Gold accent CTA preserved — admin "Create a class" IS the primary action (UX-DR2). */}
       {isEmpty && (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-4 py-16 text-center">
-            <p className="text-muted-foreground">
-              No classes yet. Create your first class to get started.
-            </p>
-            <Button
-              asChild
-              className="min-h-[44px] bg-accent text-accent-foreground hover:bg-accent/90"
-            >
-              <Link href="/admin/classes/new">Create your first class</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <EmptyState
+          message="No classes yet. Create your first class to get started."
+          action={{ href: "/admin/classes/new", label: "Create a class", accent: true }}
+        />
       )}
 
       {/* ── Populated list (AC1, AC3) ────────────────────────────────────── */}

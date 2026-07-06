@@ -32,7 +32,6 @@ import {
   enrollmentStatusBadgeVariant,
 } from "@/lib/enrollment-display";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -42,6 +41,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MarkAttendanceButtons } from "./mark-attendance-buttons";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (story constraint, 2.2/3.5 convention)
@@ -127,9 +127,10 @@ export default async function ClassRosterPage({ params }: ClassRosterPageProps) 
     // Plain <div> — the (admin) layout owns the single <main> landmark (1.3 a11y fix).
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       {/* ── Back navigation ─────────────────────────────────────────────── */}
+      {/* NFR10/UX-DR6: focus-visible ring so keyboard navigation is visible */}
       <Link
         href="/admin/classes"
-        className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
+        className="mb-4 inline-block rounded-sm text-sm text-muted-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         ← Back to classes
       </Link>
@@ -166,15 +167,7 @@ export default async function ClassRosterPage({ params }: ClassRosterPageProps) 
       <h2 className="mb-4 text-lg font-semibold">Enrollment roster</h2>
 
       {/* ── Empty state (AC2) ────────────────────────────────────────────── */}
-      {isEmpty && (
-        <Card>
-          <CardContent className="flex items-center justify-center py-16 text-center">
-            <p className="text-muted-foreground">
-              No one has enrolled in this class yet.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+      {isEmpty && <EmptyState message="No one has enrolled in this class yet." />}
 
       {/* ── Enrollment table (AC1, AC3) ──────────────────────────────────── */}
       {/* Wrapped in overflow-x-auto for narrow-screen horizontal scrollability (UX-DR8). */}

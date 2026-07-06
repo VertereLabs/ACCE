@@ -16,7 +16,6 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -25,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (2.2/3.1 convention)
@@ -71,13 +71,7 @@ export default async function AdminStudentsPage() {
 
       {/* ── Empty state ──────────────────────────────────────────────────── */}
       {isEmpty && (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-4 py-16 text-center">
-            <p className="text-muted-foreground">
-              No students yet. Students appear here once they sign up.
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState message="No students yet. Students appear here once they sign up." />
       )}
 
       {/* ── Populated list ───────────────────────────────────────────────── */}

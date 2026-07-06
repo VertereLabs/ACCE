@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CancelEnrollmentButton } from "./cancel-enrollment-button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library.
@@ -96,20 +97,12 @@ export default async function MyClassesPage() {
       <h1 className="mb-6 text-2xl font-bold">My classes</h1>
 
       {/* ── Empty state (AC3, UX-DR4) ─────────────────────────────────── */}
+      {/* UX-DR2: "Browse available classes" is navigational — subordinate link, not gold CTA. */}
       {isEmpty && (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-            <p className="text-muted-foreground">
-              You haven&apos;t booked any upcoming classes yet.
-            </p>
-            <Link
-              href="/portal/classes"
-              className="text-sm font-medium text-foreground/80 underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-            >
-              Browse available classes
-            </Link>
-          </CardContent>
-        </Card>
+        <EmptyState
+          message="You haven't booked any upcoming classes yet."
+          action={{ href: "/portal/classes", label: "Browse available classes" }}
+        />
       )}
 
       {/* ── Enrollment list (AC1, AC2) ─────────────────────────────────── */}

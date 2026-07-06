@@ -74,3 +74,17 @@ export function formatSeatsLeft(seatsLeft: number): string {
   if (seatsLeft === 1) return "1 seat left";
   return `${seatsLeft} seats left`;
 }
+
+/**
+ * Canonical supporting sentence for the "Class full" state (AC1, UX-DR3, Story 6.4).
+ *
+ * Single source of truth for the full-class body copy shown on:
+ *   - The portal browse grid (/portal/classes) — full-card CardFooter
+ *   - The portal class detail page (/portal/classes/[id]) — checkout panel
+ *
+ * Do NOT duplicate or diverge this string in any other file.
+ * It intentionally replaces the prior divergent "This class is fully booked." (browse)
+ * vs "…Check back in case a seat opens up." (detail) variants.
+ */
+export const CLASS_FULL_MESSAGE =
+  "This class is fully booked. Check back in case a seat opens up.";
