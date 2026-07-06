@@ -16,7 +16,7 @@
 
 import { db } from "@/lib/db";
 import { computeBalanceAfter, wouldGoNegative } from "@/lib/wallet-math";
-import type { LedgerEntry, LedgerType, Prisma } from "@prisma/client";
+import type { LedgerEntry, LedgerType } from "@prisma/client";
 
 // ---------------------------------------------------------------------------
 // Types

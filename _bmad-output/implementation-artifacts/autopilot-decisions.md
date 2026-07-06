@@ -737,3 +737,33 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All DoD conditions met: tasks complete, ACs satisfied, tests pass (incl. 29 new), build clean, File List complete, Change Log updated, Dev Agent Record complete.
 - **Reversibility:** Revert to "in-progress" by editing sprint-status.yaml and story file Status line.
 - **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/3-1-view-wallet-balance-and-ledger.md
+
+### [2026-07-06T04:59:57Z] 3-1-view-wallet-balance-and-ledger — Code-review verdict (adversarial, fresh)
+- **Risk:** critical
+- **Workflow / step:** code-review step 2-4 (adversarial review + triage of the AD-6 wallet mutation seam)
+- **Decision point:** Does the first wallet-domain money path (getBalance + the single serialized mutate seam, NFR4 non-negative guard, AD-3 page auth) satisfy all 5 ACs without correctness/security holes, and is it done or in-progress?
+- **Options considered:** A) pass as `done`; B) send back `in-progress` with follow-ups.
+- **Chosen:** A — `done`. Fresh re-verification (not trusting dev claims): `npx prisma validate` clean; `npm test` 219/219 (incl 16 wallet-math + 13 wallet-display); `npm run build` compiled successfully with `/portal/wallet` as ƒ Dynamic. Adversarially confirmed: (AC3/AD-6) mutate takes `pg_advisory_xact_lock(hashtext(studentId))` FIRST on the passed `tx`, reads balance UNDER the lock via getBalance(…, tx), computes balanceAfterCents, rejects `< 0` via WalletInsufficientFundsError BEFORE any write, appends an immutable LedgerEntry — never `db` directly, composes into caller tx. (Scope) mutate is exported but NOT called anywhere (only getBalance imported by the page) — 3.4/3.5 wire in later, as specified. (AC4/AD-3) page calls requireSession() before any fetch, queries strictly by session.user.id. (AC1/AC2) balance Card + chronological asc Table + R0.00 empty state. (AD-9) integer cents, formatZar/formatSignedZar at UI edge only. Advisory-lock hashtext int4 collision = over-locking (safe: reduces concurrency, never corrupts balance) and is exactly the AD-6-prescribed mechanism. Live-DB advisory-lock round-trip remains deferred to CI ephemeral-Postgres (same wall as 1.1/1.5/2.x; pg-level lock is un-mockable).
+- **Rationale:** No HIGH/MEDIUM findings. The critical money path is correct and safe; all ACs met; chain independently green.
+- **Reversibility:** To reopen, set 3-1 back to `in-progress` in sprint-status.yaml and add Review Follow-ups to the story. The money seam is un-called, so any later re-architecture of mutate is isolated to wallet.ts + its two future callers.
+- **Files touched:** none (verdict only)
+
+### [2026-07-06T04:59:57Z] 3-1-view-wallet-balance-and-ledger — LOW auto-fix: remove dead Prisma import
+- **Risk:** low
+- **Workflow / step:** code-review step 3 (triage → auto-fix)
+- **Decision point:** `src/lib/wallet.ts` imported `Prisma` (type-only) from @prisma/client but never referenced it (PrismaTx is derived from `typeof db.$transaction`, not the Prisma namespace). Harmless (noUnusedLocals off, build clean) but dead code.
+- **Options considered:** A) remove the unused import; B) leave it; C) defer as a follow-up.
+- **Chosen:** A — removed `Prisma` from the import, leaving `import type { LedgerEntry, LedgerType } from "@prisma/client"`. Re-verified: `npm run build` compiled successfully, `/portal/wallet` ƒ Dynamic; whole-project `tsc --noEmit` shows no wallet errors (the only errors are pre-existing Epic-2 test-file Zod literal-narrowing quirks in class-form-schema/edit-class-schema tests, excluded from `next build`).
+- **Rationale:** Zero-risk cleanup of genuinely dead code; keeps the new wallet module tidy.
+- **Reversibility:** Re-add `Prisma` to the import line in wallet.ts:19. No behavioural effect either way.
+- **Files touched:** acce-nextjs/src/lib/wallet.ts
+
+### [2026-07-06T04:59:57Z] 3-1-view-wallet-balance-and-ledger — Deferred/dismissed minor observations
+- **Risk:** low
+- **Workflow / step:** code-review step 3 (triage → defer/dismiss)
+- **Decision point:** Two sub-threshold observations surfaced; record disposition.
+- **Options considered:** fix now vs dismiss/defer.
+- **Chosen:** (1) DISMISS — ledger "Amount" credit cell uses `text-green-600 dark:text-green-400` (Tailwind palette, not a design token). DESIGN.md explicitly permits "coloured text … must keep ≥4.5:1 contrast in BOTH modes; do NOT rely on colour alone" — the `+`/`−` prefix carries the sign, dark-mode variant is provided, and no success token exists in the navy+gold system; introducing one is scope creep. (2) DISMISS — `mutate` computes `computeBalanceAfter` once for `balanceAfterCents` and again inside `wouldGoNegative`; pure micro-redundancy on the un-called seam, not a defect; leaving the critical money path un-churned is preferable.
+- **Rationale:** Neither reaches LOW-worth-fixing; both are explicitly within spec / harmless.
+- **Reversibility:** n/a (no change made).
+- **Files touched:** none

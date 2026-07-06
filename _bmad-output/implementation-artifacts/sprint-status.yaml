@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-06T00:45:00Z
+last_updated: 2026-07-06T05:00:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -77,6 +77,7 @@ project: ACCE
 # epic-3 marked in-progress and 3-1 set ready-for-dev on 2026-07-06 (create-story: first wallet + first Epic 3 story; builds src/lib/wallet.ts [getBalance = Σ amountCents via aggregate + the SINGLE serialized mutate seam per AD-6: per-student pg_advisory_xact_lock → read-under-lock → computeBalanceAfter → non-negative guard NFR4 → append immutable LedgerEntry, on caller tx not db] + read-only (portal)/portal/wallet page [requireSession-first AD-3, query by session.user.id only, balance Card + chronological ledger Table, empty-state R0.00] + pure wallet-math/wallet-display helpers [reuse formatZar]; canonical name = wallet.mutate NOT epic addEntry [AD-6 + Story 3.5 binding]; 3.1 BUILDS+unit-tests the mutate seam but does NOT call it [reserve=3.4, admin credit=3.5]; NO enrollment/Paystack/admin-credit/schema/dep; nav link + /portal/wallet e2e manifest; live-DB read + advisory-lock round-trip deferred CI ephemeral-Postgres)
 # 3-1 set in-progress on 2026-07-06 (dev-story)
 # 3-1 set review on 2026-07-06 (dev-story complete: wallet-math.ts [sumLedgerAmounts+computeBalanceAfter+wouldGoNegative], wallet-display.ts [formatSignedZar+formatLedgerType], wallet.ts [getBalance+mutate AD-6 seam+WalletInsufficientFundsError], (portal)/portal/wallet/page.tsx [requireSession-first+parallel fetch+balance Card+chronological Table+empty-state], portal-nav.tsx [Wallet link], authenticated-routes.ts [/portal/wallet STUDENT]; 219/219 vitest incl 29 new, build clean, prisma validate clean)
+# 3-1 set done on 2026-07-06 (code-review: FRESH adversarial pass over all 5 ACs + AD-6/9/3/2/1; 0 HIGH/MEDIUM/critical; 1 LOW auto-fixed [removed dead `Prisma` type import in wallet.ts], 2 dismissed [Tailwind green credit colour within DESIGN.md; mutate double computeBalanceAfter micro-redundancy]; independently re-verified prisma validate clean + build clean [/portal/wallet ƒ Dynamic] + 219/219 vitest; confirmed mutate seam = advisory-lock-first→read-under-lock→NFR4 non-negative guard→immutable append on caller tx & NOT called in 3.1 [scope], page requireSession-first + query by session.user.id only [AC4], integer cents at UI edge [AD-9]; live-DB advisory-lock round-trip still deferred CI ephemeral-Postgres)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -100,7 +101,7 @@ development_status:
 
   # Epic 3: Browse & Enroll with Wallet Balance
   epic-3: in-progress
-  3-1-view-wallet-balance-and-ledger: review
+  3-1-view-wallet-balance-and-ledger: done
   3-2-browse-upcoming-classes-with-seats-left: backlog
   3-3-class-detail-and-checkout-page: backlog
   3-4-reserve-and-pay-a-seat-from-wallet-balance: backlog

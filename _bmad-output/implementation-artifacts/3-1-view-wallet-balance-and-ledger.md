@@ -4,7 +4,7 @@ baseline_commit: 2a404e71e033aefde55966590ef4478c9a193429
 
 # Story 3.1: View wallet balance and ledger
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -221,3 +221,12 @@ No debug issues. All tasks implemented and verified clean on first pass.
 ## Change Log
 
 - 2026-07-06: Story 3.1 implemented by dev agent. Created wallet domain module (wallet.ts: getBalance + mutate seam AD-6), pure helper modules (wallet-math.ts, wallet-display.ts), read-only student wallet page ((portal)/portal/wallet/page.tsx), portal nav Wallet link, e2e manifest entry. 29 new unit tests. 219/219 vitest green, build clean, prisma validate clean. Status → review.
+- 2026-07-06: Code-review (adversarial, fresh). Verdict: DONE — no HIGH/MEDIUM findings. Independently re-verified: prisma validate clean, 219/219 vitest, build compiled successfully with /portal/wallet ƒ Dynamic. Confirmed AC1-AC5 + AD-6/9/3/2/1: mutate takes advisory lock first → reads under lock → non-negative guard (WalletInsufficientFundsError) before any write → immutable LedgerEntry append, on caller tx (never db); mutate exported but NOT called (scope respected); page requireSession-first, queries by session.user.id only; integer cents formatted at UI edge. 1 LOW auto-fixed [removed dead `Prisma` type import in wallet.ts]. 2 dismissed [Tailwind green credit colour = within DESIGN.md spec; mutate double computeBalanceAfter = harmless micro-redundancy]. Live-DB advisory-lock round-trip remains deferred to CI ephemeral-Postgres. Status → done.
+
+## Review Findings (code-review, 2026-07-06)
+
+- **Verdict:** DONE — clean. 0 HIGH / 0 MEDIUM / 0 critical defects.
+- **Fixed (LOW):** `src/lib/wallet.ts` — removed unused `Prisma` type import (dead code; `PrismaTx` derives from `typeof db.$transaction`). Build re-verified clean.
+- **Dismissed:** ledger credit-amount `text-green-600 dark:text-green-400` (coloured text explicitly permitted by DESIGN.md, sign carried by +/− prefix, dark variant present); `mutate` computes `computeBalanceAfter` twice (harmless micro-redundancy on the un-called seam).
+- **AC coverage:** AC1 balance Card + chronological read-only Table ✓; AC2 R0.00 + "No wallet activity yet" empty state ✓; AC3 single serialized mutate seam, advisory-lock-first, non-negative NFR4 guard, immutable append on caller tx ✓ (built + unit-tested, not called — scope correct); AC4 requireSession-first + query by session.user.id only ✓; AC5 prisma validate + build + 219/219 vitest green, /portal/wallet in route table & e2e manifest ✓.
+- **Deferred (unchanged):** live-DB read of the page + the `pg_advisory_xact_lock` / non-negative round-trip → CI ephemeral-Postgres (pg-level lock un-mockable; same wall as 1.1/1.5/2.x).
