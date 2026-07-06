@@ -1383,3 +1383,33 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Definition of done satisfied: all 5 tasks checked, 54 new unit tests passing, build + prisma validate clean, no regressions, file list complete, dev agent record complete with implementation notes.
 - **Reversibility:** Revert sprint-status.yaml and story Status to in-progress if code-review finds issues requiring re-work.
 - **Files touched:** _bmad-output/implementation-artifacts/5-1-my-classes-with-cancel-and-refund-tier-preview.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-06T21:02:19Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — code-review: diff source
+- **Risk:** low
+- **Workflow / step:** code-review step 1 (gather context)
+- **Decision point:** Autonomous run — the workflow's Tier-5 "ask what to review" HALT is overridden. Must pick a diff source without a human.
+- **Options considered:** A) uncommitted working tree; B) branch diff vs main; C) diff against the story's `baseline_commit` frontmatter (8b9d49d, the epic-4 tip / dev-story parent)
+- **Chosen:** C — `git diff 8b9d49d..HEAD`, review_mode=full with spec_file = the 5.1 story.
+- **Rationale:** Story frontmatter pins `baseline_commit`; that isolates exactly the 5.1 dev-story delta (8 files, +880) with no epic-4 noise. Working tree was clean so B/C converge, but the baseline is the precise, story-scoped source.
+- **Reversibility:** n/a — read-only context selection.
+- **Files touched:** none
+
+### [2026-07-06T21:02:19Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — adversarial review outcome + fix
+- **Risk:** low
+- **Workflow / step:** code-review steps 2–5 (review / triage / present / act)
+- **Decision point:** Fresh 3-lens adversarial review (Blind Hunter / Edge Case Hunter / Acceptance Auditor) of the 5.1 diff, then fix-vs-action-items at the `<ask>`.
+- **Options considered:** Findings triaged — (1) `refundTierForHours` imported but never used in page.tsx → real ESLint `no-unused-vars` warning [LOW patch]; label hardcodes 70/100 branches but only 0/70/100 are reachable under the pinned single tier [dismissed — not a bug]; all ACs verified met; no IDOR (query keyed strictly to session.user.id), no writes, no meetingUrl/location leak, inert button genuinely inert. No HIGH/MEDIUM findings.
+- **Chosen:** FIX the one LOW patch (removed the dead `refundTierForHours` import); dismissed the label nit; no defers.
+- **Rationale:** Per autopilot contract, fix HIGH/MEDIUM automatically — none existed. The lone LOW lint-warning fix is trivial and reversible, so applied it to keep the tree warning-clean rather than deferring. Re-verified: ESLint exit 0 on the page, `npm test` 405/405, `npm run build` clean with `/portal/my-classes ƒ Dynamic`, `prisma validate` clean.
+- **Reversibility:** Re-add `refundTierForHours` to the import on line 31 of page.tsx to undo (single-line, no behavioural effect).
+- **Files touched:** acce-nextjs/src/app/(portal)/portal/my-classes/page.tsx
+
+### [2026-07-06T21:02:19Z] 5-1-my-classes-with-cancel-and-refund-tier-preview — final status
+- **Risk:** low
+- **Workflow / step:** code-review step 6 (update story status + sync sprint tracking)
+- **Decision point:** Set final story status after review.
+- **Options considered:** A) `done` — clean, only-fixed findings; B) `in-progress` — unresolved HIGH/MEDIUM or action items left
+- **Chosen:** A — `done`. All findings resolved (one LOW patch applied, one dismissed), zero unresolved HIGH/MEDIUM, full verification chain green.
+- **Rationale:** Workflow rule: done when all decision-needed/patch findings resolved AND no unresolved high/medium remain. Satisfied.
+- **Reversibility:** Revert sprint-status.yaml + story Status to in-progress and re-open findings if a follow-up review disagrees.
+- **Files touched:** _bmad-output/implementation-artifacts/5-1-my-classes-with-cancel-and-refund-tier-preview.md, _bmad-output/implementation-artifacts/sprint-status.yaml

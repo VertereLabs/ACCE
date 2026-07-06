@@ -28,7 +28,7 @@ import Link from "next/link";
 import { requireSession } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import { formatZar, formatMode } from "@/lib/class-display";
-import { hoursUntilStart, refundTierForHours, computeRefund } from "@/lib/cancellation";
+import { hoursUntilStart, computeRefund } from "@/lib/cancellation";
 import {
   Card,
   CardContent,

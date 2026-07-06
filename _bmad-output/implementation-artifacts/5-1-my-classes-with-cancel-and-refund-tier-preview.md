@@ -4,7 +4,7 @@ baseline_commit: 8b9d49d7b6ba5035182f317d6285f4b01df4eee0
 
 # Story 5.1: My classes with cancel and refund-tier preview
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -174,6 +174,13 @@ Then a new `tests/unit/cancellation.test.ts` covers the tier boundaries and refu
 - [Source: acce-nextjs/src/app/(portal)/portal/wallet/page.tsx (3.1 read-only portal analog); acce-nextjs/src/app/(portal)/portal/classes/[id]/page.tsx (3.3 detail + AD-10 reveal to link to)]
 - [Source: acce-nextjs/src/app/(portal)/portal-nav.tsx (nav link); acce-nextjs/tests/e2e/authenticated-routes.ts (manifest — /portal/my-classes example)]
 - [Source: _bmad-output/implementation-artifacts/deferred-work.md#AD-12 (cross-epic collision reachable in 5.2, not 5.1); 3-3-…md; 3-1-…md]
+
+## Review Findings
+
+Adversarial code review (Blind Hunter / Edge Case Hunter / Acceptance Auditor) of `git diff 8b9d49d..HEAD`, 2026-07-06. Result: **1 patch (fixed), 0 defer, 1 dismissed, 0 decision-needed.** No HIGH/MEDIUM findings. All AC1–AC6 verified met; no IDOR (query keyed strictly to `session.user.id`), no writes, no `meetingUrl`/`location` leak, inert cancel button genuinely inert, pinned tier comparators exact.
+
+- [x] [Review][Patch] Dead import `refundTierForHours` in my-classes page — FIXED [acce-nextjs/src/app/(portal)/portal/my-classes/page.tsx:31] — the page uses `hoursUntilStart` + `computeRefund` only; `refundTierForHours` was imported but never used (real ESLint `no-unused-vars` warning). Removed from the import. Re-verified ESLint exit 0, build clean, 405/405 tests.
+- [x] [Review][Dismiss] Cancel-label branches hardcode 100/70/else — dismissed as noise. Under the pinned single tier only `refundPct ∈ {0,70,100}` is reachable, so the label is correct today. If a per-variant tier table lands later (AD-11), a generic `${refundPct}% refund` label would be more robust — noted for 5.2 but not a defect now.
 
 ## Dev Agent Record
 
