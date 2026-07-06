@@ -1,32 +1,26 @@
-// Class detail + checkout page — Story 3.3 (AC1–AC5, AC6).
+// Class detail + checkout page — Story 3.3 (AC1–AC5, AC6); updated Story 3.4 (AC1, AC4).
 // Dynamic server component: guard → enrollment lookup → class fetch → checkout panel.
+//
+// Story 3.4 update: The inert "Pay with balance" button is replaced by the
+//   <PayWithBalanceButton> client island (pay-with-balance-button.tsx), which calls
+//   reserveSeatAction and shows a sonner toast on success/error (UX-DR5), then
+//   calls router.refresh() to re-render this page in the CONFIRMED state.
+//   Everything else — AD-10 join-detail gating, AD-5 occupancy read, the enrolled/
+//   full/insufficient checkout states — is unchanged from Story 3.3.
 //
 // Security model (AD-3): requireSession() is the TRUSTED page-level guard.
 // It runs BEFORE any data fetch or JSX. The session.user.id drives ALL lookups —
 // the client never supplies a student id.
 //
-// AD-10 — Join-detail gating (THE headline of this story):
-//   meetingUrl (ONLINE) and location (IN_PERSON) are selected ONLY when the viewer
-//   holds a CONFIRMED enrollment. Never merely hidden in JSX — server-side omission
-//   means the fields never reach the client payload for non-confirmed viewers.
+// AD-10 — Join-detail gating: meetingUrl (ONLINE) and location (IN_PERSON) are
+//   selected ONLY when the viewer holds a CONFIRMED enrollment (server-side omission).
 //
-// AD-5 — Readers never write: occupancy is derived via occupiedEnrollmentWhere +
-//   computeSeatsLeft (single-source, from class-occupancy.ts). This page issues NO
-//   write of any kind. Lazy PENDING→CANCELLED expiry belongs only inside a locked
-//   mutation in enrollment.ts (Story 3.4 / Epic 4).
+// AD-5 — Readers never write: occupancy via occupiedEnrollmentWhere + computeSeatsLeft.
+// AD-6 — getBalance() read-only (no wallet.mutate — that is reserveSeat in 3.4).
+// AD-9 — Money is integer cents; formatZar() converts at the UI edge only.
 //
-// AD-6 — getBalance() read-only: used to compute checkout eligibility (balance >= price).
-//   wallet.mutate is NOT called here (BOOKING_CHARGE is Story 3.4).
-//
-// AD-9 — Money is integer cents: priceCents and balanceCents are integers throughout.
-//   Only formatZar() converts to Rand at the UI edge.
-//
-// AD-4 — No reservation here: the "Pay with balance" button is INERT/disabled.
-//   Story 3.4 converts the panel to a client island, adds reserveSeat(), and wires it.
-//
-// A11y (NFR10): page uses a plain <div> wrapper — the (portal) layout owns the single
-//   <main> landmark (1.3 a11y fix — never nest a second <main>).
-//
+// A11y (NFR10): plain <div> wrapper — the (portal) layout owns the single <main>
+//   landmark (1.3 a11y fix — never nest a second <main>).
 // Next 16 App Router: params is a Promise and must be awaited.
 
 import Link from "next/link";
@@ -44,8 +38,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { PayWithBalanceButton } from "./pay-with-balance-button";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library (consistent with 2.2/2.3/3.2).
@@ -287,7 +281,7 @@ export default async function ClassDetailPage({ params }: ClassDetailPageProps) 
             </div>
           )}
 
-          {/* ── AC1: Balance sufficient — "Pay with balance" inert CTA ── */}
+          {/* ── AC1: Balance sufficient — "Pay with balance" live CTA (Story 3.4) ── */}
           {canPayFromBalance && (
             <div className="space-y-3">
               <div className="text-sm">
@@ -299,22 +293,13 @@ export default async function ClassDetailPage({ params }: ClassDetailPageProps) 
               </div>
 
               {/*
-                FORWARD AFFORDANCE — disabled/inert in Story 3.3.
-                Story 3.4 converts this panel to a client island and wires the
-                live reserveSeat() action + UX-DR5 toast.
-                Button is keyboard-operable and perceivable even while disabled.
+                PayWithBalanceButton (Story 3.4): client island that calls
+                reserveSeatAction, shows a sonner toast (UX-DR5), and calls
+                router.refresh() on success so the page re-renders to the
+                CONFIRMED state (revealing join details via AD-10 gating).
+                Pass a plain string prop (RSC-500 safe per 1.5 lesson).
               */}
-              <Button
-                disabled
-                className="min-h-[44px] w-full bg-accent text-accent-foreground hover:bg-accent/90"
-                aria-label="Pay with balance (booking opens soon)"
-              >
-                Pay with balance
-              </Button>
-
-              <p className="text-center text-xs text-muted-foreground">
-                Booking coming soon
-              </p>
+              <PayWithBalanceButton classId={cls.id} />
             </div>
           )}
 

@@ -907,3 +907,73 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** (1) The detail fetch has no status/start guard, so a deep-link to a CANCELLED/past class renders detail + an inert checkout — but the button is inert and real enforcement is the 3.4 reserve-under-lock path; no 3.3 AC requires 404-ing non-scheduled classes. Fixing it now would pre-empt a 3.4 design decision. (2) The inert Pay button uses native `disabled` (not tab-focusable), mildly contradicting the UX-DR6 "keyboard-operable" note — but it is still screen-reader-perceivable, and 3.4 converts the panel to a client island with a live (focusable) button, making the item transient. Neither is a correctness/security defect; deferring keeps 3.3 scope tight and avoids touching code that 3.4 rewrites.
 - **Reversibility:** Both items are logged in deferred-work.md#story-3.3; promote either to a story task if a later loop decides to address it before 3.4.
 - **Files touched:** _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T05:50:36Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — Story scope: reserveSeat balance-path only, Paystack PENDING branch deferred to Epic 4
+- **Risk:** medium
+- **Workflow / step:** create-story step 2 (epic/story analysis) + step 5 (scope boundaries)
+- **Decision point:** AD-4 mandates ONE canonical `reserveSeat()` serving BOTH the wallet-balance path and the Paystack path. Story 3.4's ACs only cover the balance path; Paystack init/PENDING-hold is Epic 4 (Story 4.1). How much of `reserveSeat` does 3.4 build?
+- **Options considered:** A) Build the full reserveSeat incl. the PENDING/pendingExpiresAt Paystack branch now; B) Build reserveSeat with ONLY the balance→CONFIRMED+BOOKING_CHARGE branch now, structured so Epic 4 extends it with the insufficient-balance→PENDING branch; C) Build a balance-only helper and let Epic 4 build a separate reserve path.
+- **Chosen:** B — reserveSeat is created in `src/lib/enrollment.ts` with the Serializable-tx skeleton (FOR UPDATE, AD-5 count, AD-12 create-or-reactivate, AD-6 BOOKING_CHARGE) implementing the balance→CONFIRMED path; the Paystack PENDING branch is a documented forward-extension seam (Epic 4). Option C is explicitly forbidden by AD-4 (no second reservation path); A is out-of-scope scope-creep into Epic 4.
+- **Rationale:** Honours AD-4's single-canonical-reservation invariant while keeping 3.4 to its ACs. Mirrors how 2.1 established the create pattern and 2.3 extended the tx/lock pattern.
+- **Reversibility:** Epic 4 extends the same function in-place (add the `else`/insufficient-balance→PENDING branch). If the seam shape is wrong, only `enrollment.ts` changes; callers use the discriminated result.
+- **Files touched:** _bmad-output/implementation-artifacts/3-4-reserve-and-pay-a-seat-from-wallet-balance.md
+
+### [2026-07-06T05:50:36Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — AD-12 reactivation vs AD-8 one-BOOKING_CHARGE-per-enrollment cross-epic tension flagged
+- **Risk:** high
+- **Workflow / step:** create-story step 3 (architecture guardrails) — adversarial gap analysis
+- **Decision point:** AD-12 says re-booking a previously-CANCELLED class must REUSE (reactivate) the existing `Enrollment` row (status-agnostic `@@unique([studentId, groupSessionId])`). AD-8 enforces one `BOOKING_CHARGE` per enrollmentId via a partial unique index. Reactivating a row that already has a historical `BOOKING_CHARGE` and writing a new one would hit that unique index → the reactivation charge path is unsatisfiable as written.
+- **Options considered:** A) Resolve the collision now in 3.4 (redesign the partial-unique key or reactivation ledger identity); B) Implement create-or-reactivate per AD-12 but note the collision is not reachable in Phase 1a until a cancel path exists (Epic 5), and flag it as a cross-epic item to resolve when Epic 5 lands; C) Ignore reactivation entirely and only handle new-enrollment + FR11 reject.
+- **Chosen:** B — 3.4 codes the FR11 reject (non-cancelled existing enrollment) as the live, tested behaviour; the CANCELLED→reactivate branch is implemented defensively per AD-12 but the AD-8 BOOKING_CHARGE-collision is documented as a deferred cross-epic decision (no CANCELLED enrollment can exist until Epic 5's cancel flow, so it is unreachable in 3.4). Recorded in the story Dev Notes + deferred-work.
+- **Rationale:** Cancel/refund (Epic 5) does not exist yet, so no CANCELLED row is producible in 3.4; forcing a partial-unique redesign now would be speculative and could churn the AD-8 migration. FR11 (the reachable case) is fully handled + tested.
+- **Reversibility:** When Epic 5 lands cancel, revisit: either key the BOOKING_CHARGE partial-unique on an active-cycle discriminator, or give reactivation a fresh ledger identity. Isolated to `enrollment.ts` + the AD-8 migration.
+- **Files touched:** _bmad-output/implementation-artifacts/3-4-reserve-and-pay-a-seat-from-wallet-balance.md, _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T05:50:36Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — Checkout panel becomes a client island; live concurrency test deferred to CI
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (UX + testing scope)
+- **Decision point:** UX-DR5 requires a sonner toast on book success/error, which needs a client component; the 3.3 checkout panel is currently fully server-rendered. Also AD-4 mandates a real-Postgres concurrency integration test that the credential-blocked sandbox cannot run.
+- **Options considered (island):** A) Extract a `"use client"` "Pay with balance" button island that calls the server action and toasts, keeping the rest of the detail page server-rendered (avoids the 1.5 RSC non-children-prop 500 trap); B) Convert the whole page to a client component (breaks AD-10 server-side omission + AD-3 server guard posture).
+- **Chosen (island):** A. **Testing:** unit-test the pure reserve-input schema / result-mapping helper (mirrors 2.1/2.3); defer the live Serializable/40001 no-oversell concurrency integration test to the CI ephemeral-Postgres job (same wall as 1.1/1.5/2.2/2.3), per AD-4's explicit "must include a real-Postgres concurrency integration test" — recorded in deferred-work.
+- **Rationale:** Keeps the AD-10 join-detail server omission and AD-3 guard intact; matches the established island + CI-deferral posture of the codebase.
+- **Reversibility:** Island is a new client file consumed via `children`/prop-safe wiring; CI test is additive. No schema impact.
+- **Files touched:** _bmad-output/implementation-artifacts/3-4-reserve-and-pay-a-seat-from-wallet-balance.md, _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T06:00:31Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — dev-story start: mark in-progress, baseline_commit preserved
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; baseline_commit already set in frontmatter (92fa690b — set by create-story run); need to transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Baseline commit `92fa690b85f1bf4960ddea81e7b7388e97005c57` preserved (already in frontmatter); update sprint-status.yaml to `in-progress`.
+- **Rationale:** Required by workflow contract. baseline_commit already present — do not overwrite per dev-story step 4 rule.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/3-4-reserve-and-pay-a-seat-from-wallet-balance.md
+
+### [2026-07-06T06:00:31Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — CRITICAL: WalletInsufficientFundsError must throw out of tx callback to trigger rollback
+- **Risk:** critical
+- **Workflow / step:** dev-story step 5 (Task 1 — enrollment.ts reserveSeat implementation)
+- **Decision point:** When `wallet.mutate()` throws `WalletInsufficientFundsError` inside the tx callback, should we (A) catch inside callback and return `{ ok: false, reason: 'insufficient_balance' }` → tx COMMITS (enrollment row persists, no ledger — data integrity violation), or (B) let the error propagate out of the callback → Prisma rolls back the full Serializable tx → enrollment NOT persisted → catch in outer try/catch.
+- **Options considered:** A) catch inside → tx commits with orphaned enrollment; B) throw out → tx rolls back → outer catch returns discriminated result.
+- **Chosen:** B — `WalletInsufficientFundsError` is NOT caught inside the `db.$transaction` callback. It propagates out, Prisma rolls back the tx, the enrollment creation is rolled back. The outer try/catch catches it and returns `{ ok: false, reason: 'insufficient_balance' }`. The story says "the throw rolls the whole tx back" — confirms approach B.
+- **Rationale:** Only by throwing can we guarantee rollback. Approach A would silently create an orphaned `CONFIRMED` enrollment with no `BOOKING_CHARGE` ledger entry — a data integrity violation (a student would have a CONFIRMED seat without paying). This is a CRITICAL path (moves real balance).
+- **Reversibility:** If a future requirement changes how insufficient_balance is handled (e.g., PENDING state), refactor the catch location inside the tx and manage tx state explicitly. No schema change needed.
+- **Files touched:** acce-nextjs/src/lib/enrollment.ts
+
+### [2026-07-06T06:00:31Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — Pure reserve schema placed in src/lib/reserve-schema.ts
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (Task 4 — pure helper module placement)
+- **Decision point:** Where to place the pure reserve-input Zod schema and reason→message mapper?
+- **Options considered:** A) Colocated in `src/app/(portal)/portal/classes/[id]/reserve-schema.ts`; B) Shared lib at `src/lib/reserve-schema.ts` (mirrors wallet-math.ts, wallet-display.ts, class-occupancy.ts all in src/lib).
+- **Chosen:** B — `src/lib/reserve-schema.ts`. Mirrors the established pattern of pure db-free helpers in src/lib; also importable from the client island without crossing route-group boundaries.
+- **Rationale:** The pure helper pattern (src/lib, no db import, vitest-jsdom-safe) is the project standard for testable helpers.
+- **Reversibility:** Move the file to the route folder and update the import in the unit test + island; one-line change in each.
+- **Files touched:** acce-nextjs/src/lib/reserve-schema.ts, acce-nextjs/tests/unit/reserve-schema.test.ts
+
+### [2026-07-06T06:00:31Z] 3-4-reserve-and-pay-a-seat-from-wallet-balance — Retry loop: MAX_RETRIES=4 (5 total attempts), backoffs [50,100,200]ms
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1, subtask 2 — retry parameters)
+- **Decision point:** Story says "bounded retry, 3–5 attempts, small backoff". Exact parameters not specified.
+- **Options considered:** A) 3 attempts, [50,100]ms; B) 4 max retries (5 total), [50,100,200]ms; C) 5 retries, [100,200,400]ms.
+- **Chosen:** B — `MAX_RETRIES = 4` (attempts 0..4 = 5 total), backoffs `[50, 100, 200]` ms (clamped at last index for retries ≥2). Timeout=15000ms, maxWait=5000ms.
+- **Rationale:** 4 retries within 3–5 range; 200ms max backoff keeps total serialization overhead ≤650ms well within 15s timeout.
+- **Reversibility:** Change the constants in enrollment.ts; no downstream impact.
+- **Files touched:** acce-nextjs/src/lib/enrollment.ts
