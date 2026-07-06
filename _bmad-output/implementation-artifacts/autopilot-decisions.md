@@ -637,3 +637,33 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Keeps the AD-9/validation logic single-sourced where practical, and refuses to fake lock semantics that a mock cannot honestly reproduce. Static verification is the honest bar in-sandbox.
 - **Reversibility:** (a) Extract-vs-duplicate is a local refactor either direction. (b) The deferred integration test is picked up in CI once ephemeral-Postgres is wired (shared with AD-4's no-oversell test).
 - **Files touched:** 2-3-edit-an-existing-class.md (Tasks 1, 6, 7; Testing standards).
+
+### [2026-07-06T00:21:33Z] 2-3-edit-an-existing-class — Edit form pre-fill used UTC wall-clock (timezone round-trip patch)
+- **Risk:** medium
+- **Workflow / step:** code-review step 3 (triage) → step 4 (apply patch)
+- **Decision point:** The edit page pre-fills start/end via `session.start.toISOString().slice(0,16)` (UTC wall-clock). Create parse (`z.coerce.date`) and the 2.2 list display (`toLocaleString`, no timeZone) both use SERVER-LOCAL. The story explicitly required the edit datetime-local round-trip to "stay consistent with create/list." On a non-UTC deploy the edit form shows a different time than the list and shifts the stored instant on every save → latent AC1 correctness/data-integrity defect. Fix now vs defer to the cross-cutting TZ item?
+- **Options considered:** A) Fix edit to format server-local now (aligns with create/list under any TZ; standalone, doesn't require the global TZ decision). B) Defer to the 2.2 system-wide TZ decision (leaves edit diverging from create/list even today under non-UTC). C) Force `Africa/Johannesburg` here (rejected — story says do NOT unilaterally pin a TZ).
+- **Chosen:** A — added `toDatetimeLocalInput()` (server-local wall-clock formatter) in page.tsx; `expectedUpdatedAt` stays `toISOString()` (absolute instant, correct).
+- **Rationale:** Server-local formatting makes the datetime-local round-trip lossless and consistent with the create-form parse frame + 2.2 list display under ANY deploy TZ, without pre-empting the deferred global-TZ decision. Verified build clean + 190/190 vitest after the change.
+- **Reversibility:** Revert page.tsx to `toISOString().slice(0,16)` to restore UTC behavior; the helper is self-contained (page.tsx:62-78). The broader "pin one canonical app TZ end-to-end" decision remains open in deferred-work.md (2.2 + this).
+- **Files touched:** acce-nextjs/src/app/(admin)/admin/classes/[id]/edit/page.tsx
+
+### [2026-07-06T00:21:33Z] 2-3-edit-an-existing-class — Two deferred findings (concurrency integration test + IN_PERSON meetingUrl)
+- **Risk:** medium
+- **Workflow / step:** code-review step 3 (triage) → step 4 (write defers)
+- **Decision point:** Two real findings are not sandbox-fixable/actionable now: (1) AC4 token parity between raw `$queryRaw` and Prisma `findUnique` + the whole FOR UPDATE/optimistic-concurrency/capacity-race behaviour is only verifiable against a live Postgres (Task 7 posture); (2) `meetingUrl` not nulled on ONLINE→IN_PERSON switch (low, harmless, symmetric with create).
+- **Options considered:** patch / defer / dismiss for each.
+- **Chosen:** Defer both — logged to the story Review Findings and deferred-work.md under a 2.3 heading. Neither blocks `done`.
+- **Rationale:** (1) is environmental first-live-verification (same wall as 1.1/1.5/2.2 CI-deferred items) — cannot be exercised without ephemeral Postgres; forcing dev-story to re-loop would spin with nothing to fix. (2) is a low data-cleanliness nit with no consumer today. Both belong in the ledger, not as blocking dev follow-ups.
+- **Reversibility:** Pick up from deferred-work.md when the CI ephemeral-Postgres job lands (integration test) / when meet-link consumption is implemented (null on IN_PERSON in both create+edit).
+- **Files touched:** _bmad-output/implementation-artifacts/2-3-edit-an-existing-class.md, _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T00:21:33Z] 2-3-edit-an-existing-class — Final status = done
+- **Risk:** medium
+- **Workflow / step:** code-review step 4 section 6 (status determination)
+- **Decision point:** After patching the one actionable MEDIUM (timezone round-trip), only environmental/low deferred findings remain. Set `done` or `in-progress`?
+- **Options considered:** A) `done` (all actionable patch findings resolved; remaining items are ledger-tracked environmental/low, matching 1.1/1.5/2.2 precedent which all went `done` with CI-deferred items). B) `in-progress` (strict reading: a deferred MEDIUM remains) — but its follow-up is a CI-only integration test dev-story cannot execute in the sandbox → would loop with no fix available.
+- **Chosen:** A — `done`. Story file Status → done; sprint-status.yaml `2-3-edit-an-existing-class: done`.
+- **Rationale:** The only sandbox-actionable defect is fixed and re-verified (build clean, 190/190). Remaining findings are environmental (deferred to CI, consistent with every prior story) or low. Marking in-progress would create a no-progress loop on an unfixable-here CI item.
+- **Reversibility:** Set `2-3-edit-an-existing-class: in-progress` in sprint-status.yaml and revert the story Status if the team wants the story held open until the CI concurrency test is green.
+- **Files touched:** _bmad-output/implementation-artifacts/2-3-edit-an-existing-class.md, _bmad-output/implementation-artifacts/sprint-status.yaml

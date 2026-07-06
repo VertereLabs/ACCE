@@ -4,7 +4,7 @@ baseline_commit: 7a38dda4732128acfdbcbfb59002889b42ca0e24
 
 # Story 2.3: Edit an existing class
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -347,6 +347,14 @@ No schema/migration files are modified. The dynamic edit route is added to the 1
   params`). Server component: guard → load → `notFound()` if missing → render client form with serialisable props.
 - **Zod 4:** reuse `z.coerce.date()/number()`, `.refine`/`.superRefine`; `error.flatten().fieldErrors` for the
   discriminated result. Reuse the `typedResolver` cast pattern for the coerced fields in the client form.
+
+## Review Findings
+
+Adversarial code review (2026-07-06, autopilot). 1 patch applied, 2 deferred, several dismissed as noise.
+
+- [x] [Review][Patch] Edit form pre-filled start/end in UTC wall-clock, diverging from the create-parse / 2.2-list server-local convention (AC1 round-trip). `page.tsx` used `session.start.toISOString().slice(0,16)` → on any non-UTC deploy the edit form showed a different time than the list and shifted the stored instant on every edit round-trip. Fixed: added `toDatetimeLocalInput()` (server-local wall-clock formatter) so edit is consistent with create/list and the round-trip is lossless. [acce-nextjs/src/app/(admin)/admin/classes/[id]/edit/page.tsx:62-78] — FIXED.
+- [x] [Review][Defer] AC4 concurrency-token parity between raw `$queryRaw` and Prisma `findUnique` is unverified — deferred to CI. The AC4 check compares `updatedAt` read via `tx.$queryRaw` (raw pg) against the page's `findUnique` (Prisma). `@prisma/adapter-pg` installs type parsers so these should match, but if they ever diverge (TZ/precision) every edit false-rejects with "changed by someone else." Unverifiable in the credential-blocked sandbox → part of the deferred CI ephemeral-Postgres concurrency integration test (Task 7). [acce-nextjs/src/app/(admin)/admin/classes/[id]/edit/actions.ts:92-108] — deferred, environmental.
+- [x] [Review][Defer] `meetingUrl` is not nulled when a class is switched to IN_PERSON — `actions.ts` nulls `location` for ONLINE but retains a stale Meet link on an in-person class (RHF keeps the hidden field's value). Harmless today (nothing reads meetingUrl for IN_PERSON) and consistent with the create action's non-guard. [acce-nextjs/src/app/(admin)/admin/classes/[id]/edit/actions.ts:159] — deferred, low.
 
 ## Dev Agent Record
 

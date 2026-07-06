@@ -23,6 +23,24 @@ interface EditClassPageProps {
   params: Promise<{ id: string }>;
 }
 
+/**
+ * Format a Date to the "YYYY-MM-DDTHH:mm" string an <input type="datetime-local">
+ * expects, using the SERVER's local wall clock — the SAME timezone frame that
+ * `z.coerce.date()` uses when it re-parses the submitted string on save, and that
+ * the 2.2 list uses to display (`toLocaleString`, no explicit timeZone).
+ *
+ * Using `toISOString()` here would emit the UTC wall clock, which — on any non-UTC
+ * deploy — pre-fills a different time than the list shows AND shifts the stored
+ * instant on every edit round-trip. Formatting in server-local keeps edit
+ * consistent with create/list and makes the round-trip lossless (AC1).
+ */
+function toDatetimeLocalInput(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+    d.getHours()
+  )}:${pad(d.getMinutes())}`;
+}
+
 export default async function EditClassPage({ params }: EditClassPageProps) {
   // AD-3: trusted page-level guard — runs before any data fetch or JSX.
   await requireAdmin();
@@ -65,9 +83,10 @@ export default async function EditClassPage({ params }: EditClassPageProps) {
     level: session.level,
     title: session.title,
     description: session.description ?? "",
-    // datetime-local format: "YYYY-MM-DDTHH:mm"
-    start: session.start.toISOString().slice(0, 16),
-    end: session.end.toISOString().slice(0, 16),
+    // datetime-local format: "YYYY-MM-DDTHH:mm" in SERVER-local time — consistent
+    // with the create-form parse frame and the 2.2 list display (round-trip-safe).
+    start: toDatetimeLocalInput(session.start),
+    end: toDatetimeLocalInput(session.end),
     capacity: session.capacity,
     // AD-9: stored as cents → Rand for the form (cents / 100, keep up to 2 dp)
     priceRand: session.priceCents / 100,
