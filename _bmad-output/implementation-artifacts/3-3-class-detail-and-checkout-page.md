@@ -4,7 +4,7 @@ baseline_commit: a3210042ce00ef0c6d68ccebb8404367acb9cfd0
 
 # Story 3.3: Class detail and checkout page
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 

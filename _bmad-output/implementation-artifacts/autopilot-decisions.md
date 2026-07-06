@@ -887,3 +887,23 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All ACs satisfied: AC1 (detail page + checkout panel with 4 states), AC2 (meetingUrl/location omitted server-side for non-confirmed), AC3 (join details revealed mode-dependently for CONFIRMED), AC4 (full-class + insufficient-balance states), AC5 (requireSession first + notFound for missing id), AC6 (chain green, no writes, no schema change, /portal/classes/seed-class-acc-1 in e2e manifest).
 - **Reversibility:** Revert status to `in-progress`; delete the new page file.
 - **Files touched:** acce-nextjs/src/app/(portal)/portal/classes/[id]/page.tsx, acce-nextjs/tests/e2e/authenticated-routes.ts, _bmad-output/implementation-artifacts/3-3-class-detail-and-checkout-page.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-06T05:44:23Z] 3-3-class-detail-and-checkout-page — code-review verdict: CLEAN → done
+- **Risk:** low
+- **Workflow / step:** code-review (bmad-code-review v6-skill), fix-vs-action-items <ask>
+- **Decision point:** Fresh adversarial review of the `review` story 3.3 (class detail + checkout page). At the fix-vs-action-items ask, default is to auto-fix all HIGH/MEDIUM findings; decide final status (done if clean, else in-progress + Review Follow-ups).
+- **Options considered:** A) fix findings + set in-progress with follow-ups; B) verdict CLEAN, set done, defer LOW items; C) block.
+- **Chosen:** B — CLEAN. 0 HIGH/MEDIUM/critical findings. 2 LOW findings recorded to deferred-work.md.
+- **Rationale:** FRESH re-verification of all 6 ACs + AD-1/2/3/4/5/6/9/10 from scratch, not assuming dev was correct. AD-10 (the security headline) is correctly implemented: enrollment status is looked up FIRST, and `meetingUrl`/`location` are conditionally SELECTED (two-branch `findUnique`) only for a CONFIRMED viewer — true server-side omission, never JSX-hiding; the fields never enter the RSC payload for non-confirmed viewers. Reveal is mode-dependent (ONLINE→meetingUrl, IN_PERSON→location), which also neutralizes the 2.3 stale-meetingUrl deferral on the read side. AD-3: requireSession() runs first (redirects /sign-in), notFound() on unknown id, all lookups keyed to session.user.id. AD-5: reused occupiedEnrollmentWhere + computeSeatsLeft filtered _count, zero write. AD-6: getBalance read-only, wallet.mutate NOT called. AD-9: integer-cents throughout, formatZar only at the edge. The four checkout-panel states (enrolled / full / balance-ok-inert-CTA / insufficient) are mutually exclusive AND exhaustive; label text (not colour) carries each state (UX-DR6). Independently re-ran the chain green: `prisma validate` clean, `npm run build` clean (`/portal/classes/[id]` present as ƒ Dynamic), 223/223 vitest. Per project precedent (1.4/2.2/2.3 went `done` with LOW items deferred), LOW-only → done.
+- **Reversibility:** No code was changed this review (clean). To reverse the status decision, set 3-3 back to `in-progress` in sprint-status.yaml and convert either LOW deferral into a Review Follow-up task on the story.
+- **Files touched:** _bmad-output/implementation-artifacts/deferred-work.md (2 LOW items), _bmad-output/implementation-artifacts/sprint-status.yaml (3-3 → done), _bmad-output/implementation-artifacts/autopilot-decisions.md
+
+### [2026-07-06T05:44:23Z] 3-3-class-detail-and-checkout-page — 2 LOW findings deferred (not fixed)
+- **Risk:** low
+- **Workflow / step:** code-review, triage
+- **Decision point:** Two LOW findings surfaced; auto-fix mandate covers HIGH/MEDIUM only. Fix now or defer?
+- **Options considered:** A) fix both now; B) defer both to a later loop / 3.4; C) fix one, defer one.
+- **Chosen:** B — defer both to deferred-work.md.
+- **Rationale:** (1) The detail fetch has no status/start guard, so a deep-link to a CANCELLED/past class renders detail + an inert checkout — but the button is inert and real enforcement is the 3.4 reserve-under-lock path; no 3.3 AC requires 404-ing non-scheduled classes. Fixing it now would pre-empt a 3.4 design decision. (2) The inert Pay button uses native `disabled` (not tab-focusable), mildly contradicting the UX-DR6 "keyboard-operable" note — but it is still screen-reader-perceivable, and 3.4 converts the panel to a client island with a live (focusable) button, making the item transient. Neither is a correctness/security defect; deferring keeps 3.3 scope tight and avoids touching code that 3.4 rewrites.
+- **Reversibility:** Both items are logged in deferred-work.md#story-3.3; promote either to a story task if a later loop decides to address it before 3.4.
+- **Files touched:** _bmad-output/implementation-artifacts/deferred-work.md
