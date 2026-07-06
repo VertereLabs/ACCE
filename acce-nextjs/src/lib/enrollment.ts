@@ -1,10 +1,22 @@
-// enrollment.ts — Story 3.4 (AC1, AC2, AC3, AC5) + Story 4.1 (AC1–AC4, AD-4/5/12/14).
+// enrollment.ts — Story 3.4 (AC1, AC2, AC3, AC5) + Story 4.1 (AC1–AC4, AD-4/5/12/14)
+//                 + Story 4.2 (AC2, AC3, AC4, AD-7/8/14/15).
 //
 // AD-14 — SOLE STATUS WRITER: This module is the ONLY place in the app that
 // writes Enrollment.status. All seat acquisition (balance path AND Paystack
 // PENDING path), confirm (webhook — 4.2), cancel, expire, attend/no-show all
 // live here as separate exported functions added by future epics. No page,
 // action, or reader writes Enrollment.status anywhere else.
+//
+// Story 4.2 ADDITIONS:
+//   - `confirmPaidSeat(args)` — the webhook confirm seam (AD-7/8/14/15).
+//     Owns the entire Serializable tx: Payment idempotency gate (P2002 → already_processed)
+//     → GroupSession FOR UPDATE re-check → PENDING+room→CONFIRMED+BOOKING_CHARGE |
+//     PENDING-refilled/CANCELLED→CANCELLATION_REFUND wallet credit (AD-15).
+//     Reuses the same retry loop, lock pattern, and helpers as reserveSeat.
+//   - `decideConfirmOutcome(args)` — pure exported decision function (unit-testable).
+//   - Lock order: GroupSession FOR UPDATE → wallet advisory lock (same as reserveSeat → no deadlock).
+//   - AD-15 orphan/CANCELLED path: flip still-PENDING → CANCELLED (AD-14 sole writer),
+//     then credit captured amount as CANCELLATION_REFUND via wallet.mutate (AD-6).
 //
 // AD-4 — ONE CANONICAL SEAT RESERVATION, Serializable SSI:
 //   reserveSeat() is the SINGLE reservation function for ALL paths (balance
@@ -441,5 +453,313 @@ export async function reserveSeat(
 
   // Exhausted all retries (all MAX_RETRIES attempts were serialization failures).
   console.error("[enrollment.reserveSeat] exhausted retries:", { studentId, classId });
+  return { ok: false, reason: "error" };
+}
+
+// ---------------------------------------------------------------------------
+// Story 4.2 — internal sentinel + confirmPaidSeat + decideConfirmOutcome
+// ---------------------------------------------------------------------------
+
+/** Sentinel thrown inside the tx callback when Payment.reference already exists (P2002). */
+class AlreadyProcessedError extends Error {
+  constructor() {
+    super("ALREADY_PROCESSED");
+    this.name = "AlreadyProcessedError";
+  }
+}
+
+/**
+ * Discriminated result from confirmPaidSeat (Story 4.2).
+ *
+ * ok:true paths:
+ *   "confirmed"          — PENDING→CONFIRMED, BOOKING_CHARGE written
+ *   "refunded_to_wallet" — seat gone/expired, captured amount credited (AD-15)
+ *   "already_processed"  — Payment.reference already exists (idempotent replay)
+ *   "noop"               — enrollment not found for reference; Payment recorded
+ *
+ * ok:false paths:
+ *   "error"              — unrecoverable error; route returns 500 for Paystack retry
+ */
+export type ConfirmResult =
+  | { ok: true; outcome: "confirmed" | "refunded_to_wallet" | "already_processed" | "noop" }
+  | { ok: false; reason: "error" };
+
+/**
+ * Pure decision function for the confirm/refund/noop branch (AC2, AC3, AC4, Story 4.2).
+ *
+ * Called inside `confirmPaidSeat` after reading enrollment status and counting
+ * OTHER occupancy under the GroupSession FOR UPDATE lock.
+ *
+ * Rules (per Dev Notes "The confirm control flow"):
+ *   CONFIRMED/ATTENDED/NO_SHOW → noop (defensive; Payment gate normally prevents re-delivery reaching here)
+ *   PENDING AND othersOccupied < capacity  → confirm
+ *   PENDING AND othersOccupied >= capacity → refund_to_wallet (class refilled, AD-15)
+ *   CANCELLED                              → refund_to_wallet (hold expired, AD-15)
+ *
+ * @param args.status          - current enrollment status (re-read under the lock)
+ * @param args.othersOccupied  - count of OTHER occupying enrollments (excludes own row)
+ * @param args.capacity        - class capacity from the locked GroupSession row
+ * @returns                    - "confirm" | "refund_to_wallet" | "noop"
+ */
+export function decideConfirmOutcome(args: {
+  status: string;
+  othersOccupied: number;
+  capacity: number;
+}): "confirm" | "refund_to_wallet" | "noop" {
+  const { status, othersOccupied, capacity } = args;
+
+  if (status === "CONFIRMED" || status === "ATTENDED" || status === "NO_SHOW") {
+    // Defensive noop — Payment gate should prevent re-delivery reaching here.
+    return "noop";
+  }
+
+  if (status === "PENDING") {
+    if (othersOccupied < capacity) {
+      return "confirm";
+    }
+    // Seat count (excluding this row) >= capacity: class is full → conserve to wallet (AD-15).
+    return "refund_to_wallet";
+  }
+
+  if (status === "CANCELLED") {
+    // Hold expired and released (lazy flip or prior cancel) → conserve to wallet (AD-15).
+    return "refund_to_wallet";
+  }
+
+  // Unknown status — treat as noop defensively.
+  return "noop";
+}
+
+/**
+ * The webhook confirm seam for the Paystack online-payment path (Story 4.2, AD-7).
+ *
+ * This is the ONLY function that processes a verified Paystack `charge.success`
+ * event. It owns the entire Serializable tx, ordered per AD-7:
+ *
+ *   1. INSERT Payment(reference unique)                    — AD-7 idempotency GATE
+ *      └─ P2002 → already_processed → caller returns 200
+ *   2. findUnique Enrollment by paymentRef=reference
+ *      └─ none → noop (Payment recorded; no student to credit safely)
+ *   3. SELECT … FOR UPDATE GroupSession(enr.groupSessionId) — AD-4/5 re-check under lock
+ *   4. decide(status, othersOccupied, capacity):
+ *      CONFIRMED/ATTENDED/NO_SHOW           → noop
+ *      PENDING & othersOccupied < capacity  → confirm  (PENDING→CONFIRMED + BOOKING_CHARGE)
+ *      PENDING & othersOccupied >= capacity → refund_to_wallet (AD-15)
+ *      CANCELLED                            → refund_to_wallet (AD-15)
+ *   5. confirm:  Enrollment→CONFIRMED, pendingExpiresAt=null
+ *                wallet.mutate BOOKING_CHARGE -priceCents (snapshot, AD-16), enrollmentId, paymentRef
+ *      refund:   if still PENDING → Enrollment→CANCELLED, pendingExpiresAt=null (AD-14)
+ *                wallet.mutate CANCELLATION_REFUND +amountCents (captured), enrollmentId, paymentRef
+ *   commit
+ *
+ * Lock order: GroupSession FOR UPDATE → wallet advisory lock (same as reserveSeat → no deadlock).
+ *
+ * Retry loop, helpers (MAX_RETRIES, backoffMs, isSerializationError), and
+ * $transaction options are reused from reserveSeat per the story spec.
+ *
+ * @param args.reference  - Paystack `data.reference` (joins to Enrollment.paymentRef)
+ * @param args.amountCents - Paystack `data.amount` (integer cents; used for AD-15 refund)
+ * @param args.status      - Paystack `data.status` (stored in Payment row)
+ * @param args.type        - Paystack `event` name (stored in Payment row)
+ * @param args.raw         - the full parsed event object (stored in Payment.raw)
+ */
+export async function confirmPaidSeat(args: {
+  reference: string;
+  amountCents: number;
+  status: string;
+  type: string;
+  raw: unknown;
+}): Promise<ConfirmResult> {
+  let attempt = 0;
+
+  while (attempt <= MAX_RETRIES) {
+    try {
+      // ── Serializable interactive transaction (AD-7, mirrors reserveSeat AD-4) ─
+      const result = await db.$transaction(
+        async (tx) => {
+          const now = new Date();
+
+          // ── Step 1: Idempotency gate — INSERT Payment(reference unique) ────────
+          // AD-7: the unique-insert is the atomic gate. Under Serializable SSI,
+          // only one concurrent delivery commits; the loser gets P2002 (or a
+          // serialization abort → retry → then P2002) and no-ops.
+          // Catch P2002 INSIDE the callback: throw AlreadyProcessedError (sentinel)
+          // so Prisma rolls back the (empty) tx, and the outer catch maps to
+          // "already_processed". Non-P2002 errors are re-thrown as-is.
+          try {
+            await tx.payment.create({
+              data: {
+                reference: args.reference,
+                amountCents: args.amountCents,
+                status: args.status,
+                type: args.type,
+                raw: args.raw as import("@prisma/client").Prisma.InputJsonValue,
+              },
+            });
+          } catch (createErr) {
+            if (
+              createErr instanceof Prisma.PrismaClientKnownRequestError &&
+              createErr.code === "P2002"
+            ) {
+              // Reference already processed — throw sentinel to signal already_processed.
+              throw new AlreadyProcessedError();
+            }
+            throw createErr; // re-throw non-P2002 errors for outer handler
+          }
+
+          // ── Step 2: Find the enrollment by paymentRef=reference ────────────────
+          const enr = await tx.enrollment.findUnique({
+            where: { paymentRef: args.reference },
+            select: {
+              id: true,
+              studentId: true,
+              groupSessionId: true,
+              status: true,
+              priceCents: true,
+            },
+          });
+
+          if (!enr) {
+            // No enrollment found for this reference — Payment recorded above;
+            // no student to attribute. Log + return noop.
+            console.error("[enrollment.confirmPaidSeat] no enrollment found for reference:", {
+              reference: args.reference,
+            });
+            return { ok: true as const, outcome: "noop" as const };
+          }
+
+          // ── Step 3: Lock GroupSession row FOR UPDATE (AD-4 belt-and-braces) ────
+          // Mirrors reserveSeat Step 1 exactly.
+          const rows = await tx.$queryRaw<
+            {
+              id: string;
+              status: string;
+              start: Date;
+              capacity: number;
+              priceCents: number;
+            }[]
+          >`SELECT id, status, "start", capacity, "priceCents" FROM "GroupSession" WHERE id = ${enr.groupSessionId} FOR UPDATE`;
+
+          if (rows.length === 0) {
+            // GroupSession deleted — should not happen; conserve as refund if possible.
+            console.error("[enrollment.confirmPaidSeat] GroupSession not found:", {
+              groupSessionId: enr.groupSessionId,
+              reference: args.reference,
+            });
+            // Fall through: treat as refund_to_wallet (money must not be kept).
+            await tx.enrollment.update({
+              where: { id: enr.id },
+              data: { status: "CANCELLED", pendingExpiresAt: null },
+            });
+            await mutate(tx, enr.studentId, {
+              type: "CANCELLATION_REFUND",
+              amountCents: args.amountCents,
+              enrollmentId: enr.id,
+              paymentRef: args.reference,
+            });
+            return { ok: true as const, outcome: "refunded_to_wallet" as const };
+          }
+
+          const cls = rows[0];
+
+          // Re-read enrollment status UNDER the lock (TOCTOU-safe).
+          const freshEnr = await tx.enrollment.findUnique({
+            where: { id: enr.id },
+            select: { status: true },
+          });
+          const currentStatus = freshEnr?.status ?? enr.status;
+
+          // ── Step 4: Decide — count OTHER occupancy excluding this enrollment ──
+          const othersOccupied = await tx.enrollment.count({
+            where: {
+              groupSessionId: enr.groupSessionId,
+              id: { not: enr.id },
+              ...occupiedEnrollmentWhere(now),
+            },
+          });
+
+          const decision = decideConfirmOutcome({
+            status: currentStatus,
+            othersOccupied,
+            capacity: cls.capacity,
+          });
+
+          // ── Step 5 (confirm path) ──────────────────────────────────────────────
+          if (decision === "confirm") {
+            // PENDING → CONFIRMED + BOOKING_CHARGE (snapshot priceCents, AD-16)
+            await tx.enrollment.update({
+              where: { id: enr.id },
+              data: { status: "CONFIRMED", pendingExpiresAt: null },
+            });
+            await mutate(tx, enr.studentId, {
+              type: "BOOKING_CHARGE",
+              amountCents: -enr.priceCents, // negative = debit; uses snapshot (AD-16)
+              enrollmentId: enr.id,
+              paymentRef: args.reference,
+            });
+            return { ok: true as const, outcome: "confirmed" as const };
+          }
+
+          // ── Step 5 (refund_to_wallet path, AD-15) ─────────────────────────────
+          if (decision === "refund_to_wallet") {
+            // Flip still-PENDING row to CANCELLED (AD-14 sole status writer).
+            // CANCELLED rows are left as-is (already CANCELLED).
+            if (currentStatus === "PENDING") {
+              await tx.enrollment.update({
+                where: { id: enr.id },
+                data: { status: "CANCELLED", pendingExpiresAt: null },
+              });
+            }
+            // Credit captured amount to wallet (AD-15; never keep the money).
+            await mutate(tx, enr.studentId, {
+              type: "CANCELLATION_REFUND",
+              amountCents: args.amountCents, // positive = credit (captured amount from event)
+              enrollmentId: enr.id,
+              paymentRef: args.reference,
+            });
+            return { ok: true as const, outcome: "refunded_to_wallet" as const };
+          }
+
+          // ── Step 5 (noop path) ────────────────────────────────────────────────
+          // Already CONFIRMED/ATTENDED/NO_SHOW — Payment recorded; nothing further.
+          return { ok: true as const, outcome: "noop" as const };
+        },
+        {
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+          maxWait: 5000,
+          timeout: 15000,
+        },
+      );
+
+      return result;
+    } catch (err) {
+      // ── Already-processed sentinel (P2002 on Payment.reference unique) ────────
+      if (err instanceof AlreadyProcessedError) {
+        return { ok: true, outcome: "already_processed" };
+      }
+
+      // ── Serialization failure: retry with backoff (AD-4, mirrors reserveSeat) ─
+      if (isSerializationError(err) && attempt < MAX_RETRIES) {
+        await new Promise((resolve) => setTimeout(resolve, backoffMs(attempt)));
+        attempt++;
+        continue;
+      }
+
+      // ── Non-retryable error: log and return failure (Paystack will retry) ──────
+      // Structured log — never swallow a real failure (Consistency Conventions).
+      // Never log the secret or PII.
+      console.error("[enrollment.confirmPaidSeat] unrecoverable error:", {
+        reference: args.reference,
+        attempt,
+        error: err,
+      });
+      return { ok: false, reason: "error" };
+    }
+  }
+
+  // Exhausted all retries (all serialization failures).
+  console.error("[enrollment.confirmPaidSeat] exhausted retries:", {
+    reference: args.reference,
+  });
   return { ok: false, reason: "error" };
 }

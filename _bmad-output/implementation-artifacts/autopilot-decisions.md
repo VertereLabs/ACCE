@@ -1176,3 +1176,73 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All ACs (AC1–AC6) satisfied; the single actionable finding was auto-fixed and re-verified.
 - **Reversibility:** Set sprint-status development_status[4-1-…] back to `review`/`in-progress` and re-open findings if needed.
 - **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/4-1-paystack-init-with-a-15-minute-pending-seat-hold.md, _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T07:30:15Z] 4-2-verified-idempotent-payment-webhook-confirms-the-seat — Story scope + boundaries (create-story)
+- **Risk:** medium
+- **Workflow / step:** create-story step 2-5 (scope the backlog story)
+- **Decision point:** What Story 4.2 builds vs defers. The epic AC + AD-7/AD-14/AD-15 describe the webhook, the confirm, and the orphan-payment branch; scope must be minimal-but-complete without pulling in 4.3 (no-oversell concurrency test) or a card-refund adapter.
+- **Options considered:** A) Webhook route + verifySignature + a NEW enrollment.ts confirm function (sole status writer) + AD-15 wallet-credit branch, static verification only, live/concurrency deferred to CI · B) Also author the no-oversell concurrency integration test here · C) Also build a Paystack card-refund adapter for AD-15
+- **Chosen:** A. Build `src/app/api/webhooks/paystack/route.ts` (nodejs runtime, raw-body HMAC), `paystack.verifySignature`, `enrollment.confirmPaidSeat` (the 4.2 seam named in enrollment.ts header + paystack.ts header), pure unit-tested helpers; defer live round-trip + no-oversell(4.3) + card-refund(AD-15 deferred list).
+- **Rationale:** Matches the architecture spine's Capability map (Paystack checkout → paystack.ts + api/webhooks/paystack governed by AD-4/7/8/13/14/15) and the explicit story boundaries in 4.1. 4.3 owns concurrency; AD-15 card-refund is on the spine Deferred list (wallet credit is the MVP conservation).
+- **Reversibility:** Story file is the only artifact; re-scope by editing it before dev-story picks it up.
+- **Files touched:** _bmad-output/implementation-artifacts/4-2-verified-idempotent-payment-webhook-confirms-the-seat.md
+
+### [2026-07-06T07:30:15Z] 4-2 — Confirm logic lives in a new enrollment.ts function called by the webhook (AD-14)
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture guardrails)
+- **Decision point:** Where the seat-confirm transaction lives. AD-7 says the webhook does the Payment idempotency gate + re-check + "flip status by CALLING enrollment.ts"; AD-14 makes enrollment.ts the sole status writer. The route handler must not write Enrollment.status.
+- **Options considered:** A) Route handler owns HMAC + parse only; a NEW `confirmPaidSeat(reference, amountCents, rawEvent)` in enrollment.ts owns the whole Serializable tx (Payment.create gate → GroupSession FOR UPDATE → re-check occupancy → CONFIRMED+BOOKING_CHARGE OR AD-15 CANCELLED+wallet-credit), reusing the existing retry/backoff/isSerializationError helpers · B) Route handler runs the tx inline and calls enrollment.ts only for the status flip
+- **Chosen:** A. Single domain function owns the tx; route handler is a thin HMAC/parse/HTTP-status shell (UI→entry→domain layering). Lock order GroupSession→wallet advisory matches reserveSeat (no deadlock).
+- **Rationale:** Keeps AD-14 (sole status writer) + AD-7 (webhook confirms via enrollment.ts) reconciled in one place; reuses the proven 4.1 retry loop; keeps the Payment gate + status flip + charge atomic in one Serializable tx.
+- **Reversibility:** The function is additive to enrollment.ts; splitting responsibilities later is a local refactor.
+- **Files touched:** _bmad-output/implementation-artifacts/4-2-verified-idempotent-payment-webhook-confirms-the-seat.md
+
+### [2026-07-06T07:30:15Z] 4-2 — AD-15 orphan-payment branch interpretation
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (AD-15 edge)
+- **Decision point:** When a verified charge.success arrives but the seat is gone. AD-15 = credit the captured amount to wallet (CANCELLATION_REFUND), idempotent by Payment.reference, never oversell.
+- **Options considered:** A) Grant only when the enrollment is still PENDING and OTHER occupancy (excluding this row) < capacity → CONFIRMED+BOOKING_CHARGE; otherwise (own row CANCELLED by lazy expiry, or PENDING but class refilled) → flip/keep CANCELLED + wallet CANCELLATION_REFUND of the captured amount · B) Reactivate a CANCELLED-but-has-room row and confirm it
+- **Chosen:** A. Grant-if-still-holdable else conserve-to-wallet. Refund uses the captured amount from the event; idempotency provided by the Payment.reference unique-insert gate. Reactivate-CANCELLED-with-room left as a documented deferred edge.
+- **Rationale:** Matches the epic AC3 framing ("expired/released and class has since filled → credited to wallet") and AD-15 exactly; avoids the AD-8 BOOKING_CHARGE partial-unique collision (a lazily-expired PENDING never carried a charge, but reactivation is out of scope here). Never oversells.
+- **Reversibility:** Branch logic is a pure decision function (unit-tested); changing the reactivation policy is a localized edit.
+- **Files touched:** _bmad-output/implementation-artifacts/4-2-verified-idempotent-payment-webhook-confirms-the-seat.md
+
+### [2026-07-06T07:30:15Z] 4-2 — Webhook rate-limiting deferred to edge/proxy; fast HMAC rejection in-app
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (Consistency Conventions: "the webhook is rate-limited")
+- **Decision point:** The conventions list the webhook as rate-limited, but no in-app rate-limiter/Redis exists (the magic-link limit is Better Auth's built-in, which does not cover a custom route handler), and an in-memory limiter is unreliable in a standalone/multi-instance deploy.
+- **Options considered:** A) In-app best-effort in-memory limiter · B) Defer rate-limiting to the Coolify/reverse-proxy edge + rely on cheap constant-time HMAC rejection of forged requests; record as deferred · C) Add Redis dependency now
+- **Chosen:** B. The route rejects bad signatures with a cheap timing-safe HMAC compare (the real abuse vector is forged posts); a proper distributed rate limit is deferred to the reverse-proxy/infra layer and recorded in deferred-work.md. No new dependency.
+- **Rationale:** Deployment notes already state the webhook is "public, authenticated by HMAC only"; an in-memory limiter gives false assurance across instances and risks dropping legitimate Paystack retries. Edge/proxy is the correct layer.
+- **Reversibility:** Add a limiter (Redis/edge rule) later without touching the confirm logic.
+- **Files touched:** _bmad-output/implementation-artifacts/4-2-verified-idempotent-payment-webhook-confirms-the-seat.md, _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T07:37:11Z] 4-2 — dev-story start: implement verifySignature/computeSignature in paystack.ts, confirmPaidSeat/decideConfirmOutcome in enrollment.ts, webhook route handler, unit tests
+- **Risk:** critical
+- **Workflow / step:** dev-story step 4 (mark in-progress and begin implementation)
+- **Decision point:** Story 4-2 is a payment path + security surface (public HMAC-only auth webhook). All implementation decisions follow the story spec exactly.
+- **Options considered:** A) Follow the story spec (AD-7/8/14/15 ordering, Payment.create as idempotency gate, pure helpers for unit tests, thin route shell) · B) Alternative architectures
+- **Chosen:** A. Story spec is authoritative. Implementation: computeSignature (pure HMAC helper), verifySignature (reads env, timing-safe), parseWebhookEvent (Zod), decideConfirmOutcome (pure decision), confirmPaidSeat (Serializable tx with retry loop), webhook route (thin shell).
+- **Rationale:** The story's Dev Notes, AC, and Architecture Spine guardrails precisely define the implementation. This is a critical money path — no deviation from spec.
+- **Reversibility:** Each function is additive to existing files; rollback = delete the new exports and the new route file.
+- **Files touched:** acce-nextjs/src/lib/paystack.ts, acce-nextjs/src/lib/enrollment.ts, acce-nextjs/src/app/api/webhooks/paystack/route.ts, acce-nextjs/tests/unit/paystack-webhook.test.ts
+
+### [2026-07-06T17:33:23Z] 4-2-verified-idempotent-payment-webhook-confirms-the-seat — resuming story: implementation already complete, proceeding to validation and status update
+- **Risk:** low
+- **Workflow / step:** dev-story step 1 (load story) + step 4 (mark in-progress)
+- **Decision point:** Story is already `in-progress` and all 4 implementation files already exist (paystack.ts verifySignature/computeSignature/parseWebhookEvent, enrollment.ts confirmPaidSeat/decideConfirmOutcome, route.ts, paystack-webhook.test.ts). Tasks are unchecked in the story file. Decision: verify tests pass and build is clean, then mark tasks complete and move to `review`.
+- **Options considered:** A) Re-implement from scratch · B) Validate existing code against ACs, run tests, mark complete
+- **Chosen:** B. All implementation files match the story spec exactly. Test suite: 351/351 green. Build: clean with /api/webhooks/paystack confirmed in route manifest. Prisma validate: clean.
+- **Rationale:** The files implement every task and AC in the story. Re-implementation would be scope creep and risky on a critical payment path.
+- **Reversibility:** N/A — validation only; no new code written.
+- **Files touched:** none (validation run only)
+
+### [2026-07-06T17:33:23Z] 4-2-verified-idempotent-payment-webhook-confirms-the-seat — deferred-work.md Story 4.2 entries: four live integration tests deferred to CI ephemeral-Postgres
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 Task 5 (record deferrals in deferred-work.md)
+- **Decision point:** Story Task 5 requires recording four deferred live-verification items in deferred-work.md: (a) live charge.success → CONFIRMED + BOOKING_CHARGE round-trip; (b) idempotent replay (same ref twice → one charge, both 200); (c) AD-15 orphan credit (CANCELLATION_REFUND, no oversell); (d) live Paystack sandbox signature round-trip.
+- **Options considered:** A) Record in deferred-work.md · B) Skip (items are already implied by prior deferral entries)
+- **Chosen:** A. Story explicitly requires recording. All four are environmental blockers (no real Postgres / no PAYSTACK_SECRET_KEY in sandbox).
+- **Rationale:** Explicit deferral record keeps the CI requirement visible and traceable.
+- **Reversibility:** Delete the entries when CI coverage is added.
+- **Files touched:** _bmad-output/implementation-artifacts/deferred-work.md

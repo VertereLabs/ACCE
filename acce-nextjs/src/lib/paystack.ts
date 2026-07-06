@@ -1,18 +1,25 @@
-// paystack.ts — Story 4.1 (AC1, AC6, AD-13).
+// paystack.ts — Story 4.1 (AC1, AC6, AD-13) + Story 4.2 (AC1, AC6, AD-13, NFR2).
 //
 // AD-13 — NATIVE FETCH, THIN ADAPTER:
 //   This module wraps Paystack's API using native fetch (Node ≥ 18 global).
 //   No axios (supply-chain risk — lessons-learned), no @paystack/* SDK.
 //   The adapter is kept thin: only the server-side data-fetch + response parse.
 //
-// AD-7 — WEBHOOK CONFIRMS (NOT HERE):
-//   This file handles `initializeTransaction` only. The seat is confirmed ONLY
-//   by the 4.2 webhook (HMAC-verified `charge.success` handler). Never confirm
-//   a seat from a browser callback/redirect.
+// AD-7 — WEBHOOK CONFIRMS (NOT HERE — see 4.2 route):
+//   The seat is confirmed ONLY by the 4.2 webhook (HMAC-verified `charge.success`
+//   handler at src/app/api/webhooks/paystack/route.ts). Never confirm a seat from
+//   a browser callback/redirect.
 //
-// EPIC-4 SEAM for 4.2:
-//   `verifySignature(payload: Buffer, signature: string): boolean` lives here
-//   next — the HMAC-SHA512 check on the raw webhook body. Add it when 4.2 lands.
+// EPIC-4 SEAM FILLED (Story 4.2):
+//   `verifySignature(rawBody: string, signature: string | null): boolean` is now
+//   implemented here — the HMAC-SHA512 check on the raw webhook body (NFR2).
+//   `computeSignature(rawBody: string, secret: string): string` — pure, testable.
+//   `parseWebhookEvent(json: unknown)` — Zod envelope validation.
+//
+// NFR2 — WEBHOOK AUTHENTICITY:
+//   HMAC-SHA512 of the raw body; constant-time compare (timingSafeEqual).
+//   The secret is read server-side, NEVER logged. Guard unequal lengths before
+//   timingSafeEqual (it throws on length mismatch).
 //
 // MONEY: amount is integer cents (ZAR). Paystack's `amount` field IS the lowest
 //   currency unit for ZAR — pass amountCents straight through (AD-9). No floats.
@@ -23,6 +30,9 @@
 //
 // AD-2: import { db } from "@/lib/db" — not needed here; this module has no db calls.
 // AD-9: integer cents throughout.
+
+import { createHmac, timingSafeEqual } from "crypto";
+import { z } from "zod";
 
 // ---------------------------------------------------------------------------
 // Pure helpers (unit-testable without fetch or db)
@@ -119,6 +129,132 @@ export function parseInitResponse(json: unknown): {
   }
 
   return { ok: false, error };
+}
+
+// ---------------------------------------------------------------------------
+// Story 4.2 — verifySignature + computeSignature (AC1, AC6, NFR2, AD-13)
+// ---------------------------------------------------------------------------
+
+/**
+ * Computes the expected HMAC-SHA512 hex digest for a given raw body + secret.
+ *
+ * PURE FUNCTION — no env read, no I/O. Accepts the secret as an argument so it
+ * can be unit-tested against a known vector (a fixed body+secret → fixed hex).
+ *
+ * This is the inner computation extracted so it is independently testable.
+ * The actual webhook verification uses `verifySignature()` which reads the
+ * secret from `process.env.PAYSTACK_SECRET_KEY`.
+ *
+ * @param rawBody - the exact raw bytes received from Paystack (as a UTF-8 string)
+ * @param secret  - the PAYSTACK_SECRET_KEY (must NOT be logged)
+ * @returns       - lowercase hex digest string
+ */
+export function computeSignature(rawBody: string, secret: string): string {
+  return createHmac("sha512", secret).update(rawBody, "utf8").digest("hex");
+}
+
+/**
+ * Verifies that the given `x-paystack-signature` header matches the expected
+ * HMAC-SHA512 digest of the raw body using `PAYSTACK_SECRET_KEY`.
+ *
+ * Security requirements (AC1, NFR2):
+ *   - Reads `PAYSTACK_SECRET_KEY` from `process.env` server-side; never logs it.
+ *   - If the key is missing/empty: logs a non-sensitive error, returns `false`
+ *     (fail-closed — reject the request).
+ *   - If `signature` is null/empty: returns `false`.
+ *   - Guards unequal buffer lengths before `timingSafeEqual` (which throws on
+ *     length mismatch) — returns `false` for wrong-length digests.
+ *   - Uses `crypto.timingSafeEqual` for the final comparison (constant-time,
+ *     prevents timing-oracle attacks).
+ *
+ * The route must read the raw body BEFORE calling this function (no JSON parse
+ * before verification — parsing then re-stringifying would change the byte
+ * representation and break the hash).
+ *
+ * @param rawBody   - the exact raw request body (`await request.text()`)
+ * @param signature - the `x-paystack-signature` header value (or null if absent)
+ * @returns         - `true` iff the signature is valid, `false` otherwise
+ */
+export function verifySignature(rawBody: string, signature: string | null): boolean {
+  // ── Fail fast: require PAYSTACK_SECRET_KEY ─────────────────────────────────
+  // NEVER log the key value. Only log the error itself.
+  const secret = process.env.PAYSTACK_SECRET_KEY;
+  if (!secret || secret.trim() === "") {
+    console.error("[paystack.verifySignature] PAYSTACK_SECRET_KEY is missing or empty");
+    return false;
+  }
+
+  // ── Reject missing/empty signature ─────────────────────────────────────────
+  if (!signature || signature.trim() === "") {
+    return false;
+  }
+
+  // ── Compute expected digest ─────────────────────────────────────────────────
+  const expected = computeSignature(rawBody, secret);
+
+  // ── Guard length before timingSafeEqual (it throws on length mismatch) ──────
+  const expectedBuf = Buffer.from(expected, "hex");
+  const actualBuf = Buffer.from(signature, "hex");
+
+  if (expectedBuf.length !== actualBuf.length) {
+    // Wrong-length digest → cannot be valid.
+    return false;
+  }
+
+  // ── Constant-time comparison (NFR2 — prevent timing oracle attacks) ─────────
+  return timingSafeEqual(expectedBuf, actualBuf);
+}
+
+// ---------------------------------------------------------------------------
+// Story 4.2 — parseWebhookEvent (AC5, AC6)
+// ---------------------------------------------------------------------------
+
+/**
+ * Zod schema for the Paystack webhook event envelope.
+ *
+ * Validates the outer envelope only — `event` (string) + `data` (reference,
+ * amount, status). The event name is NOT constrained here; the route decides
+ * whether to act on it. Non-`charge.success` events still parse OK.
+ *
+ * `data.amount` is an integer (Paystack lowest currency unit = cents for ZAR;
+ * AD-9 — no floats, no division). `data.reference` is a non-empty string.
+ */
+const webhookEventSchema = z.object({
+  event: z.string(),
+  data: z.object({
+    reference: z.string().min(1),
+    amount: z.number().int().nonnegative(),
+    status: z.string(),
+  }),
+});
+
+/**
+ * The validated Paystack charge event shape returned by `parseWebhookEvent`.
+ * The event name is preserved verbatim; the route checks for "charge.success".
+ */
+export type PaystackChargeEvent = z.infer<typeof webhookEventSchema>;
+
+/**
+ * Validates and parses a raw JSON value as a Paystack webhook event envelope.
+ *
+ * Returns `{ ok: true; event }` on success, or `{ ok: false }` on validation
+ * failure (malformed body, missing fields, wrong types). This is the Zod entry
+ * point — call it AFTER `JSON.parse(raw)`.
+ *
+ * Does NOT check `event.event === "charge.success"` — non-charge events parse
+ * OK; the route decides to ignore them. This keeps parsing separate from routing.
+ *
+ * @param json - the result of `JSON.parse(rawBody)` (or any `unknown` value)
+ * @returns    - discriminated result: ok/not-ok
+ */
+export function parseWebhookEvent(
+  json: unknown,
+): { ok: true; event: PaystackChargeEvent } | { ok: false } {
+  const result = webhookEventSchema.safeParse(json);
+  if (result.success) {
+    return { ok: true, event: result.data };
+  }
+  return { ok: false };
 }
 
 // ---------------------------------------------------------------------------
