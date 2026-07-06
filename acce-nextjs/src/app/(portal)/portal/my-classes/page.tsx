@@ -1,5 +1,4 @@
-// my-classes/page.tsx — Story 5.1 (AC1–AC4, AC6).
-// Read-only server component — fully server-rendered, no client island.
+// my-classes/page.tsx — Story 5.1 (AC1–AC4, AC6) + Story 5.2 (AC5 — live cancel island).
 //
 // Security model (AD-3): requireSession() is the TRUSTED page-level guard.
 // It runs BEFORE any data fetch or JSX, so unauthenticated users are redirected
@@ -8,21 +7,15 @@
 // All enrollment queries are keyed strictly by session.user.id — never a
 // client-supplied id — so a student can never see another student's classes (AC4).
 //
-// Scope boundary (AD-5, AD-6, AD-14): this page is a PURE READER.
-//   - No status writes, no wallet writes, no seat-return (all Story 5.2).
-//   - Cancel button is INERT/disabled — a forward affordance only (mirrors
-//     3.3's "Pay with balance" inert button before 3.4 made it live).
-//   - AD-10: meetingUrl / location are NOT selected here; each row links to
-//     /portal/classes/[id] where the AD-10 gate already reveals join details
-//     for a CONFIRMED viewer (built in 3.3).
-//
-// AD-11 refund preview: hours-to-start → tier → advisory % displayed in the
-//   cancel button label text (UX-DR6: state carried in text, not colour alone).
-//   5.2 recomputes authoritatively at cancel-time; this preview is advisory.
+// Story 5.2 update: the INERT cancel button is replaced with the live
+//   <CancelEnrollmentButton> client island that fires cancelEnrollmentAction.
+//   - Props are all plain serialisable values (RSC-500 safe, 1.5 lesson).
+//   - The page still computes advisory refund preview props; the action recomputes
+//     authoritatively under the lock (single source guarantee, AD-11).
+//   - AD-10: meetingUrl / location are NOT selected here (3.3 detail page gate).
 //
 // A11y (NFR10): plain <div> wrapper — the (portal) layout owns the single
 //   <main> landmark (1.3 a11y fix). All controls keyboard-operable, ≥44px.
-//   Disabled button is still perceivable/announced (native disabled attribute).
 
 import Link from "next/link";
 import { requireSession } from "@/lib/auth-guards";
@@ -35,8 +28,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CancelEnrollmentButton } from "./cancel-enrollment-button";
 
 // ---------------------------------------------------------------------------
 // Date formatting — native Intl, no date library.
@@ -133,13 +126,8 @@ export default async function MyClassesPage() {
               hours,
             );
 
-            // Build cancel button label carrying the refund state in text (UX-DR6).
-            const cancelLabel =
-              refundPct === 100
-                ? "Cancel — 100% refund"
-                : refundPct === 70
-                  ? "Cancel — 70% refund"
-                  : "Cancel — no refund";
+            // cancelLabel drives the advisory preview shown on the button (UX-DR6).
+            // The CancelEnrollmentButton island also builds the same label from refundPct.
 
             return (
               <Card key={enrollment.id}>
@@ -188,21 +176,17 @@ export default async function MyClassesPage() {
                         View details
                       </Link>
 
-                      {/* Cancel affordance — INERT / disabled in Story 5.1.
-                           - Story 5.2 will convert this into a live client island.
-                           - disabled attribute keeps it perceivable/announced (NFR10).
-                           - Label text carries the refund state (UX-DR6: not colour alone).
-                           - Not a gold CTA (subordinate/disabled) — uses default variant (UX-DR2). */}
-                      <Button
-                        variant="outline"
-                        size="default"
-                        disabled
-                        aria-label={`${cancelLabel} for ${cls.title}`}
-                        className="h-11 min-w-[160px]"
-                        aria-disabled="true"
-                      >
-                        {cancelLabel}
-                      </Button>
+                      {/* Cancel affordance — LIVE client island (Story 5.2).
+                           - Props are all plain serialisable values (RSC-500 safe, 1.5 lesson).
+                           - refundCents / refundPct are advisory previews; cancelEnrollmentAction
+                             recomputes the refund authoritatively under the lock (AD-11).
+                           - CancelEnrollmentButton owns the AlertDialog confirm + sonner toast. */}
+                      <CancelEnrollmentButton
+                        enrollmentId={enrollment.id}
+                        refundCents={refundCents}
+                        refundPct={refundPct}
+                        classTitle={cls.title}
+                      />
                     </div>
                   </div>
                 </CardContent>

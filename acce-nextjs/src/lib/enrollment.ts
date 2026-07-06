@@ -80,6 +80,7 @@ import { Prisma } from "@prisma/client";
 import { occupiedEnrollmentWhere } from "@/lib/class-occupancy";
 import { getBalance, mutate, WalletInsufficientFundsError } from "@/lib/wallet";
 import { generatePaymentRef } from "@/lib/paystack";
+import { computeRefund, hoursUntilStart } from "@/lib/cancellation";
 
 // ---------------------------------------------------------------------------
 // Public result type
@@ -788,6 +789,203 @@ export async function confirmPaidSeat(args: {
   // Exhausted all retries (all serialization failures).
   console.error("[enrollment.confirmPaidSeat] exhausted retries:", {
     reference: args.reference,
+  });
+  return { ok: false, reason: "error" };
+}
+
+// ---------------------------------------------------------------------------
+// Story 5.2 — cancelEnrollment — AD-14 CANCELLED-transition sole writer
+// ---------------------------------------------------------------------------
+//
+// cancelEnrollment is the SOLE function that writes the CONFIRMED→CANCELLED
+// transition (AD-14 sole status writer). It runs inside the same Serializable
+// + GroupSession FOR UPDATE + retry envelope as reserveSeat/confirmPaidSeat,
+// preserving ONE seat-mutation pattern and the lock order (GroupSession FOR
+// UPDATE → wallet advisory lock inside mutate) with no deadlock risk.
+//
+// Ledger model (BINDING — from Dev Notes "Ledger model"):
+//   BOOKING_CHARGE = -priceCents is already on the books for this enrollment.
+//   To leave net cost at feeCents:
+//     CANCELLATION_REFUND = +refundCents (the tier refund credited back to wallet)
+//     CANCELLATION_FEE    = amountCents 0 (audit-only; fee already captured by BOOKING_CHARGE)
+//   Writing -feeCents for CANCELLATION_FEE would double-count the fee → wrong balance.
+//   Only the CANCELLATION_REFUND row is balance-affecting; NFR4 never trips (positive credit).
+//
+// Lock order: GroupSession FOR UPDATE → wallet advisory (inside mutate). Same
+//   as reserveSeat → no deadlock (consistent lock ordering across all seat mutations).
+
+/**
+ * Discriminated result from cancelEnrollment (Story 5.2).
+ *
+ * ok:true  — seat cancelled, refund (if any) credited, feeCents (if any) logged
+ * ok:false — reasons:
+ *   "not_found"      — no enrollment with that id+studentId (IDOR guard or invalid id)
+ *   "not_cancellable"— enrollment is not CONFIRMED or class start <= now (double-cancel, past)
+ *   "error"          — unrecoverable or non-retryable failure
+ */
+export type CancelResult =
+  | { ok: true; refundCents: number; feeCents: number }
+  | { ok: false; reason: "not_found" | "not_cancellable" | "error" };
+
+/**
+ * Cancel a CONFIRMED upcoming enrollment, applying the tiered refund (AD-11, Story 5.2).
+ *
+ * AD-14: this is the SOLE function that writes the CONFIRMED→CANCELLED transition.
+ * AD-11: refund is computed authoritatively here via computeRefund (single source,
+ *         same pure fn used by the 5.1 advisory preview — cannot diverge).
+ * AD-16: uses enrollment.priceCents (the reserve-time snapshot), never the class price.
+ * AD-6:  all ledger writes go through wallet.mutate (never tx.ledgerEntry.create directly).
+ * AD-5:  no seat counter — flipping to CANCELLED removes this row from occupiedEnrollmentWhere.
+ * AD-4:  same Serializable + retry envelope as reserveSeat/confirmPaidSeat.
+ *
+ * @param studentId    - from requireSession().user.id (never client-supplied — IDOR guard, AD-3)
+ * @param enrollmentId - the enrollment to cancel (Zod-validated by the action)
+ */
+export async function cancelEnrollment(
+  studentId: string,
+  enrollmentId: string,
+): Promise<CancelResult> {
+  let attempt = 0;
+
+  while (attempt <= MAX_RETRIES) {
+    try {
+      // ── Serializable interactive transaction (AD-4, mirrors reserveSeat) ──────
+      const result = await db.$transaction(
+        async (tx) => {
+          const now = new Date();
+
+          // ── Step 1: IDOR-safe lookup — keyed on BOTH id AND studentId (AC4a) ───
+          // A client-supplied enrollmentId from another student will not match and
+          // returns not_found (no write, no status reveal).
+          const enr = await tx.enrollment.findFirst({
+            where: { id: enrollmentId, studentId },
+            select: {
+              id: true,
+              status: true,
+              priceCents: true,
+              groupSessionId: true,
+              session: { select: { start: true } },
+            },
+          });
+
+          if (!enr) {
+            return { ok: false as const, reason: "not_found" as const };
+          }
+
+          // ── Step 2: Lock the GroupSession row (AD-4 belt-and-braces, AD-14) ───
+          // Cancel is a seat-affecting transition; must take the same lock that
+          // reserve/confirm use so concurrent mutations serialize correctly.
+          // Also provides a TOCTOU-safe reading point for the enrollment re-check below.
+          const rows = await tx.$queryRaw<
+            { id: string; start: Date; capacity: number }[]
+          >`SELECT id, "start", capacity FROM "GroupSession" WHERE id = ${enr.groupSessionId} FOR UPDATE`;
+
+          if (rows.length === 0) {
+            // GroupSession deleted (should not happen in normal operation).
+            return { ok: false as const, reason: "not_cancellable" as const };
+          }
+
+          const session = rows[0];
+
+          // ── Step 3: Re-read enrollment status UNDER the lock (TOCTOU-safe) (AC4b) ─
+          // A concurrent second cancel or a webhook confirm serializes behind this lock;
+          // after acquiring, the fresh status may differ from what Step 1 saw.
+          const freshEnr = await tx.enrollment.findUnique({
+            where: { id: enr.id },
+            select: { status: true },
+          });
+          const currentStatus = freshEnr?.status ?? enr.status;
+
+          // Guard: only CONFIRMED + upcoming (AC4b/AC4c).
+          //   - not CONFIRMED → already cancelled, PENDING, ATTENDED, etc. → not_cancellable
+          //   - start <= now  → class has begun; cancellation no longer applies → not_cancellable
+          if (currentStatus !== "CONFIRMED" || session.start <= now) {
+            return { ok: false as const, reason: "not_cancellable" as const };
+          }
+
+          // ── Step 4: Compute refund authoritatively (AD-11, AC1) ───────────────
+          // Use the enrollment's immutable priceCents snapshot (AD-16), not the class price.
+          // Same computeRefund that the 5.1 advisory preview uses — single source guarantee.
+          const hours = hoursUntilStart(session.start, now);
+          const { refundCents, feeCents } = computeRefund(enr.priceCents, hours);
+
+          // ── Step 5: Flip enrollment to CANCELLED (AD-14 sole writer) ──────────
+          await tx.enrollment.update({
+            where: { id: enr.id },
+            data: { status: "CANCELLED", pendingExpiresAt: null },
+          });
+
+          // ── Step 6: Credit refund to wallet via mutate (AD-6, AC1) ────────────
+          // CANCELLATION_REFUND = +refundCents (positive credit; NFR4 non-negative guard
+          // is never tripped by a credit). Written only when refundCents > 0.
+          if (refundCents > 0) {
+            await mutate(tx, studentId, {
+              type: "CANCELLATION_REFUND",
+              amountCents: refundCents,
+              enrollmentId: enr.id,
+            });
+          }
+
+          // ── Step 7: Write fee audit row (AD-6, AC1) ──────────────────────────
+          // CANCELLATION_FEE amountCents = 0 deliberately:
+          //   The fee was already captured by the original BOOKING_CHARGE = -priceCents.
+          //   Crediting only +refundCents leaves net cost = feeCents correctly.
+          //   Writing -feeCents here would double-count the fee → incorrect balance.
+          //   This row is an immutable audit marker that a fee was retained.
+          //   (balanceAfterCents is unchanged by a 0-amount entry — valid LedgerEntry.)
+          if (feeCents > 0) {
+            await mutate(tx, studentId, {
+              type: "CANCELLATION_FEE",
+              amountCents: 0, // audit-only; fee already captured by BOOKING_CHARGE (AC1)
+              enrollmentId: enr.id,
+            });
+          }
+
+          // ── Step 8: Return success ────────────────────────────────────────────
+          return { ok: true as const, refundCents, feeCents };
+        },
+        {
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+          maxWait: 5000, // ms to wait for a connection
+          timeout: 15000, // ms for the tx to complete
+        },
+      );
+
+      return result;
+    } catch (err) {
+      // ── WalletInsufficientFundsError: defensive — a credit cannot trip NFR4 ──
+      // Included for safety; should never occur since CANCELLATION_REFUND is positive.
+      if (err instanceof WalletInsufficientFundsError) {
+        console.error("[enrollment.cancelEnrollment] WalletInsufficientFundsError (unexpected — defensive):", {
+          studentId,
+          enrollmentId,
+          attempt,
+        });
+        return { ok: false, reason: "error" };
+      }
+
+      // ── Serialization failure: retry with backoff (AD-4, mirrors reserveSeat) ─
+      if (isSerializationError(err) && attempt < MAX_RETRIES) {
+        await new Promise((resolve) => setTimeout(resolve, backoffMs(attempt)));
+        attempt++;
+        continue;
+      }
+
+      // ── Non-retryable error: log and return generic failure ───────────────────
+      console.error("[enrollment.cancelEnrollment] unrecoverable error:", {
+        studentId,
+        enrollmentId,
+        attempt,
+        error: err,
+      });
+      return { ok: false, reason: "error" };
+    }
+  }
+
+  // Exhausted all retries (all serialization failures).
+  console.error("[enrollment.cancelEnrollment] exhausted retries:", {
+    studentId,
+    enrollmentId,
   });
   return { ok: false, reason: "error" };
 }

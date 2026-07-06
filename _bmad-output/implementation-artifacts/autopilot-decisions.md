@@ -1413,3 +1413,88 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Workflow rule: done when all decision-needed/patch findings resolved AND no unresolved high/medium remain. Satisfied.
 - **Reversibility:** Revert sprint-status.yaml + story Status to in-progress and re-open findings if a follow-up review disagrees.
 - **Files touched:** _bmad-output/implementation-artifacts/5-1-my-classes-with-cancel-and-refund-tier-preview.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+---
+
+### [2026-07-06T21:20:09Z] 5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool — create-story: ledger model for CANCELLATION_REFUND / CANCELLATION_FEE
+- **Risk:** critical
+- **Workflow / step:** create-story step 5 (author story ACs + dev notes) — money semantics
+- **Decision point:** How to represent the tiered cancellation refund on the append-only wallet ledger (AD-6, balance = Σ amountCents). The original BOOKING_CHARGE already debited the FULL priceCents at booking (both balance path 3.4 and Paystack path 4.2's TOPUP+BOOKING_CHARGE). AD-11 mandates writing CANCELLATION_REFUND (+ CANCELLATION_FEE when feeCents>0). What signed amount does each row carry so the student's net cost ends at feeCents and nothing double-counts?
+- **Options considered:**
+  - A) CANCELLATION_REFUND = +refundCents (the tier amount, the money credited back); CANCELLATION_FEE = amountCents 0, an immutable audit-only record that a fee was retained (magnitude = priceCents − refundCents, reconstructable). Single balance-affecting row.
+  - B) CANCELLATION_REFUND = +priceCents (full reversal) then CANCELLATION_FEE = −feeCents (re-charge the fee). Two non-zero rows, net = +refundCents.
+  - C) Both rows carry signed magnitudes (REFUND +refundCents, FEE −feeCents) — REJECTED: with the prior −priceCents BOOKING_CHARGE this nets to a double fee (mathematically wrong).
+- **Chosen:** A.
+- **Rationale:** (1) AD-15 (4.2) already established the convention CANCELLATION_REFUND.amountCents = the amount credited back to the wallet (there it credits the full captured amount because nothing is kept). For consistency, 5.2's CANCELLATION_REFUND must equal the amount credited back = refundCents. (2) The 5.1 UI previewed "N% refund" = refundCents; AC3 requires the wallet ledger to show that same CANCELLATION_REFUND figure — Model B's +priceCents line would contradict the preview. (3) Money integrity: exactly one balance-affecting row (+refundCents) makes double-counting impossible given BOOKING_CHARGE already took the full price; a non-zero FEE debit would charge the fee twice. The FEE row is written (per AD-11 "when feeCents > 0") as a 0-amount audit marker with an explicit code comment explaining why amountCents is 0.
+- **Reversibility:** Contained to enrollment.ts#cancelEnrollment and the two wallet.mutate calls. To switch to Model B: change the CANCELLATION_REFUND amount to +priceCents and the CANCELLATION_FEE amount to −feeCents (both under the same tx/advisory lock); net balance effect is identical (+refundCents), only the per-line presentation changes. No schema change either way (LedgerType already has both values). The integration assertion "getBalance increased by exactly refundCents after cancel" holds under both models and is the regression guard.
+- **Files touched:** acce-nextjs/src/lib/enrollment.ts (new cancelEnrollment fn — spec'd in story)
+
+### [2026-07-06T21:20:09Z] 5-2 — create-story: cancel action re-guards + double-cancel prevention (ownership, state, under-lock re-read)
+- **Risk:** critical
+- **Workflow / step:** create-story step 5 (ACs) — authz + money-safety
+- **Decision point:** The live cancel action receives a client-supplied enrollmentId. How to prevent IDOR, cancelling a non-cancellable enrollment, and a double-click / stale-page double-refund.
+- **Options considered:** A) trust the enrollmentId + status shown on the (possibly stale) page; B) re-guard everything server-side: requireSession-first, key the lookup on BOTH id AND studentId (IDOR-proof), and re-read status UNDER the GroupSession FOR UPDATE lock, only refunding if still CONFIRMED and start>now.
+- **Chosen:** B.
+- **Rationale:** A student must never cancel another student's seat (query keyed to { id: enrollmentId, studentId: session.user.id }, mirrors AD-3 across every prior portal surface). Re-reading status under the lock is the ONLY thing that prevents a double CANCELLATION_REFUND when two cancels race or a stale page re-submits — the second serializes behind the FOR UPDATE lock, sees CANCELLED, and no-ops (returns not_cancellable, writes no ledger row). Also re-guard status===CONFIRMED && start>now (5.1 only lists these; the action must not trust the page).
+- **Reversibility:** All within the new cancelEnrollment domain fn + cancelEnrollmentAction. Removing a guard is a one-line change but would (re)introduce IDOR / double-refund — do not.
+- **Files touched:** acce-nextjs/src/lib/enrollment.ts, acce-nextjs/src/app/(portal)/portal/my-classes/actions.ts (both new — spec'd)
+
+### [2026-07-06T21:20:09Z] 5-2 — create-story: DEFER the AD-12 vs AD-8 reactivation collision (do NOT resolve in 5.2)
+- **Risk:** high
+- **Workflow / step:** create-story step 5 (scope boundary)
+- **Decision point:** 5.2 is the FIRST producer of CANCELLED enrollments, which makes the long-flagged AD-12 (re-book reuses the row) vs AD-8 (one BOOKING_CHARGE per enrollmentId, partial-unique index) collision reachable: a student who cancels then re-books hits reserveSeat's reactivation branch, which tries a second BOOKING_CHARGE on the same enrollmentId. Resolve now or defer?
+- **Options considered:** A) resolve in 5.2 by modifying reserveSeat (null/supersede the prior charge under the lock, or key the partial-unique on a booking-cycle discriminator, or give a reactivated booking a fresh ledger identity); B) defer — leave reserveSeat untouched, document the now-reachable gap, carry the deferred-work item forward.
+- **Chosen:** B (defer).
+- **Rationale:** 5.2's ACs (epics.md#Story 5.2) are strictly cancel→refund→seat-return→wallet-ledger; re-booking-after-cancel is NOT an AC (contract: implement only what the story specifies). Option A would surgery the oversell-critical reserveSeat — the single most concurrency-sensitive function in the app — with no in-sandbox test coverage (needs the CI ephemeral-Postgres concurrency suite), injecting high risk into a cancel story. Crucially the current behaviour FAILS SAFE: the AD-8 partial-unique index PREVENTS a double charge, so a re-book-after-cancel attempt surfaces as a caught P2002 → { ok:false, reason:"error" } (generic toast), never data corruption / never a double charge. A tolerable known-limitation to defer with a loud flag.
+- **Reversibility:** Purely additive when picked up — a later story modifies reserveSeat's reactivation branch. Nothing in 5.2 forecloses any of the three resolution options. deferred-work.md#AD-12 carries the exact options.
+- **Files touched:** none (deferred; story documents the boundary + carries the deferred-work item)
+
+### [2026-07-06T21:20:09Z] 5-2 — create-story: cancel mutation uses Serializable + GroupSession FOR UPDATE + retry (house pattern)
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (transaction shape)
+- **Decision point:** What isolation/locking for the cancel transaction? Cancel FREES a seat (cannot oversell), so a default-isolation interactive tx with the FOR UPDATE lock would be correct in isolation.
+- **Options considered:** A) default (read-committed) interactive tx + GroupSession FOR UPDATE; B) Serializable + FOR UPDATE + the same P2034/40001 retry loop reserveSeat/confirmPaidSeat use.
+- **Chosen:** B — mirror the established seat-mutation pattern.
+- **Rationale:** AD-14 requires seat-affecting status transitions to take the GroupSession lock; using the identical Serializable+retry envelope as reserveSeat/confirmPaidSeat keeps ONE transaction pattern across all seat mutations (lower cognitive load, future-proof against a concurrent reserve/edit on the same class), and the lock order GroupSession FOR UPDATE → wallet advisory (inside mutate) matches reserveSeat exactly → no deadlock. Cost is negligible for a low-frequency cancel.
+- **Reversibility:** Local to cancelEnrollment; could drop to default isolation + remove the retry loop with no correctness loss for cancel-only, if ever desired.
+
+### [2026-07-06T21:36:47Z] 5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool — AD-12⇄AD-8 re-book collision: now reachable, intentionally deferred
+- **Risk:** high
+- **Workflow / step:** dev-story step 5 (scope boundary check)
+- **Decision point:** 5.2 is the first producer of CANCELLED enrollments, making the AD-12⇄AD-8 re-book collision (deferred since 3.4) now reachable. Story Dev Notes explicitly say "NOT resolved in 5.2 — out of AC scope, fails safe via the AD-8 partial-unique index". Should we resolve it in 5.2?
+- **Options considered:** A) Carry the deferral forward (as instructed by story Dev Notes); B) Resolve in-scope (risky surgery on oversell-critical reserveSeat without in-sandbox test).
+- **Chosen:** A — carry forward, as explicitly scoped by the story (Task 6c).
+- **Rationale:** Resolving requires modifying the oversell-critical `reserveSeat` + the AD-8 partial-unique index, with no real-Postgres test available in sandbox. The AD-8 index fails safe (P2002 → generic error toast, no double charge, no corruption). Task 6c explicitly requires recording this carry-forward.
+- **Reversibility:** When a re-book-after-cancel story lands: key BOOKING_CHARGE partial-unique on a booking-cycle discriminator, or give a reactivated booking a fresh ledger identity, or null/supersede the prior charge under the lock.
+- **Files touched:** _bmad-output/implementation-artifacts/deferred-work.md
+
+### [2026-07-06T21:36:47Z] 5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool — CANCELLATION_FEE ledger model: amountCents=0
+- **Risk:** critical
+- **Workflow / step:** dev-story step 5 (Task 2 — cancelEnrollment implementation)
+- **Decision point:** What amountCents should the CANCELLATION_FEE ledger row carry? The story's Dev Notes say explicitly "amountCents = 0 by design — audit-only; fee already captured by BOOKING_CHARGE". Implementing −feeCents here would double-count the fee.
+- **Options considered:** A) `amountCents = 0` (audit-only marker, balance unchanged); B) `amountCents = -feeCents` (second debit for the fee); C) skip the CANCELLATION_FEE row entirely (no audit trail).
+- **Chosen:** A — `amountCents = 0` as specified in Dev Notes "Ledger model (BINDING)".
+- **Rationale:** BOOKING_CHARGE = −priceCents already took the full price. Crediting +refundCents leaves net cost at feeCents correctly. Writing −feeCents again would double-count the fee and leave the student overcharged. The 0-amount row provides an immutable audit marker that a fee was retained, with the magnitude recoverable from the enrollment.priceCents snapshot. This is consistent with AD-15 (4.2 CANCELLATION_REFUND = amount credited back) and the 5.1 advisory preview.
+- **Reversibility:** To revert to a different model: change `amountCents: 0` to `amountCents: -feeCents` in cancelEnrollment steps 6-7 AND update any balance-affecting assertions; requires schema + test updates.
+- **Files touched:** acce-nextjs/src/lib/enrollment.ts (cancelEnrollment Step 7)
+
+### [2026-07-06T21:36:47Z] 5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool — dev-story complete: mark review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (mark story ready for review)
+- **Decision point:** All 6 tasks complete, 430/430 vitest green, build clean, prisma validate clean, ESLint exit 0.
+- **Options considered:** n/a — prescribed workflow completion step.
+- **Chosen:** Update sprint-status.yaml to `review`; update story Status to `review`.
+- **Rationale:** All AC1-AC6 satisfied, all tasks/subtasks checked, file list complete.
+- **Reversibility:** Set sprint-status.yaml back to `in-progress`; revert story Status.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool.md
+
+### [2026-07-06T21:27:20Z] 5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool — dev-story start: mark in-progress, baseline commit
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story was `ready-for-dev`; need to capture baseline_commit and transition to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Record HEAD commit d7b07191 as baseline_commit; update sprint-status.yaml to `in-progress`.
+- **Rationale:** Required by workflow contract.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`; remove YAML frontmatter from story file.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/5-2-cancel-enrollment-tiered-refund-to-wallet-seat-returns-to-pool.md
+- **Files touched:** acce-nextjs/src/lib/enrollment.ts (new cancelEnrollment fn)
