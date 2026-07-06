@@ -557,3 +557,83 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Per step-04 §6, clean of actionable patch/decision findings → done. No code changes were required.
 - **Reversibility:** Revert story Status + sprint-status `2-2` entry to `review` if a blocking finding later emerges.
 - **Files touched:** 2-2-list-and-view-classes-in-admin.md (Status/Review Findings/Change Log); sprint-status.yaml; deferred-work.md.
+
+### [2026-07-05T23:57:00Z] 2-3-edit-an-existing-class — Target story selection & epic state
+- **Risk:** low
+- **Workflow / step:** create-story step 1 (determine target story)
+- **Decision point:** Story key was dispatched explicitly (2-3-edit-an-existing-class, backlog). Confirm it is the correct first-backlog target and whether any epic-status transition is needed.
+- **Options considered:** A) Proceed on the dispatched key; B) Auto-discover a different first-backlog story.
+- **Chosen:** A. 2-3 is the first (and only) `backlog` story in epic-2 (2-1/2-2 done); epic-2 already `in-progress` (set when 2-1 was created) so no epic transition needed. 2-3 is not the first story of the epic → no epic flip.
+- **Rationale:** Matches dispatch and sprint-status ordering; nothing to change on the epic row.
+- **Reversibility:** Trivial — status is a single yaml line.
+- **Files touched:** none (read-only at this step).
+
+### [2026-07-05T23:57:00Z] 2-3-edit-an-existing-class — No schema/migration change (updatedAt already migrated)
+- **Risk:** medium
+- **Workflow / step:** create-story step 3 (architecture guardrails / data-model facts)
+- **Decision point:** AD-16 requires an optimistic-concurrency token (`GroupSession.updatedAt @updatedAt`). The ARCHITECTURE-SPINE "Schema deltas" table lists it as a delta beyond `init` — did this story need a migration?
+- **Options considered:** A) Add `updatedAt @updatedAt` + a migration in this story; B) Verify it already exists and scope the story as schema-untouched.
+- **Chosen:** B. Verified directly: `schema.prisma:131` has `updatedAt DateTime @default(now()) @updatedAt`, and migration `20260705203800_schema_deltas_spine/migration.sql:17` already `ALTER TABLE "GroupSession" ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`. So the AD-16 token is in the DB. Story scoped as NO schema/migration change (AC6 keeps `prisma validate` on an untouched schema).
+- **Rationale:** Prevents a needless/duplicate migration and a false "schema change" scope; the column the AC4 optimistic-concurrency check depends on is confirmed present.
+- **Reversibility:** If a token were somehow missing, add the field + `prisma migrate` in a follow-up; but verification shows it is present.
+- **Files touched:** 2-3-edit-an-existing-class.md (context/data-model facts).
+
+### [2026-07-05T23:57:00Z] 2-3-edit-an-existing-class — First FOR UPDATE lock lands in the admin edit action (not enrollment.ts)
+- **Risk:** high
+- **Workflow / step:** create-story step 3/5 (scoping the AD-16 concurrency contract)
+- **Decision point:** AD-16 says admin edits run under "the same GroupSession FOR UPDATE lock as reservation." `reserveSeat`/`enrollment.ts` (the eventual shared lock holder) do not exist yet (Epic 3/4). Where does the lock logic live for 2.3, and how much of the concurrency machinery does this story build?
+- **Options considered:** A) Build a generic `enrollment.ts`/shared lock helper now so the edit reuses it; B) Colocate an interactive `db.$transaction` + raw `SELECT … FOR UPDATE` on the GroupSession row inside the admin edit action, doing the capacity-count + optimistic-concurrency check inside the lock; C) Skip the lock, do a plain `update` and rely on a later story to add concurrency.
+- **Chosen:** B. Implement the lock colocated with `updateClassAction` (capability map places admin CRUD under `(admin)/admin/**`, governed by AD-16). It locks the SAME `GroupSession` row `reserveSeat` will later lock, so the two serialise on that row with no forced refactor. Rejected A (building enrollment.ts now = inventing scope from Epic 3/4 into a 2-AC edit story) and C (violates AD-16 — a capacity/price edit could race reserveSeat into oversell).
+- **Rationale:** AD-16 is binding and edit-scoped; option B satisfies it minimally and forward-compatibly. This is the FIRST `FOR UPDATE`/interactive-transaction pattern in the codebase — noted as such so the dev establishes it cleanly.
+- **Reversibility:** When `enrollment.ts` lands with a shared GroupSession-lock helper, re-point `updateClassAction` at it (same lock target, same predicate) — a localized swap, no data-shape change. To re-architect toward a serializable/`reserveSeat`-owned edit, move the lock+count into that module.
+- **Files touched:** 2-3-edit-an-existing-class.md (Tasks 3, Dev Notes AD-16 guardrail).
+
+### [2026-07-06T00:03:12Z] 2-3-edit-an-existing-class — dev-story start: mark in-progress, baseline_commit preserved
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark story in-progress)
+- **Decision point:** Story status is `ready-for-dev`; baseline_commit is already set (7a38dda4) from create-story. Need to transition sprint-status to `in-progress`.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Preserve existing `baseline_commit: 7a38dda4732128acfdbcbfb59002889b42ca0e24`; update sprint-status.yaml to `in-progress`.
+- **Rationale:** Required by workflow contract; baseline_commit already set during create-story so no overwrite needed.
+- **Reversibility:** Revert sprint-status.yaml line to `ready-for-dev`.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/2-3-edit-an-existing-class.md
+
+### [2026-07-06T00:03:12Z] 2-3-edit-an-existing-class — Task 1: duplicate edit schema field block (ZodEffects .extend() awkward)
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 1 — schema strategy)
+- **Decision point:** Story says prefer extracting a shared base from `class-form-schema.ts` for both create and edit, but allows duplication if `.extend()` on `ZodEffects` (the result of `.refine`/`.superRefine`) is awkward. The create schema uses chained `.refine().superRefine()` producing a `ZodEffects` which cannot be `.extend()`-ed.
+- **Options considered:** A) Extract a base `z.object(fields)` before `.refine()`, then build both schemas from it — requires restructuring `class-form-schema.ts`; B) Duplicate the field block in `editClassSchema` (colocated with edit route) — simpler, no change to create schema; C) Re-export the inner object from create schema.
+- **Chosen:** B — duplicate the field block in `edit-class-schema.ts`. The story explicitly permits this when the `.refine`/`.superRefine`-on-ZodEffects approach is disproportionate. Reuse `toCents` from the create schema module (AD-9 single site).
+- **Rationale:** Avoids restructuring the working create schema (risk of regression); keeps the edit schema pure/colocated; both schemas stay independently testable. Option A would require touching the 2.1 create schema which is done and reviewed.
+- **Reversibility:** If a future schema update needs to sync both, extract the shared base from `class-form-schema.ts` at that point (clear refactor path).
+- **Files touched:** src/app/(admin)/admin/classes/[id]/edit/edit-class-schema.ts
+
+### [2026-07-06T00:03:12Z] 2-3-edit-an-existing-class — Task 4: copy ClassForm to edit-class-form.tsx (not parametrise)
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 4 — form reuse strategy)
+- **Decision point:** Story says reuse `ClassForm` by parametrising OR copy to `edit-class-form.tsx`. Parametrising adds `mode`/`initialValues`/`expectedUpdatedAt`/`submitAction` props to the existing create form — risky (changes reviewed code, adds conditional complexity).
+- **Options considered:** A) Parametrise existing `ClassForm` with edit-mode props; B) Copy `ClassForm` to `edit-class-form.tsx` and adapt for edit.
+- **Chosen:** B — copy to `edit-class-form.tsx`. Isolates the edit-specific logic (pre-fill, hidden id/expectedUpdatedAt, updateClassAction call, stale-edit toast, "Save changes" label) from the working create form. Story explicitly allows this.
+- **Rationale:** The create form is done and code-reviewed; parametrising it adds risk of regression. A separate edit form is independently readable and testable. The story notes both options are acceptable.
+- **Reversibility:** Merge back by adding a `mode` prop to `ClassForm` if desired; the change would be purely additive to the form component.
+- **Files touched:** src/app/(admin)/admin/classes/[id]/edit/edit-class-form.tsx
+
+### [2026-07-06T02:15:00Z] 2-3-edit-an-existing-class — story complete → status: review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (story completion + mark for review)
+- **Decision point:** All 7 tasks complete, all ACs verified statically. Mark as review and commit.
+- **Options considered:** n/a — prescribed workflow step.
+- **Chosen:** Status set to `review` in both story file and sprint-status.yaml. 190/190 vitest pass, build clean (ƒ Dynamic `/admin/classes/[id]/edit` present), prisma validate clean. Concurrency integration test (FOR UPDATE lock/capacity-race/stale-write) deferred to CI ephemeral-Postgres per deferred-work.md posture (same sandbox wall as 1.1/1.4/1.5/2.1/2.2).
+- **Rationale:** DoD fully met: all tasks checked, AC1-AC6 satisfied, 48 new unit tests added (42 edit-schema + 6 capacityBelowOccupied), file list complete, change log updated, no regressions.
+- **Reversibility:** Revert status lines to `in-progress` if a code-review loop finds issues.
+- **Files touched:** _bmad-output/implementation-artifacts/2-3-edit-an-existing-class.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-05T23:57:00Z] 2-3-edit-an-existing-class — Reuse create schema/form via extract-or-duplicate; live concurrency test deferred to CI
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (schema/form reuse + verification posture)
+- **Decision point:** (a) The edit form needs the same fields + cross-field rules as `createClassSchema` plus `id`+`expectedUpdatedAt` — extract a shared base or duplicate? (b) The FOR UPDATE lock / capacity-race / stale-write reject can't be exercised without real Postgres — how is AC verified in-sandbox?
+- **Options considered:** (a) A1) Extract a reusable field object/refinement from `class-form-schema.ts` and build both create+edit schemas from it; A2) Duplicate the field block into `editClassSchema`. (b) B1) Fake the lock via Prisma mocks; B2) Static verification (prisma validate + build + vitest on the pure seams) and defer the concurrency integration test to CI ephemeral-Postgres.
+- **Chosen:** (a) Prefer A1 (single source, no drift) but explicitly allow A2 if `.extend()` on the create schema's `ZodEffects` is disproportionately awkward — dev logs whichever. (b) B2 — mirror the AD-4 posture (concurrency needs a real 40001/lock) and the 1.1/1.4/1.5/2.1/2.2 sandbox wall; unit-test only the pure edit-schema + `capacityBelowOccupied` predicate; record the deferred concurrency integration test in deferred-work.md.
+- **Rationale:** Keeps the AD-9/validation logic single-sourced where practical, and refuses to fake lock semantics that a mock cannot honestly reproduce. Static verification is the honest bar in-sandbox.
+- **Reversibility:** (a) Extract-vs-duplicate is a local refactor either direction. (b) The deferred integration test is picked up in CI once ephemeral-Postgres is wired (shared with AD-4's no-oversell test).
+- **Files touched:** 2-3-edit-an-existing-class.md (Tasks 1, 6, 7; Testing standards).

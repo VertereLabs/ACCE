@@ -1,5 +1,6 @@
 /**
  * Story 2.2 AC3, AC5 — Unit tests for the pure AD-5 occupancy helpers.
+ * Story 2.3 AC2, AC6 — Extended with capacityBelowOccupied (AD-16 floor predicate).
  *
  * Imports ONLY src/lib/class-occupancy.ts — a pure module with no db/Prisma
  * runtime dependency. Runs safely in jsdom without DATABASE_URL or a live DB.
@@ -8,12 +9,14 @@
  *   - occupiedEnrollmentWhere: shape of the Prisma relation-filter (status.in,
  *     OR clause covering null and gt-now, exclusion of non-occupying statuses).
  *   - computeSeatsLeft: arithmetic, zero-clamp, never-negative.
+ *   - capacityBelowOccupied: AC2 capacity-floor predicate (AD-16).
  */
 
 import { describe, expect, it } from "vitest";
 import {
   occupiedEnrollmentWhere,
   computeSeatsLeft,
+  capacityBelowOccupied,
 } from "../../src/lib/class-occupancy";
 
 // ---------------------------------------------------------------------------
@@ -128,5 +131,35 @@ describe("computeSeatsLeft", () => {
 
   it("returns full capacity when no enrollments", () => {
     expect(computeSeatsLeft(6, 0)).toBe(6);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// capacityBelowOccupied — Story 2.3 AC2 / AD-16 capacity-floor predicate
+// ---------------------------------------------------------------------------
+
+describe("capacityBelowOccupied (AD-16 floor)", () => {
+  it("returns true when new capacity is below occupied (3 < 4 → rejected)", () => {
+    expect(capacityBelowOccupied(3, 4)).toBe(true);
+  });
+
+  it("returns false when new capacity equals occupied (4 = 4 → allowed)", () => {
+    expect(capacityBelowOccupied(4, 4)).toBe(false);
+  });
+
+  it("returns false when new capacity exceeds occupied (5 > 4 → allowed)", () => {
+    expect(capacityBelowOccupied(5, 4)).toBe(false);
+  });
+
+  it("returns false when occupied is zero and capacity is positive (1 > 0 → allowed)", () => {
+    expect(capacityBelowOccupied(1, 0)).toBe(false);
+  });
+
+  it("returns true when capacity is 1 and occupied is 2 (edge: 1 < 2)", () => {
+    expect(capacityBelowOccupied(1, 2)).toBe(true);
+  });
+
+  it("returns false when both are zero (edge: 0 = 0 → allowed)", () => {
+    expect(capacityBelowOccupied(0, 0)).toBe(false);
   });
 });

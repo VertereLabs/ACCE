@@ -49,4 +49,8 @@ export const AUTHENTICATED_ROUTES: AuthenticatedRoute[] = [
   { path: "/admin/classes/new", role: "ADMIN" },
   // Story 2.2 — read-only admin classes index (RSC-500 smoke guard, 1.5 pattern).
   { path: "/admin/classes", role: "ADMIN" },
+  // Story 2.3 — dynamic edit route (uses deterministic seeded id seed-class-acc-1).
+  // Dynamic routes use a real seeded id so the RSC-500 smoke covers the route.
+  // Live authenticated run is DB-bound → deferred to CI ephemeral-Postgres (same wall as 2.1/2.2).
+  { path: "/admin/classes/seed-class-acc-1/edit", role: "ADMIN" },
 ];

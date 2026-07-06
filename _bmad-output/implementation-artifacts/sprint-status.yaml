@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-05
-last_updated: 2026-07-05T23:50:47Z
+last_updated: 2026-07-06T02:15:00Z
 project: ACCE
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-05 (create-story)
 # 1-1 set in-progress on 2026-07-05 (dev-story)
@@ -71,6 +71,7 @@ project: ACCE
 # 2-2 set in-progress on 2026-07-05 (dev-story)
 # 2-2 set review on 2026-07-05 (dev-story complete: class-occupancy.ts [pure AD-5 filter+computeSeatsLeft], class-display.ts [formatZar/formatMode/formatStatus], (admin)/admin/classes/page.tsx [server RSC, requireAdmin-first, filtered _count occupancy, empty-state gold CTA, shadcn Table+Badge], admin landing links + 2.1 redirect repoint + e2e manifest +2; 23 new unit tests, 142/142 vitest, build clean, prisma validate clean)
 # 2-2 set done on 2026-07-05 (code-review: FRESH adversarial pass re-verified all 5 ACs + AD-2/3/5/9 from scratch; independently re-ran chain green [prisma validate clean, build clean w/ /admin/classes+/admin/classes/new in route table, 142/142 vitest]; 0 patch/0 decision-needed, 1 defer [display-timezone hardening — cross-cutting w/ 2.1 datetime-local parse, self-consistent today, resolve holistically later], 1 dismissed [query over-selects unused end/level — harmless]; requireAdmin-before-fetch [AC4], zero-write filtered _count matches AD-5 predicate exactly [AC3], formatZar integer-cents→Rand at UI edge [AD-9] all confirmed; no code changes required)
+# 2-3 set ready-for-dev on 2026-07-05 (create-story: the AD-16 concurrency-safe edit story [(admin)/admin/classes/[id]/edit] = pre-filled client form + updateClassAction wrapping the FIRST FOR UPDATE interactive tx in the app; capacity-vs-occupied floor counted INSIDE the lock via reused occupiedEnrollmentWhere [AC2], optimistic-concurrency via expectedUpdatedAt vs @updatedAt [AC4], price edit never touches Enrollment.priceCents snapshot [AC5]; VERIFIED updatedAt already migrated [schema_deltas_spine] → NO schema/migration change; reuse create schema/action/form templates + toCents [AD-9]; pure edit-schema + capacityBelowOccupied unit-tested; live-DB + concurrency integration test deferred to CI ephemeral-Postgres; per-row Edit link on 2.2 list + dynamic route in e2e manifest via seed-class-acc-1; NO delete/status-transition/enrollment code)
 project_key: NOKEY
 tracking_system: file-system
 story_location: "{project-root}/_bmad-output/implementation-artifacts"
@@ -89,7 +90,7 @@ development_status:
   epic-2: in-progress
   2-1-create-a-group-class: done
   2-2-list-and-view-classes-in-admin: done
-  2-3-edit-an-existing-class: backlog
+  2-3-edit-an-existing-class: review
   epic-2-retrospective: optional
 
   # Epic 3: Browse & Enroll with Wallet Balance

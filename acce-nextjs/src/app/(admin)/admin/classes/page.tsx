@@ -152,6 +152,7 @@ export default async function AdminClassesPage() {
                 <TableHead>Price</TableHead>
                 <TableHead>Mode</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -183,6 +184,17 @@ export default async function AdminClassesPage() {
                       <Badge variant={statusVariant(cls.status)}>
                         {formatStatus(cls.status)}
                       </Badge>
+                    </TableCell>
+                    {/* Story 2.3 — per-row Edit link (secondary/ghost, keeps gold CTA dominant) */}
+                    <TableCell>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="min-h-[44px]"
+                      >
+                        <Link href={`/admin/classes/${cls.id}/edit`}>Edit</Link>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );

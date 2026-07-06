@@ -48,3 +48,27 @@ export function occupiedEnrollmentWhere(now: Date): Prisma.EnrollmentWhereInput 
 export function computeSeatsLeft(capacity: number, occupied: number): number {
   return Math.max(0, capacity - occupied);
 }
+
+/**
+ * AD-16 capacity-floor check: returns true when the proposed new capacity
+ * would drop BELOW the currently occupied seat count.
+ *
+ * This is the pure AD-16 invariant — the comparison that is evaluated
+ * INSIDE the `GroupSession` `FOR UPDATE` lock in `updateClassAction` so
+ * the count cannot race a concurrent `reserveSeat`.
+ *
+ * Rule: `capacity < occupied` is rejected; `capacity >= occupied` (incl. exact match)
+ * is allowed (the class is exactly full but no booked seat is lost).
+ *
+ * Epic 3/4's `reserveSeat` can reuse this same floor concept by importing
+ * this predicate alongside `occupiedEnrollmentWhere`.
+ *
+ * @param newCapacity - the capacity value the admin submitted
+ * @param occupied    - count of occupied seats at the moment of the lock
+ */
+export function capacityBelowOccupied(
+  newCapacity: number,
+  occupied: number,
+): boolean {
+  return newCapacity < occupied;
+}
