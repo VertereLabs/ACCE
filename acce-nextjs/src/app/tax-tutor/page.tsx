@@ -4,6 +4,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import ConversionCtas from "@/components/ConversionCtas";
+import { getGuidesForSubject } from "@/config/guides";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
 
@@ -77,6 +79,8 @@ const FAQPAGE_DATA = {
 };
 
 export default function TaxTutorPage() {
+    const guidesHref = getGuidesForSubject("tax").length > 0 ? "#guides" : "/guides";
+
     return (
         <div className="min-h-screen bg-background">
             <JsonLd id="tax-tutor-jsonld-service" data={SERVICE_DATA} />
@@ -101,11 +105,10 @@ export default function TaxTutorPage() {
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             Taxation is one of the four core subjects on the CA(SA) pathway and one of the areas where students most often lose marks to formula-sequence errors and misclassified items rather than a lack of understanding. Whether you are working through undergraduate tax modules, preparing for the PGDA internal assessments, or building towards the ITC and APC, I help you understand the Acts, apply the correct framework, and answer questions at exam level.
                         </p>
-                        <Button asChild variant="hero">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                Book a Tax Session
-                            </a>
-                        </Button>
+                        <ConversionCtas
+                            bookLabel="Book a Tax Session"
+                            guidesHref={guidesHref}
+                        />
                     </div>
 
                     {/* Section 1: What we cover */}
@@ -324,11 +327,11 @@ export default function TaxTutorPage() {
                             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 Whether it is the general deduction formula, fringe benefits, VAT input tax, CGT under the Eighth Schedule, or APC case-study tax advice, book a session and we will work on it together.
                             </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book a Session on WhatsApp
-                                </a>
-                            </Button>
+                            <ConversionCtas
+                                bookLabel="Book a Session on WhatsApp"
+                                guidesHref="/guides"
+                                align="center"
+                            />
                         </div>
                     </div>
 

@@ -4,6 +4,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import ConversionCtas from "@/components/ConversionCtas";
+import { getGuidesForSubject } from "@/config/guides";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
 
@@ -81,6 +83,8 @@ const FAQPAGE_DATA = {
 };
 
 export default function AuditingTutorPage() {
+    const guidesHref = getGuidesForSubject("auditing").length > 0 ? "#guides" : "/guides";
+
     return (
         <div className="min-h-screen bg-background">
             <JsonLd id="auditing-tutor-jsonld-service" data={SERVICE_DATA} />
@@ -105,11 +109,10 @@ export default function AuditingTutorPage() {
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             Auditing is the subject on the CA(SA) pathway that teaches you to provide independent assurance over financial information that someone else has prepared. An auditor does not draft financial statements. Instead, an auditor gathers evidence to express an opinion on whether those statements are free from material misstatement. That framing shapes everything from how you plan procedures to how you decide whether an opinion needs to be modified. Whether you are working through undergraduate auditing modules, navigating the PGDA year, or building towards the ITC and APC, I help you understand the ISAs, apply the audit risk model, and answer questions at exam level.
                         </p>
-                        <Button asChild variant="hero">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                Book an Auditing Session
-                            </a>
-                        </Button>
+                        <ConversionCtas
+                            bookLabel="Book an Auditing Session"
+                            guidesHref={guidesHref}
+                        />
                     </div>
 
                     {/* Section 1: What we cover */}
@@ -331,11 +334,11 @@ export default function AuditingTutorPage() {
                             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 Whether it is the audit risk model, assertions and procedures, modified opinion types, ethics and independence under the SAICA/IRBA Code, or APC governance advisory, book a session and we will work on it together.
                             </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book a Session on WhatsApp
-                                </a>
-                            </Button>
+                            <ConversionCtas
+                                bookLabel="Book a Session on WhatsApp"
+                                guidesHref="/guides"
+                                align="center"
+                            />
                         </div>
                     </div>
 

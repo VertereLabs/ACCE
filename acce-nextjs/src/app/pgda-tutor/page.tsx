@@ -3,6 +3,7 @@ import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ConversionCtas from "@/components/ConversionCtas";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, CheckCircle } from "lucide-react";
 
@@ -102,11 +103,10 @@ export default function PgdaTutorPage() {
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             The PGDA year is the gateway to the CA(SA) designation. It is demanding, it covers four subjects at once, and the self-directed nature of programmes like UNISA means you can reach exam week with gaps you never had the chance to address. I have walked this path, and I know exactly where the diploma year tends to trip people up.
                         </p>
-                        <Button asChild variant="hero">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                Book a PGDA Session
-                            </a>
-                        </Button>
+                        <ConversionCtas
+                            bookLabel="Book a PGDA Session"
+                            guidesHref="/guides"
+                        />
                     </div>
 
                     {/* Section 1: What PGDA is */}
@@ -340,11 +340,11 @@ export default function PgdaTutorPage() {
                             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 Book a session and we will work out where to focus first.
                             </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book a Session on WhatsApp
-                                </a>
-                            </Button>
+                            <ConversionCtas
+                                bookLabel="Book a Session on WhatsApp"
+                                guidesHref="/guides"
+                                align="center"
+                            />
                         </div>
                     </div>
 

@@ -3,6 +3,7 @@ import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ConversionCtas from "@/components/ConversionCtas";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, MapPin } from "lucide-react";
 
@@ -110,11 +111,7 @@ export default function SubjectsPage() {
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             I am Priyanka, and this is the single entry point for every subject and qualification ACCE tutors. Whether you are at undergraduate level working through your first Financial Accounting module, midway through a PGDA year at UNISA, or preparing for the CTA and the ITC board exam, you will find the right page from here. I have guided students from UCT, Wits, UJ, UP, and Stellenbosch through these subjects, and the same structured approach works regardless of which institution you are at or which year you are in.
                         </p>
-                        <Button asChild variant="hero">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                Book a Session
-                            </a>
-                        </Button>
+                        <ConversionCtas guidesHref="/guides" />
                     </div>
 
                     {/* The four subjects */}
@@ -256,12 +253,11 @@ export default function SubjectsPage() {
                             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 Send a WhatsApp message with your subject, your university, and what you are struggling with. I will point you to the right page and confirm availability.
                             </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    <Monitor className="w-4 h-4 mr-2" aria-hidden="true" />
-                                    Book a Session on WhatsApp
-                                </a>
-                            </Button>
+                            <ConversionCtas
+                                bookLabel="Book a Session on WhatsApp"
+                                guidesHref="/guides"
+                                align="center"
+                            />
                         </div>
                     </div>
 

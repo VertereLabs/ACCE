@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HowItWorks, { howItWorksSteps } from "@/components/HowItWorks";
+import ConversionCtas from "@/components/ConversionCtas";
 
 export const metadata: Metadata = {
     title: "How ACCE Tutoring Works | From First Message to Exam Success",
@@ -56,6 +57,13 @@ export default function HowItWorksPage() {
             <Navbar />
             <main className="pt-20">
                 <HowItWorks />
+
+                {/* Book or read the guides */}
+                <section className="pb-12">
+                    <div className="container mx-auto px-6">
+                        <ConversionCtas guidesHref="/guides" align="center" />
+                    </div>
+                </section>
 
                 {/* Explore next */}
                 <section className="pb-24">

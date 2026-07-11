@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Pricing, { pricingPlans } from "@/components/Pricing";
+import ConversionCtas from "@/components/ConversionCtas";
 
 export const metadata: Metadata = {
     title: "Tutoring Pricing & Packages | CA(SA), CTA & PGDA | ACCE",
@@ -71,6 +72,13 @@ export default function PricingPage() {
             <Navbar />
             <main className="pt-20">
                 <Pricing />
+
+                {/* Book or read the guides */}
+                <section className="pb-12">
+                    <div className="container mx-auto px-6">
+                        <ConversionCtas guidesHref="/guides" align="center" />
+                    </div>
+                </section>
 
                 {/* Explore next */}
                 <section className="pb-24">

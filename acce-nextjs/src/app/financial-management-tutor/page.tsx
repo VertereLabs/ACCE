@@ -4,6 +4,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import ConversionCtas from "@/components/ConversionCtas";
+import { getGuidesForSubject } from "@/config/guides";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
 
@@ -77,6 +79,8 @@ const FAQPAGE_DATA = {
 };
 
 export default function FinancialManagementTutorPage() {
+    const guidesHref = getGuidesForSubject("maf").length > 0 ? "#guides" : "/guides";
+
     return (
         <div className="min-h-screen bg-background">
             <JsonLd id="financial-management-tutor-jsonld-service" data={SERVICE_DATA} />
@@ -101,11 +105,10 @@ export default function FinancialManagementTutorPage() {
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             Whether you are searching for a financial management tutor or a management accounting tutor, you are looking for MAF: the single subject on the CA(SA) pathway that covers costing, budgeting, decision-making and corporate finance. I help MAF students at every level understand the methods, apply them to exam scenarios, and stop losing marks to the same recurring gaps.
                         </p>
-                        <Button asChild variant="hero">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                Book a MAF Session
-                            </a>
-                        </Button>
+                        <ConversionCtas
+                            bookLabel="Book a MAF Session"
+                            guidesHref={guidesHref}
+                        />
                     </div>
 
                     {/* Section 1: What MAF covers */}
@@ -318,11 +321,11 @@ export default function FinancialManagementTutorPage() {
                             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 Whether it is costing methods, variance analysis, NPV, or APC case-study preparation, book a session and we will work on it together.
                             </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book a Session on WhatsApp
-                                </a>
-                            </Button>
+                            <ConversionCtas
+                                bookLabel="Book a Session on WhatsApp"
+                                guidesHref="/guides"
+                                align="center"
+                            />
                         </div>
                     </div>
 

@@ -3,6 +3,7 @@ import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ConversionCtas from "@/components/ConversionCtas";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, CheckCircle } from "lucide-react";
 
@@ -98,11 +99,10 @@ export default function CtaTutorPage() {
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             The CTA year is the hardest step on the road to CA(SA). Four honours-level subjects, one integration exam, and a pass rate that humbles even strong students. I have guided PGDA students through exactly this, and I know where the gaps tend to hide.
                         </p>
-                        <Button asChild variant="hero">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                Book a CTA Session
-                            </a>
-                        </Button>
+                        <ConversionCtas
+                            bookLabel="Book a CTA Session"
+                            guidesHref="/guides"
+                        />
                     </div>
 
                     {/* Section 1: What CTA is and why it is hard */}
@@ -338,11 +338,11 @@ export default function CtaTutorPage() {
                             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 Book a session and we will work out where to focus first.
                             </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book a Session on WhatsApp
-                                </a>
-                            </Button>
+                            <ConversionCtas
+                                bookLabel="Book a Session on WhatsApp"
+                                guidesHref="/guides"
+                                align="center"
+                            />
                         </div>
                     </div>
 

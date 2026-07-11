@@ -4,7 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CTA from "@/components/CTA";
-import { Button } from "@/components/ui/button";
+import ConversionCtas from "@/components/ConversionCtas";
 import { MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -125,12 +125,7 @@ export default function ContactPage() {
                     </div>
 
                     <div className="max-w-3xl mb-4">
-                        <Button asChild variant="hero" size="lg">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                <MessageCircle className="w-5 h-5" />
-                                Message on WhatsApp
-                            </a>
-                        </Button>
+                        <ConversionCtas bookLabel="Message on WhatsApp" guidesHref="/guides" />
                     </div>
 
                     <p className="max-w-3xl text-muted-foreground text-sm">

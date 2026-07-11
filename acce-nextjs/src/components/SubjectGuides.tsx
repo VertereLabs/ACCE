@@ -19,7 +19,7 @@ const SubjectGuides = ({ subject, subjectLabel }: SubjectGuidesProps) => {
     const guides = getGuidesForSubject(subject);
 
     return (
-        <div className="max-w-3xl">
+        <div id="guides" className="max-w-3xl scroll-mt-24">
             <div className="flex items-center gap-3 mb-4">
                 <BookOpen className="w-6 h-6 text-accent" aria-hidden="true" />
                 <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -66,8 +66,8 @@ const SubjectGuides = ({ subject, subjectLabel }: SubjectGuidesProps) => {
                         <Link href="/guides" className="text-accent hover:underline">
                             study guides library
                         </Link>{" "}
-                        covers the core CA(SA) standards, and a tutoring session is the fastest way to work through a
-                        {" "}{subjectLabel} topic you are stuck on.
+                        covers the core CA(SA) standards, and a tutoring session is the fastest way to work through the
+                        {" "}{subjectLabel} topics you are stuck on.
                     </p>
                 </div>
             )}

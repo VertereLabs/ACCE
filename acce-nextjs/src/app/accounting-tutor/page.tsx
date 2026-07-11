@@ -4,6 +4,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import ConversionCtas from "@/components/ConversionCtas";
+import { getGuidesForSubject } from "@/config/guides";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
 
@@ -77,6 +79,8 @@ const FAQPAGE_DATA = {
 };
 
 export default function AccountingTutorPage() {
+    const guidesHref = getGuidesForSubject("accounting").length > 0 ? "#guides" : "/guides";
+
     return (
         <div className="min-h-screen bg-background">
             <JsonLd id="accounting-tutor-jsonld-service" data={SERVICE_DATA} />
@@ -101,11 +105,10 @@ export default function AccountingTutorPage() {
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                             Financial accounting is the technical backbone of the CA(SA) pathway. From your first encounter with the accounting equation to CTA-level IFRS and group statements, the depth builds quickly. I help accounting students at every stage understand the standards, apply them correctly in assessments, and stop losing marks to the same gaps.
                         </p>
-                        <Button asChild variant="hero">
-                            <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                Book an Accounting Session
-                            </a>
-                        </Button>
+                        <ConversionCtas
+                            bookLabel="Book an Accounting Session"
+                            guidesHref={guidesHref}
+                        />
                     </div>
 
                     {/* Section 1: What we cover */}
@@ -326,11 +329,11 @@ export default function AccountingTutorPage() {
                             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
                                 Whether it is consolidations, IFRS standards, or ITC preparation, book a session and we will work on it together.
                             </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book a Session on WhatsApp
-                                </a>
-                            </Button>
+                            <ConversionCtas
+                                bookLabel="Book a Session on WhatsApp"
+                                guidesHref="/guides"
+                                align="center"
+                            />
                         </div>
                     </div>
 

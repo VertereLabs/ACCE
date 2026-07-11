@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import About from "@/components/About";
+import ConversionCtas from "@/components/ConversionCtas";
 
 export const metadata: Metadata = {
     title: "About Priyanka | CA(SA) Journey & Tutoring Approach | ACCE",
@@ -83,6 +84,13 @@ export default function AboutPage() {
             <Navbar />
             <main className="pt-20">
                 <About />
+
+                {/* Book or read the guides */}
+                <section className="pb-12">
+                    <div className="container mx-auto px-6">
+                        <ConversionCtas guidesHref="/guides" align="center" />
+                    </div>
+                </section>
 
                 {/* Explore next */}
                 <section className="pb-24">

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth in-page anchor scrolling (e.g. hero "Browse the guides" -> #guides).
+   Respects reduced-motion preferences. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 /* ============================================================
    ACCE Tutors — brand tokens (Stage 1 "fresh look")
    Two-mode navy + gold system. Source of truth:
