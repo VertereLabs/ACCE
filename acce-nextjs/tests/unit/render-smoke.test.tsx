@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import Navbar from "@/components/Navbar";
 import HomePage from "@/app/page";
 import GuidesPage from "@/app/guides/page";
 import IFRS16Part1Page from "@/app/guides/ifrs-16/part-1/page";
@@ -16,6 +17,20 @@ import SubjectsPage from "@/app/subjects/page";
  * logic tests but produces an HTTP 500 in the real app (the classic RSC render trap).
  * Rendering the composed pages here is the cheap safety net for that class of bug.
  */
+
+describe("Navbar renders", () => {
+  it("contains a link to /subjects (Subjects nav item repointed from /#services)", () => {
+    const { container } = render(<Navbar />);
+    expect(container.querySelector('a[href="/subjects"]')).not.toBeNull();
+  });
+
+  it("renders the Qualifications affordance trigger text", () => {
+    // Verifies the Qualifications dropdown trigger exists in the desktop nav.
+    render(<Navbar />);
+    expect(screen.getByText("Qualifications")).toBeInTheDocument();
+  });
+});
+
 describe("HomePage renders", () => {
   it("mounts the full landing page without throwing and shows key content", () => {
     render(<HomePage />);

@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, MessageCircle } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Menu, X, MessageCircle, ChevronDown } from "lucide-react";
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -10,7 +16,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const navLinks = [
-        { name: "Subjects", href: "/#services" },
+        { name: "Subjects", href: "/subjects" },
         { name: "Group Classes", href: "/#group-classes" },
         { name: "About", href: "/#about" },
         { name: "How It Works", href: "/#how-it-works" },
@@ -39,6 +45,26 @@ const Navbar = () => {
                                 {link.name}
                             </a>
                         ))}
+
+                        {/* Qualifications dropdown: reaches /cta-tutor and /pgda-tutor */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground hover:text-accent-ink transition-colors duration-300 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm">
+                                Qualifications
+                                <ChevronDown className="w-4 h-4" aria-hidden="true" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start">
+                                <DropdownMenuItem asChild>
+                                    <a href="/cta-tutor" className="cursor-pointer w-full">
+                                        CTA Tutoring
+                                    </a>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <a href="/pgda-tutor" className="cursor-pointer w-full">
+                                        PGDA Tutoring
+                                    </a>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
 
                     {/* CTA Button + theme toggle */}
@@ -82,6 +108,26 @@ const Navbar = () => {
                                     {link.name}
                                 </a>
                             ))}
+
+                            {/* Qualifications group: flat links to avoid nested-menu touch complexity */}
+                            <span className="text-muted-foreground text-sm font-medium opacity-60 pt-1">
+                                Qualifications
+                            </span>
+                            <a
+                                href="/cta-tutor"
+                                className="text-muted-foreground hover:text-accent-ink transition-colors duration-300 font-medium py-2 pl-4"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                CTA Tutoring
+                            </a>
+                            <a
+                                href="/pgda-tutor"
+                                className="text-muted-foreground hover:text-accent-ink transition-colors duration-300 font-medium py-2 pl-4"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                PGDA Tutoring
+                            </a>
+
                             <div className="flex flex-col gap-3 pt-4">
                                 <Button
                                     className="w-full"
