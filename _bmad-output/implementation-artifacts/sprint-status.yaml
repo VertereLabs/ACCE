@@ -41,13 +41,14 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-11
-last_updated: 2026-07-11T12:54:33Z
+last_updated: 2026-07-11T13:09:22Z
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-11 (create-story: /cta-tutor flagship hub contexted; sitemap/navbar/homepage links scoped to later stories; cross-links to unbuilt siblings authored in place per NFR7)
 # 1-1 code-review 2026-07-11 (autopilot): clean, all 7 ACs verified, no HIGH/MEDIUM findings -> done. Sitemap registration for /cta-tutor deferred to Story 1.8 by AC7 design.
 # 1-2 set ready-for-dev on 2026-07-11 (create-story, autopilot): /accounting-tutor spoke contexted off the DONE /cta-tutor template. Service+FAQPage schema; outbound links scoped to /cta-tutor,/pgda-tutor,/subjects (IFRS-guide edge deferred to 2.3/Epic 3 gate); CAP-2 meta em dash -> colon per NFR6; sitemap deferred to 1.8. NFR1 differentiation flagged as top risk.
 # 1-2 code-review 2026-07-11 (autopilot): clean, all 7 ACs verified with fresh reasoning, zero em dashes, differentiation (NFR1) satisfied, no HIGH/MEDIUM findings (2 low observations dismissed) -> done. sitemap.test /accounting-tutor failure is by-design deferred to Story 1.8.
 # 1-3 set ready-for-dev on 2026-07-11 (create-story, autopilot): /financial-management-tutor (MAF) spoke contexted off the DONE /accounting-tutor template. Service+FAQPage schema; outbound /cta-tutor,/pgda-tutor,/subjects (no IFRS-guide edge for this page); CAP-3 meta em dash -> colon per NFR6 (Story 1.2 precedent); sitemap deferred to 1.8. Top risks: NFR1 differentiation (MAF costing/budgeting/decision-making/finance, not IFRS) + AC3 dual-naming (target both "financial management" and "management accounting").
 # 1-3 code-review 2026-07-11 (autopilot): CLEAN, all 7 ACs verified with fresh reasoning; NFR1 differentiation satisfied (MAF costing/budgeting/decision-making/corporate-finance, distinct from /accounting-tutor IFRS); AC3 dual-naming satisfied (H1 opening + "What MAF covers" H2 + first FAQ); zero em dashes; render-smoke 15/15 green; tsc no new errors; no HIGH/MEDIUM findings (2 low observations dismissed: title 57ch still <=60, word-count overrun pre-adjudicated per 1.2) -> done. The 3 sitemap.test failures (/cta-tutor,/accounting-tutor,/financial-management-tutor + guides) are by-design deferred to Story 1.8.
+# 1-4 set ready-for-dev on 2026-07-11 (create-story, autopilot): /tax-tutor spoke contexted off the DONE /accounting-tutor + /financial-management-tutor template. Service+FAQPage schema; outbound /cta-tutor,/pgda-tutor,/subjects (no IFRS-guide edge for this page); CAP-4 title kept verbatim WITH its em dash = the single sanctioned exception (Story 1.1 precedent, title 49ch); CAP-4 meta em dash -> colon per NFR6 (Story 1.2/1.3 precedent, ~135ch); sitemap deferred to 1.8. Top risk: NFR1 differentiation (Income Tax Act/corporate tax/VAT/CGT/estate duty, distinct from IFRS and costing/finance).
 project: ACCE
 project_key: SEO
 tracking_system: file-system
@@ -59,7 +60,7 @@ development_status:
   1-1-cta-qualification-hub-page-cta-tutor-flagship: done
   1-2-accounting-subject-spoke-accounting-tutor: done
   1-3-financial-management-maf-subject-spoke-financial-management-tutor: done
-  1-4-tax-subject-spoke-tax-tutor: backlog
+  1-4-tax-subject-spoke-tax-tutor: review
   1-5-auditing-subject-spoke-auditing-tutor: backlog
   1-6-pgda-qualification-hub-pgda-tutor: backlog
   1-7-subjects-hub-subjects: backlog

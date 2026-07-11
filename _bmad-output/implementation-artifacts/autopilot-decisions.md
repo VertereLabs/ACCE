@@ -175,3 +175,43 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All 7 ACs verified with fresh reasoning: AC1 server-component shell + single H1 exact; AC2 metadata title 57ch/desc 149ch (within ≤60/≤155), relative canonical, OG+twitter, zero em dashes; AC3 genuinely differentiated MAF content (costing/budgeting/decision-making/corporate-finance, distinct from /accounting-tutor IFRS/consolidations) with dual-naming satisfied in H1-opening, "What MAF covers" H2, and first FAQ, SA E-E-A-T woven (CA(SA)/SAICA/ITC/APC/UNISA MNG/UCT/Wits/UP/Stellenbosch); AC4 Service+FAQPage JSON-LD via two Script blocks, provider @id correct, FAQPAGE_DATA mapped from the same FAQ_ITEMS const rendered on-page (single source of truth); AC5 outbound /cta-tutor,/pgda-tutor,/subjects via next/link, no IFRS-guide edge (correct); AC6 tokens-only navy+gold, gold accent-only, 4 hero CTAs across 4 distinct view groups (1.2 precedent), aria-hidden icons, rel=noopener; AC7 additive-only, render-smoke extended (H1+/cta-tutor+WhatsApp), forbidden files untouched. Verified empirically: 0 em dashes (grep U+2014), 1 H1, heading hierarchy no skips, no hardcoded colors, tsc no new errors, render-smoke 15/15 green. Two trivial observations dismissed as noise: title 57ch vs story's stated 56ch (still ≤60, trivial) and word count ~1277 vs 700-900 nominal (explicitly pre-adjudicated acceptable per Story 1.2 precedent — genuine anti-doorway depth over an arbitrary ceiling). The 3 sitemap.test.ts failures (/cta-tutor, /accounting-tutor, /financial-management-tutor + guides) are by-design deferred to Story 1.8 per AC7, not regressions.
 - **Reversibility:** To reopen, set development_status[1-3-...] back to `review`/`in-progress` in sprint-status.yaml and the story Status line; no code was changed by this review (clean, no patches applied).
 - **Files touched:** _bmad-output/implementation-artifacts/1-3-financial-management-maf-subject-spoke-financial-management-tutor.md (Status → done + Review Findings note); _bmad-output/implementation-artifacts/sprint-status.yaml (1-3 → done)
+
+### [2026-07-11T12:58:19Z] 1-4-tax-subject-spoke-tax-tutor — create-story: CAP-4 title em dash is the single sanctioned exception (kept verbatim)
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (metadata authoring / AC2)
+- **Decision point:** The CAP-4 catalog title AND the epic Story 1.4 AC both pin the title verbatim as `Tax Tutor — Taxation for PGDA & CTA | ACCE Tutors`, which contains one em dash. NFR6/project-context forbid em dashes in all metadata. Must decide whether to keep the em dash or replace it.
+- **Options considered:** A) keep the em dash verbatim (the epic AC pins this exact string, matching the Story 1.1 `/cta-tutor` precedent where the verbatim-pinned title was declared the "single sanctioned exception"); B) replace the em dash with a colon/comma (deviates from a verbatim-pinned AC string); C) rewrite the title.
+- **Chosen:** A — keep the title exactly as pinned (`Tax Tutor — Taxation for PGDA & CTA | ACCE Tutors`) and document it in the story AC + a Dev Note as the single sanctioned em-dash exception for this page (title/OG/Twitter mirror it identically), exactly as Story 1.1 handled its verbatim-pinned CTA title. All other copy and the meta description carry zero em dashes.
+- **Rationale:** The epic AC4 and CAP-4 both reproduce the title verbatim with the em dash, unlike the meta description which is referenced by role (not pinned). Story 1.1's code-review accepted this exact reasoning (title em dash = sanctioned exception; body/meta = zero em dashes). Consistency across the epic's qualification/subject pages.
+- **Reversibility:** Single-string edit in the story AC and the eventual page.tsx metadata block (title/openGraph/twitter); trivially revertable to a colon if Luke later decides the title should also be em-dash-free.
+- **Files touched:** _bmad-output/implementation-artifacts/1-4-tax-subject-spoke-tax-tutor.md
+
+### [2026-07-11T12:58:19Z] 1-4-tax-subject-spoke-tax-tutor — create-story: CAP-4 meta description em dash → colon
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (metadata authoring / AC2)
+- **Decision point:** The CAP-4 catalog meta reads `Taxation tutoring for CA(SA) students — Income Tax Act, corporate tax, VAT, CGT and estate duty. Exam-focused revision with ACCE Tutors.` (one em dash). NFR6/project-context forbid em dashes in all metadata; the epic AC references "the catalog meta description" by role without pinning it verbatim.
+- **Options considered:** A) keep the em dash verbatim (violates NFR6); B) replace the em dash with a colon, preserving every other word (matches the Story 1.2 CAP-2 and Story 1.3 CAP-3 precedents, both code-review-approved); C) rewrite the sentence.
+- **Chosen:** B — `Taxation tutoring for CA(SA) students: Income Tax Act, corporate tax, VAT, CGT and estate duty. Exam-focused revision with ACCE Tutors.` (~135 chars, under ~155).
+- **Rationale:** Direct precedent set and code-review-approved in Stories 1.2 and 1.3 (catalog meta em dash → colon). The meta is referenced by role, not pinned verbatim, so no verbatim mandate to preserve the em dash (unlike the title). Minimal, meaning-preserving, satisfies the hard NFR6 rule.
+- **Reversibility:** Single-string edit in the story AC / eventual page.tsx metadata block; trivially revertable.
+- **Files touched:** _bmad-output/implementation-artifacts/1-4-tax-subject-spoke-tax-tutor.md
+
+### [2026-07-11T13:03:39Z] 1-4-tax-subject-spoke-tax-tutor — dev-story start: mark in-progress, implement /tax-tutor page
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark in-progress)
+- **Decision point:** Story 1-4 is ready-for-dev; baseline_commit is already set (179ff2c). Proceeding with implementation.
+- **Options considered:** A) implement directly following the /financial-management-tutor template; B) implement from scratch
+- **Chosen:** A — mirror /financial-management-tutor (most recent done sibling) + /accounting-tutor for content/structure conventions
+- **Rationale:** Story dev notes explicitly call out the same two files as the template. Story footprint is identical to 1.1-1.3: one new page.tsx + one test extension.
+- **Reversibility:** Delete acce-nextjs/src/app/tax-tutor/page.tsx and revert render-smoke.test.tsx to undo.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-11T13:09:22Z] 1-4-tax-subject-spoke-tax-tutor — dev-story complete: /tax-tutor implemented, all 5 tasks done, status set to review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (completion)
+- **Decision point:** All 5 tasks complete; 18 render-smoke tests green; tsc no new errors; 3 sitemap.test.ts failures are pre-existing by-design (deferred Story 1.8). Story ready for code review.
+- **Options considered:** A) mark review (all ACs satisfied, all tests pass); B) hold pending additional review
+- **Chosen:** A — mark review. All 7 ACs verified: AC1 server component shell, AC2 metadata with sanctioned em-dash title + colon meta, AC3 differentiated taxation content (Income Tax Act/VAT/CGT/estate duty distinct from sibling spokes), AC4 Service+FAQPage JSON-LD with single FAQ_ITEMS source, AC5 three outbound links (/cta-tutor, /pgda-tutor, /subjects), AC6 design tokens + hero CTAs per view group, AC7 render-smoke green.
+- **Rationale:** Clean pass on all acceptance criteria. Story footprint matches 1.1-1.3 pattern exactly (one new page + test extension).
+- **Reversibility:** git revert the commit or delete acce-nextjs/src/app/tax-tutor/page.tsx.
+- **Files touched:** acce-nextjs/src/app/tax-tutor/page.tsx, acce-nextjs/tests/unit/render-smoke.test.tsx, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/1-4-tax-subject-spoke-tax-tutor.md, _bmad-output/implementation-artifacts/autopilot-decisions.md
