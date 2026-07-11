@@ -4,7 +4,7 @@ baseline_commit: c9a6f8832e56e815f23d7b930264448d805f635d
 
 # Story 3.1: Decouple guide page-gating from PDF-gating
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -140,5 +140,14 @@ None. Implementation was straightforward: the story provided exact target code s
 - acce-nextjs/src/middleware.ts (modified: added GUIDE_PDF_PUBLISH_STATUS const, swapped PDF branch to read it)
 - acce-nextjs/tests/unit/guides-config.test.ts (modified: added isGuidePdfPublished test coverage, 6 new tests)
 
+## Review Findings
+
+Code review 2026-07-11 (autopilot, fresh adversarial reasoning across Blind Hunter + Edge Case Hunter + Acceptance Auditor layers): CLEAN. Zero decision-needed, zero patch, zero defer, 2 dismissed as noise. No HIGH/MEDIUM findings.
+
+- All 4 ACs re-verified with fresh reasoning. AC1: page-state contract byte-identical (diff touches only the doc-comment, no logic); GUIDE_PDF_PUBLISH_STATUS + isGuidePdfPublished added as fully independent map+helper; the page=true/pdf=false independence test locks the core guarantee. AC2: middleware page branch reads GUIDE_PUBLISH_STATUS, PDF branch reads GUIDE_PDF_PUBLISH_STATUS via PDF_TO_GUIDE, both mirrored maps all-false matching config. AC3: all 6 flags false + identical dev/preview unlock, so the PDF branch is byte-for-byte identical in every env; full vitest suite unchanged from baseline (57 pass / 3 pre-existing guide-route sitemap fails, Epic-3 scope / 1 todo) and tsc clean outside .next/types. AC4: the only 2 em dashes in the test file are on pre-existing lines (the isGuidePublished describe blocks), not in this diff; added blocks use colons; 4-space indent held.
+- Dismissed (LOW, noise): (1) GUIDE_PDF_PUBLISH_STATUS is hand-duplicated across guides.ts + middleware.ts with no automated sync guard: inherent, pre-existing Edge-runtime constraint acknowledged in the story and project-context, not introduced here. (2) The unconditional Download-PDF CTA on guide pages is unchanged: explicitly Story 3.2 scope, and middleware still redirects /pdfs/*.pdf so no dead download can leak in a public build.
+- No code patched (clean pass). Status set to done.
+
 ## Change Log
 - 2026-07-11: Story 3.1 implemented. Decoupled guide page-gating from PDF-gating in guides.ts and middleware.ts. Added 6 additive unit tests confirming the independence guarantee (AC1). No live behavior change (all flags false, AC3).
+- 2026-07-11: Code review (autopilot) CLEAN, all 4 ACs re-verified with fresh reasoning, 2 low observations dismissed, no HIGH/MEDIUM findings. Status review -> done.
