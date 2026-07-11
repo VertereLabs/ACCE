@@ -4,7 +4,7 @@
 baseline_commit: 457e2611030d89be766bcb098977e012f6d51205
 ---
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -135,3 +135,18 @@ claude-sonnet-4-6 (autopilot subagent, 2026-07-11)
 
 - acce-nextjs/src/components/Navbar.tsx (modified)
 - acce-nextjs/tests/unit/render-smoke.test.tsx (modified, +2 Navbar describe tests)
+
+## Review Findings
+
+Adversarial code review (autopilot, 2026-07-11, fresh reasoning across Blind Hunter / Edge Case Hunter / Acceptance Auditor lenses). Diff reviewed: `Navbar.tsx` + `render-smoke.test.tsx` vs baseline `457e261`.
+
+**Verdict: CLEAN — 0 decision-needed, 0 patch, 0 defer, 3 dismissed as noise. No HIGH/MEDIUM findings.**
+
+All 7 ACs re-verified: AC1 Subjects -> /subjects (drives both maps); AC2 Qualifications reaches /cta-tutor + /pgda-tutor via desktop DropdownMenu + mobile grouped links (permitted pattern); AC3 six other items + WhatsApp CTA + ThemeToggle unchanged; AC4 dropdown trigger keyboard-operable with added focus ring, mobile children close via setIsOpen(false), open/close intact; AC5 reuse-only tokens (text-muted-foreground, hover:text-accent-ink, bg-popover), no new palette, dual-mode; AC6 zero em dashes (grep-confirmed); AC7 additive-only (Navbar.tsx + test), all 3 targets on disk, no homepage removed.
+
+Three adversarial probes dismissed on verification:
+- **[Dismiss] Plain nav links lack explicit `focus-visible:ring`** — pre-existing site-wide convention (original Navbar and globals.css carry no focus classes; browser default outline is the baseline). Not introduced here; the new dropdown trigger actually adds an explicit ring.
+- **[Dismiss] Desktop dropdown links are portal/lazy-mounted (absent from initial SSR HTML)** — crawl discovery is already guaranteed by `sitemap.ts` (both routes registered in Story 1.8); AC2 explicitly permits a dropdown as the human affordance.
+- **[Dismiss] `opacity-60`/`text-sm` on the mobile Qualifications label** — Tailwind utilities, not a new palette/hue; consistent with the design system (the shadcn dropdown component itself uses `opacity-60`).
+
+Validation: `npx tsc --noEmit` clean (only stale `.next/types` cache). `npx vitest run` = 41 pass / 3 pre-existing guide-route sitemap failures (Epic 3, `/guides/*` unpublished) unchanged from the 39+2-new baseline. Navbar has no prop/interface change, so none of its ~20 server-page consumers break.
