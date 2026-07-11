@@ -41,9 +41,10 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-11
-last_updated: 2026-07-11T12:17:30Z
+last_updated: 2026-07-11T12:31:00Z
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-11 (create-story: /cta-tutor flagship hub contexted; sitemap/navbar/homepage links scoped to later stories; cross-links to unbuilt siblings authored in place per NFR7)
 # 1-1 code-review 2026-07-11 (autopilot): clean, all 7 ACs verified, no HIGH/MEDIUM findings -> done. Sitemap registration for /cta-tutor deferred to Story 1.8 by AC7 design.
+# 1-2 set ready-for-dev on 2026-07-11 (create-story, autopilot): /accounting-tutor spoke contexted off the DONE /cta-tutor template. Service+FAQPage schema; outbound links scoped to /cta-tutor,/pgda-tutor,/subjects (IFRS-guide edge deferred to 2.3/Epic 3 gate); CAP-2 meta em dash -> colon per NFR6; sitemap deferred to 1.8. NFR1 differentiation flagged as top risk.
 project: ACCE
 project_key: SEO
 tracking_system: file-system
@@ -53,7 +54,7 @@ development_status:
   # Epic 1: Hub-and-Spoke Ranking Pages
   epic-1: in-progress
   1-1-cta-qualification-hub-page-cta-tutor-flagship: done
-  1-2-accounting-subject-spoke-accounting-tutor: backlog
+  1-2-accounting-subject-spoke-accounting-tutor: review
   1-3-financial-management-maf-subject-spoke-financial-management-tutor: backlog
   1-4-tax-subject-spoke-tax-tutor: backlog
   1-5-auditing-subject-spoke-auditing-tutor: backlog

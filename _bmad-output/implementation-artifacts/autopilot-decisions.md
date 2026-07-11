@@ -89,3 +89,37 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All 7 ACs independently verified: shell exact (AC1), metadata shape (AC2), ~800 words across 6 H2 sections with em-dash-free body confirmed by grep (AC3), Course+FAQPage JSON-LD sharing one FAQ_ITEMS const with a resolvable Organization @id in layout (AC4), all 5 outbound spoke/pgda links present (AC5), design-token-only + focus-visible ring on Button + aria-hidden icons + one hero CTA per view group (AC6), additive-only with render-smoke extended and 9/9 green (AC7). tsc clean on story files.
 - **Reversibility:** Status set to `done` in story file + sprint-status.yaml. To reopen, flip both back to `review`/`in-progress` and add the deferred sitemap item as a Review Follow-up (already tracked for Story 1.8).
 - **Files touched:** _bmad-output/implementation-artifacts/1-1-cta-qualification-hub-page-cta-tutor-flagship.md, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/deferred-work.md
+
+---
+
+### [2026-07-11T12:21:14Z] 1-2-accounting-subject-spoke-accounting-tutor — CAP-2 meta description contains an em dash: strip it vs use verbatim
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 — reconciling a conflict between two authoritative sources
+- **Decision point:** page-catalog CAP-2 gives the meta description verbatim as `One-on-one & group Accounting tutoring for undergrad, PGDA and CTA. Financial accounting, consolidations and IFRS — pass with ACCE Tutors.` It contains an em dash before "pass". NFR6 / project-context forbid em dashes in ALL metadata. Unlike Story 1.1's `title` (which the epic AC pinned verbatim and I ringfenced as a sanctioned exception), the Story 1.2 epic AC says only "the catalog meta description" and the same AC block also mandates "zero em dashes", and it does NOT reproduce the string verbatim in the AC.
+- **Options considered:** A) Use the catalog meta verbatim (em dash intact) and ringfence as a second sanctioned exception. B) Use the catalog meta but replace the em dash with a colon (`...consolidations and IFRS: pass with ACCE Tutors.`) to satisfy NFR6, preserving wording/length/meaning. C) Rewrite the description freely.
+- **Chosen:** B — instruct the dev to use the CAP-2 meta description with the single em dash replaced by a colon; keep every other word. (`title` for 1.2 — `Accounting Tutor for CA(SA), PGDA & CTA | ACCE Tutors` — has NO em dash, so no exception is needed there, unlike 1.1.)
+- **Rationale:** The 1.2 AC does not pin the meta string verbatim (it references "the catalog meta description"), but it DOES explicitly require zero em dashes. NFR6 is a hard editorial rule and the em-dash-as-AI-tell is a named user preference (memory: "No em dashes in content"). A colon preserves meaning, tone, and length (stays ≤ ~155). This is the minimal, rule-satisfying interpretation; the 1.1 title exception does not generalise because that string was pinned verbatim in its AC and this one is not.
+- **Reversibility:** One-string edit in AC2 of the story file (and later the page's `metadata.description`). If Luke wants the em dash back, revert the single character.
+- **Files touched:** _bmad-output/implementation-artifacts/1-2-accounting-subject-spoke-accounting-tutor.md
+
+### [2026-07-11T12:21:14Z] 1-2-accounting-subject-spoke-accounting-tutor — Story scoping: IFRS-guide outbound links deferred, DO-NOT-TOUCH boundary
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 — interpreting story boundaries against the epic + catalog matrix
+- **Decision point:** CAP-2 "Links out" lists `/cta-tutor`, `/pgda-tutor`, AND "relevant IFRS guides". The epic AC for 1.2 lists outbound links as `/cta-tutor`, `/pgda-tutor`, `/subjects` and states "the IFRS-guide links are wired once Epic 3 releases those pages". The guide pages are gated (`groups`/`ifrs-15`/`ifrs-16` all page-unpublished until Epic 3 Story 3.3). Ambiguity: author the IFRS-guide links now or defer?
+- **Options considered:** A) Author `<Link>`s to `/guides/groups` etc. now (they resolve once Epic 3 flips them live). B) Defer the IFRS-guide edges entirely to Story 2.3 / Epic 3 per the epic AC, and scope 1.2's outbound links to `/cta-tutor`, `/pgda-tutor`, `/subjects` only. C) Author them but comment them out.
+- **Chosen:** B — scope 1.2 outbound links to `/cta-tutor`, `/pgda-tutor`, `/subjects`; explicitly defer the `/accounting-tutor` → IFRS-guides edge to Story 2.3 (wired on Epic 3 guide release). Added an explicit DO-NOT-TOUCH list (sitemap.ts → 1.8, Navbar → 2.1, Services/homepage → 2.2, guides config/middleware → Epic 3) mirroring Story 1.1.
+- **Rationale:** The epic AC for 1.2 is explicit that the IFRS-guide links wait for Epic 3, and epics.md Epic 2/Story 2.3 records that edge as a pending directed coupling. Unlike sibling spoke pages (safe to `<Link>` now because they build in this epic), the guide pages are behind a publish gate and would dead-end at a "Coming Soon" redirect in a public build before Epic 3, so authoring them now risks a live dead-end at release (NFR7). Minimal, no-regression interpretation.
+- **Reversibility:** Story-file-only; re-scope by editing Tasks + DO-NOT-TOUCH list. No code written.
+- **Files touched:** _bmad-output/implementation-artifacts/1-2-accounting-subject-spoke-accounting-tutor.md
+
+---
+
+### [2026-07-11T12:25:12Z] 1-2-accounting-subject-spoke-accounting-tutor — dev-story: implementation approach, content differentiation strategy
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (implement tasks 1-5)
+- **Decision point:** Need to implement a genuinely differentiated accounting page vs /cta-tutor. Biggest risk is NFR1 near-duplicate. Must decide content focus and structure.
+- **Options considered:** A) Rewrite /cta-tutor content with accounting-specific verbiage (near-duplicate risk). B) Write content centered specifically on the Accounting subject: IFRS standards (IFRS 15, IFRS 16, financial instruments), group statements/consolidations as the highest-difficulty area, undergrad→PGDA→CTA progression, South African context (SAICA, UNISA, ITC/APC). FAQ questions specific to accounting subject mechanics, not the qualification pathway.
+- **Chosen:** B — focus on the accounting SUBJECT mechanics: what makes consolidations hard, specific IFRS standards a CA(SA) student encounters, financial accounting fundamentals at each level, and progression from undergrad to CTA.
+- **Rationale:** AC3 and the Differentiation Guard dev note are explicit: must be about "Accounting as a subject" not a reworded CTA hub. Content must have real syllabus detail (IFRS 15, 16, group statements, financial instruments), progression from undergrad to CTA, and SA context.
+- **Reversibility:** Content-only; can be edited freely at any time.
+- **Files touched:** acce-nextjs/src/app/accounting-tutor/page.tsx (new file)
