@@ -3,6 +3,7 @@ import Script from "next/script";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SubjectGuides from "@/components/SubjectGuides";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
 
@@ -286,6 +287,11 @@ export default function FinancialManagementTutorPage() {
                                 </a>
                             </Button>
                         </div>
+                    </div>
+
+                    {/* Study guides for this subject */}
+                    <div className="mb-16">
+                        <SubjectGuides subject="maf" subjectLabel="Management Accounting & Finance" />
                     </div>
 
                     {/* Section 6: FAQ */}

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { GraduationCap, Heart, Target, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { GraduationCap, Heart, Target, TrendingUp, ArrowRight } from "lucide-react";
 
 const milestones = [
     {
@@ -24,7 +25,55 @@ const milestones = [
     },
 ];
 
-const About = () => {
+// Compact homepage teaser: image + intro + link to the full /about page.
+const AboutTeaser = () => (
+    <section id="about" className="py-24">
+        <div className="container mx-auto px-6">
+            <div className="grid lg:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+                <div className="relative">
+                    <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border-2 border-border">
+                        <Image
+                            src="/images/priyanka.png"
+                            alt="Priyanka Govender"
+                            width={800}
+                            height={1000}
+                            className="object-cover w-full h-full"
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                        />
+                    </div>
+                    <div className="stat-badge absolute -bottom-6 -right-6 rounded-2xl p-6">
+                        <p className="stat-badge-title font-display text-3xl font-bold">PGDA</p>
+                        <p className="text-sm">Graduate</p>
+                        <p className="text-xs mt-1">Milpark Education</p>
+                    </div>
+                </div>
+                <div>
+                    <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
+                        About Priyanka
+                    </span>
+                    <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+                        My CTA Journey
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed mb-6">
+                        I failed Financial Accounting with 38%, went back to basics, and turned it into a 25% improvement and four passes.
+                        I now use that journey to mentor students through the same challenging path toward CA(SA).
+                    </p>
+                    <Link
+                        href="/about"
+                        className="inline-flex items-center gap-1 font-medium text-accent hover:underline"
+                    >
+                        Read Priyanka&apos;s full story
+                        <ArrowRight className="w-4 h-4" />
+                    </Link>
+                </div>
+            </div>
+        </div>
+    </section>
+);
+
+const About = ({ teaser = false }: { teaser?: boolean }) => {
+    if (teaser) return <AboutTeaser />;
+
     return (
         <section id="about" className="py-24">
             <div className="container mx-auto px-6">
@@ -32,9 +81,9 @@ const About = () => {
                     <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         About Priyanka
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         My CTA Journey
-                    </h2>
+                    </h1>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         A story of resistance and struggle, but triumph in the end through persistence and resilience.
                     </p>

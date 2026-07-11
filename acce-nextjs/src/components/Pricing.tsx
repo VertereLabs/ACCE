@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Check, MessageCircle } from "lucide-react";
+import Link from "next/link";
+import { Check, MessageCircle, ArrowRight } from "lucide-react";
 
 const plans = [
     {
@@ -46,7 +47,46 @@ const plans = [
     },
 ];
 
-const Pricing = () => {
+// Compact homepage teaser: pitch + package names + link to the full pricing page.
+const PricingTeaser = () => (
+    <section id="pricing" className="py-24">
+        <div className="container mx-auto px-6">
+            <div className="text-center max-w-3xl mx-auto">
+                <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
+                    Pricing
+                </span>
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Invest in Your Success
+                </h2>
+                <p className="text-muted-foreground text-lg mb-6">
+                    Flexible options to suit your needs: single sessions, monthly packages, and full-semester support.
+                    Rates vary by subject and level; reach out for a personalized quote.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+                    {plans.map((plan) => (
+                        <span
+                            key={plan.name}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-muted-foreground text-sm font-medium"
+                        >
+                            <Check className="w-4 h-4 text-accent" />
+                            {plan.name}
+                        </span>
+                    ))}
+                </div>
+                <Button variant="hero" size="lg" asChild>
+                    <Link href="/pricing">
+                        View pricing &amp; packages
+                        <ArrowRight className="w-4 h-4" />
+                    </Link>
+                </Button>
+            </div>
+        </div>
+    </section>
+);
+
+const Pricing = ({ teaser = false }: { teaser?: boolean }) => {
+    if (teaser) return <PricingTeaser />;
+
     return (
         <section id="pricing" className="py-24">
             <div className="container mx-auto px-6">
@@ -54,9 +94,9 @@ const Pricing = () => {
                     <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         Pricing
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         Invest in Your Success
-                    </h2>
+                    </h1>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         Flexible pricing options to suit your needs. Contact me for current rates and package details.
                     </p>

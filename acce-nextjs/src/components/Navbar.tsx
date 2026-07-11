@@ -17,12 +17,12 @@ const Navbar = () => {
 
     const navLinks = [
         { name: "Subjects", href: "/subjects" },
-        { name: "Group Classes", href: "/#group-classes" },
-        { name: "About", href: "/#about" },
-        { name: "How It Works", href: "/#how-it-works" },
-        { name: "Pricing", href: "/#pricing" },
         { name: "Guides", href: "/guides" },
-        { name: "Contact", href: "/#contact" },
+        { name: "About", href: "/about" },
+        { name: "Group Classes", href: "/group-classes" },
+        { name: "Pricing", href: "/pricing" },
+        { name: "How It Works", href: "/how-it-works" },
+        { name: "Contact", href: "/contact" },
     ];
 
     return (

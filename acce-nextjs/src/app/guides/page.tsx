@@ -3,8 +3,9 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { FileText, Building2, Receipt, ArrowRight, BookOpen, Clock, Users } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { isGuidePublished } from "@/config/guides";
+import { GUIDES, isGuidePublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "CA(SA) Study Guides | ACCE Tutors",
@@ -15,42 +16,17 @@ export const metadata: Metadata = {
     },
 };
 
-const guidesData = [
-    {
-        id: "groups",
-        title: "Groups & Business Combinations",
-        description: "Master consolidated financial statements with our comprehensive guide covering IFRS 3, IFRS 10, IAS 28, and more.",
-        icon: Building2,
-        topics: ["Analysis of Equity", "Goodwill & NCI", "Consolidation Mechanics", "Fair Value Adjustments"],
-        parts: 7,
-        difficulty: "Advanced",
-        href: "/guides/groups",
-    },
-    {
-        id: "ifrs-15",
-        title: "IFRS 15: Revenue",
-        description: "Understand revenue recognition through the five-step model. From contract identification to complex scenarios.",
-        icon: Receipt,
-        topics: ["Five-Step Model", "Variable Consideration", "Principal vs Agent", "Performance Obligations"],
-        parts: 5,
-        difficulty: "Intermediate",
-        href: "/guides/ifrs-15",
-    },
-    {
-        id: "ifrs-16",
-        title: "IFRS 16: Leases",
-        description: "Navigate lessee and lessor accounting under IFRS 16. ROU assets, lease liabilities, and exemptions explained.",
-        icon: FileText,
-        topics: ["Lessee Accounting", "Lessor Classification", "Sale and Leaseback", "Practical Expedients"],
-        parts: 5,
-        difficulty: "Intermediate",
-        href: "/guides/ifrs-16",
-    },
-];
+// Icon per guide id lives here (React-land), keeping the shared catalog icon-free.
+const GUIDE_ICONS: Record<string, LucideIcon> = {
+    groups: Building2,
+    "ifrs-15": Receipt,
+    "ifrs-16": FileText,
+};
 
-// Derive status from the config — dev mode sees everything as available
-const guides = guidesData.map((g) => ({
+// Derive status + icon from the shared catalog — dev mode sees everything as available
+const guides = GUIDES.map((g) => ({
     ...g,
+    icon: GUIDE_ICONS[g.id] ?? FileText,
     status: isGuidePublished(g.id) ? "available" : "coming-soon",
 }));
 

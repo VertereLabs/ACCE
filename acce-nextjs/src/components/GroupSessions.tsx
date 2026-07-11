@@ -1,11 +1,58 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Users, MessageCircle, Sparkles, Check } from "lucide-react";
+import Link from "next/link";
+import { Calendar, Clock, Users, MessageCircle, Sparkles, Check, ArrowRight } from "lucide-react";
 import { groupSessions, subjectIcons } from "@/config/groupSessions";
 
-const GroupSessions = () => {
+// Compact homepage teaser: pitch + promise chips + link to the full schedule.
+const GroupSessionsTeaser = () => {
+    const campaign = groupSessions;
+    if (!campaign.active) return null;
+
+    return (
+        <section id="group-classes" className="py-24">
+            <div className="container mx-auto px-6">
+                <div className="text-center max-w-3xl mx-auto">
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
+                        <Sparkles className="w-4 h-4" />
+                        {campaign.eyebrow}
+                    </span>
+                    <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+                        {campaign.heading}
+                    </h2>
+                    <p className="text-muted-foreground text-lg mb-6">
+                        {campaign.subheading}
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+                        {campaign.promises.map((promise) => (
+                            <span
+                                key={promise}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-accent-ink text-sm font-medium"
+                            >
+                                <Check className="w-4 h-4" />
+                                {promise}
+                            </span>
+                        ))}
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full gradient-accent text-accent-foreground text-sm font-bold shadow-glow">
+                            {campaign.urgencyLabel}
+                        </span>
+                    </div>
+                    <Button variant="hero" size="lg" asChild>
+                        <Link href="/group-classes">
+                            See the full group class schedule
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    </Button>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const GroupSessions = ({ teaser = false }: { teaser?: boolean }) => {
     const campaign = groupSessions;
 
     if (!campaign.active) return null;
+    if (teaser) return <GroupSessionsTeaser />;
 
     return (
         <section id="group-classes" className="py-24">
@@ -16,9 +63,9 @@ const GroupSessions = () => {
                         <Sparkles className="w-4 h-4" />
                         {campaign.eyebrow}
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         {campaign.heading}
-                    </h2>
+                    </h1>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         {campaign.subheading}
                     </p>

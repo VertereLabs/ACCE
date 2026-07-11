@@ -1,4 +1,5 @@
-import { MessageCircle, Users, FileText, Trophy } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, Users, FileText, Trophy, ArrowRight } from "lucide-react";
 
 const steps = [
     {
@@ -27,7 +28,52 @@ const steps = [
     },
 ];
 
-const HowItWorks = () => {
+// Compact homepage teaser: intro + numbered step titles + link to the full page.
+const HowItWorksTeaser = () => (
+    <section id="how-it-works" className="py-24">
+        <div className="container mx-auto px-6">
+            <div className="text-center max-w-3xl mx-auto mb-10">
+                <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
+                    How It Works
+                </span>
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Your Journey to Success
+                </h2>
+                <p className="text-muted-foreground text-lg">
+                    Getting started is simple. Four steps to personalized, intentional support for your accounting journey.
+                </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-10">
+                {steps.map((step) => (
+                    <div
+                        key={step.title}
+                        className="surface-card rounded-2xl p-6 border border-border text-center"
+                    >
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full gradient-accent text-accent-foreground text-sm font-bold mb-3">
+                            {step.number}
+                        </div>
+                        <h3 className="font-display text-base font-semibold text-foreground">
+                            {step.title}
+                        </h3>
+                    </div>
+                ))}
+            </div>
+            <div className="text-center">
+                <Link
+                    href="/how-it-works"
+                    className="inline-flex items-center gap-1 font-medium text-accent hover:underline"
+                >
+                    See how it works, step by step
+                    <ArrowRight className="w-4 h-4" />
+                </Link>
+            </div>
+        </div>
+    </section>
+);
+
+const HowItWorks = ({ teaser = false }: { teaser?: boolean }) => {
+    if (teaser) return <HowItWorksTeaser />;
+
     return (
         <section id="how-it-works" className="py-24">
             <div className="container mx-auto px-6">
@@ -35,9 +81,9 @@ const HowItWorks = () => {
                     <span className="inline-block px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                         How It Works
                     </span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
                         Your Journey to Success
-                    </h2>
+                    </h1>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         Getting started is simple. Four steps to personalized, intentional support for your accounting journey.
                     </p>

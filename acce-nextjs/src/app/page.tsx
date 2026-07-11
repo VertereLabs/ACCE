@@ -34,12 +34,12 @@ export default function HomePage() {
       <Navbar />
       <main>
         <Hero />
-        <GroupSessions />
+        <GroupSessions teaser />
         <Services />
-        <About />
-        <HowItWorks />
+        <About teaser />
+        <HowItWorks teaser />
         <WhyChoose />
-        <Pricing />
+        <Pricing teaser />
         <Resources />
         <Blog />
         <CTA />

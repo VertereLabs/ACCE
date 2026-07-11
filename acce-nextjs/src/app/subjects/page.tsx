@@ -155,6 +155,29 @@ export default function SubjectsPage() {
                         </div>
                     </div>
 
+                    {/* Study guides pointer */}
+                    <div className="max-w-4xl mb-16">
+                        <div className="bg-card rounded-xl border border-border p-6">
+                            <div className="flex items-center gap-3 mb-3">
+                                <BookOpen className="w-6 h-6 text-accent" aria-hidden="true" />
+                                <h2 className="font-display text-2xl font-semibold text-foreground">
+                                    Free study guides
+                                </h2>
+                            </div>
+                            <p className="text-muted-foreground leading-relaxed mb-4">
+                                Alongside tutoring, I publish exam-focused notes on the standards students find hardest,
+                                starting with Financial Accounting (IFRS 15, IFRS 16, and Group statements) and expanding into
+                                the other subjects over time. Each subject page links to its own guides as they go live.
+                            </p>
+                            <Link
+                                href="/guides"
+                                className="inline-flex items-center gap-1 font-medium text-accent hover:underline"
+                            >
+                                Browse all study guides &rarr;
+                            </Link>
+                        </div>
+                    </div>
+
                     {/* The qualifications */}
                     <div className="max-w-4xl mb-16">
                         <div className="flex items-center gap-3 mb-4">

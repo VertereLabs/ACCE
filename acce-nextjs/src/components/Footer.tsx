@@ -3,19 +3,21 @@ import Logo from "@/components/Logo";
 
 const footerLinks = {
     subjects: [
-        { name: "Financial Accounting", href: "#services" },
-        { name: "Taxation", href: "#services" },
-        { name: "Management Accounting", href: "#services" },
-        { name: "Auditing", href: "#services" },
+        { name: "Financial Accounting", href: "/accounting-tutor" },
+        { name: "Taxation", href: "/tax-tutor" },
+        { name: "Management Accounting & Finance", href: "/financial-management-tutor" },
+        { name: "Auditing", href: "/auditing-tutor" },
+        { name: "All Subjects", href: "/subjects" },
     ],
     resources: [
-        { name: "About Priyanka", href: "#about" },
-        { name: "How It Works", href: "#how-it-works" },
-        { name: "Resources", href: "#resources" },
-        { name: "Blog", href: "#blog" },
+        { name: "About Priyanka", href: "/about" },
+        { name: "Group Classes", href: "/group-classes" },
+        { name: "How It Works", href: "/how-it-works" },
+        { name: "Pricing", href: "/pricing" },
+        { name: "Guides", href: "/guides" },
     ],
     support: [
-        { name: "Contact", href: "#contact" },
+        { name: "Contact", href: "/contact" },
         { name: "WhatsApp", href: "https://wa.me/27713255295" },
         { name: "Privacy Policy", href: "#" },
     ],

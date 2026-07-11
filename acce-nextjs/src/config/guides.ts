@@ -48,3 +48,71 @@ export function isGuidePdfPublished(guideId: string): boolean {
 export function anyGuidePublished(): boolean {
     return Object.keys(GUIDE_PUBLISH_STATUS).some(isGuidePublished);
 }
+
+/**
+ * Guide catalog — single source of truth for guide metadata and the
+ * guide↔subject taxonomy. Kept free of React/icon imports so the Edge
+ * middleware and sitemap can consume it safely; the guides page maps each
+ * `id` to its lucide icon locally.
+ *
+ * `subject` ties a guide to a subject spoke page. As new guides land (Tax,
+ * MAF, Auditing), add them here with the right subject and they light up
+ * automatically on the matching subject page and the guides index.
+ */
+export type GuideSubject = "accounting" | "tax" | "maf" | "auditing";
+
+export interface GuideMeta {
+    id: string;
+    title: string;
+    description: string;
+    subject: GuideSubject;
+    topics: string[];
+    parts: number;
+    difficulty: "Intermediate" | "Advanced";
+    href: string;
+}
+
+export const GUIDES: GuideMeta[] = [
+    {
+        id: "groups",
+        title: "Groups & Business Combinations",
+        description:
+            "Master consolidated financial statements with our comprehensive guide covering IFRS 3, IFRS 10, IAS 28, and more.",
+        subject: "accounting",
+        topics: ["Analysis of Equity", "Goodwill & NCI", "Consolidation Mechanics", "Fair Value Adjustments"],
+        parts: 7,
+        difficulty: "Advanced",
+        href: "/guides/groups",
+    },
+    {
+        id: "ifrs-15",
+        title: "IFRS 15: Revenue",
+        description:
+            "Understand revenue recognition through the five-step model. From contract identification to complex scenarios.",
+        subject: "accounting",
+        topics: ["Five-Step Model", "Variable Consideration", "Principal vs Agent", "Performance Obligations"],
+        parts: 5,
+        difficulty: "Intermediate",
+        href: "/guides/ifrs-15",
+    },
+    {
+        id: "ifrs-16",
+        title: "IFRS 16: Leases",
+        description:
+            "Navigate lessee and lessor accounting under IFRS 16. ROU assets, lease liabilities, and exemptions explained.",
+        subject: "accounting",
+        topics: ["Lessee Accounting", "Lessor Classification", "Sale and Leaseback", "Practical Expedients"],
+        parts: 5,
+        difficulty: "Intermediate",
+        href: "/guides/ifrs-16",
+    },
+];
+
+/**
+ * Published guides for a subject, in catalog order. Empty when a subject has
+ * no live guides yet (Tax, MAF, Auditing today) — callers show a pointer to
+ * the main guides index in that case.
+ */
+export function getGuidesForSubject(subject: GuideSubject): GuideMeta[] {
+    return GUIDES.filter((g) => g.subject === subject && isGuidePublished(g.id));
+}
