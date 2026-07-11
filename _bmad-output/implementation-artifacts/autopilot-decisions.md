@@ -987,3 +987,23 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Accurate representation of the live codebase. Guide pages are informational content pages, not service/course/FAQ pages, so lack of JSON-LD is correct.
 - **Reversibility:** Edit the table in the runbook if structured data is later added to guide pages.
 - **Files touched:** acce-nextjs/docs/seo-measurement-runbook.md
+
+### [2026-07-11T16:45:14Z] 4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement — code-review: CLEAN, resolve to done
+- **Risk:** low
+- **Workflow / step:** code-review step-04 (clean-review shortcut) + status sync
+- **Decision point:** Adversarial fresh-reasoning review of the review-status ops/docs story (one new runbook markdown). At the fix-vs-action-items ask, the autopilot goal defaults to FIX all HIGH/MEDIUM findings; determine whether any survive fresh verification, then set final status.
+- **Options considered:** A) Confirm clean -> done. B) Find fixable HIGH/MEDIUM -> patch + keep in-progress with follow-ups. C) BLOCKED.
+- **Chosen:** A -- CLEAN, resolve to done. Zero HIGH/MEDIUM findings survived. Every AC re-verified against the actual source (did NOT trust the dev step): (AC2) all 10 canonical URLs present, exactly the 7 marketing pages + 3 released guide index pages, no /pdfs/*.pdf, no guide part pages; GUIDE_PUBLISH_STATUS groups/ifrs-15/ifrs-16 = true and GUIDE_PDF_PUBLISH_STATUS all false confirmed in src/config/guides.ts. (AC3) per-page title/H1/schema table checked cell-by-cell against live page.tsx files: all 7 tutor titles + H1s match byte-for-byte (post-4.1 colon form), 3 guide titles + H1s match, /subjects title correctly used the LIVE colon form ("Subjects We Tutor: ...") NOT the page-catalog em-dash trap; schema types verified by grep (accounting-tutor Service+FAQPage, cta/pgda Course+FAQPage, subjects BreadcrumbList, guides 0 JSON-LD = "none" correct). Canonical trailing-slash note accurate (page metadata canonical:"/cta-tutor/" vs sitemap no-slash, both resolve). (AC4/5) 3 baselines verbatim (34/27/3), ClaudeSEO GSC snapshot named as source, Top-Pages-grows-from-2-URLs documented, flagship "cta tutors" hold-at-3-or-better/never-regress stated; primary queries match page-catalog.md exactly. (AC6) snapshot log first row = 2026-07-11 baseline (3/34/27, Top Pages=2) + clearly-marked OWNER placeholder row + copy-the-row instructions. (AC7) em-dash grep = 0, en-dash grep = 0; git diff touches ONLY the runbook + planning artifacts, zero src/tests/config/package.json; vitest 77 pass / 0 fail unchanged.
+- **Rationale:** The deliverable is a self-contained, factually-accurate runbook whose every load-bearing claim was independently confirmed against the codebase and specs. No defect affects its actionability.
+- **Reversibility:** Status is a sprint-status.yaml scalar + story Status line; revert to review and re-open if a later reader finds a content gap.
+- **Files touched:** _bmad-output/implementation-artifacts/4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement.md (Status + Review Findings), _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-11T16:45:14Z] 4-2 — LOW observation dismissed: "302" vs 307 in NOT-submitted note
+- **Risk:** low
+- **Workflow / step:** code-review step-03 triage (dismissed as noise)
+- **Decision point:** Runbook line 35 says middleware "returns 302 for all /pdfs/* paths"; src/middleware.ts uses NextResponse.redirect (Next default 307), not 302.
+- **Options considered:** A) Patch "302" -> "redirect (307)". B) Dismiss as noise.
+- **Chosen:** B -- dismiss. The statement sits in an explanatory rationale for excluding PDFs from the submit list; the operational instruction ("do not submit /pdfs/*.pdf") is correct regardless of the exact 3xx code. No owner action changes, no AC references a status code. Not HIGH/MEDIUM.
+- **Rationale:** Cosmetic inaccuracy in a parenthetical; the runbook's actionability is unaffected. Fixing it is optional polish, out of the FIX-HIGH/MEDIUM mandate.
+- **Reversibility:** Trivial one-word edit to the runbook if desired later.
+- **Files touched:** none

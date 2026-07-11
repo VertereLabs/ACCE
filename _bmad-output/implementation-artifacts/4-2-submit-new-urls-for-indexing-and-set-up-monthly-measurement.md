@@ -4,7 +4,7 @@ baseline_commit: 20fc7f7ab39238e3565ddbde4eebdb6fcc049be2
 
 # Story 4.2: Submit new URLs for indexing and set up monthly measurement
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -180,3 +180,15 @@ claude-sonnet-4-6 (Sonnet 4.6)
 ### File List
 
 - acce-nextjs/docs/seo-measurement-runbook.md (new)
+
+## Review Findings
+
+Code review (2026-07-11, autopilot, FRESH adversarial reasoning; did not trust the dev step): **CLEAN, resolved to `done`.** Zero HIGH/MEDIUM findings. Every AC re-verified against the actual source files, not the dev's word:
+
+- **AC2:** All 10 canonical URLs present (7 marketing + 3 released guide index pages), no `/pdfs/*.pdf`, no guide part pages. Confirmed `GUIDE_PUBLISH_STATUS` groups/ifrs-15/ifrs-16 = `true` and `GUIDE_PDF_PUBLISH_STATUS` all `false` in `src/config/guides.ts`.
+- **AC3:** Per-page title/H1/schema table checked cell-by-cell against live `page.tsx` files. All 7 tutor titles + H1s match byte-for-byte (post-4.1 colon form); 3 guide titles + H1s match; `/subjects` correctly uses the LIVE colon title (`Subjects We Tutor: ...`), NOT the page-catalog em-dash trap. Schema types grep-verified (Service+FAQPage / Course+FAQPage / BreadcrumbList / guides 0 JSON-LD = "none"). Canonical trailing-slash note accurate (`canonical: "/cta-tutor/"` vs sitemap no-slash).
+- **AC4/AC5:** Three baselines verbatim (34 / 27 / 3); ClaudeSEO GSC snapshot named as source; Top-Pages-grows-from-2-URLs documented; flagship "cta tutors" hold-at-3-or-better / never-regress stated. Primary queries match `page-catalog.md` exactly.
+- **AC6:** Snapshot log first row = 2026-07-11 baseline (3 / 34 / 27, Top Pages = 2) + clearly-marked OWNER placeholder row + copy-the-row instructions.
+- **AC7:** Em-dash grep = 0, en-dash grep = 0. `git diff` touches only the runbook + planning artifacts, zero `src/`/`tests/`/config/`package.json`. Vitest 77 pass / 0 fail unchanged.
+
+1 LOW observation dismissed as noise: runbook says middleware "returns 302" for `/pdfs/*` (actual `NextResponse.redirect` default is 307); it is a parenthetical rationale, the exclusion instruction is correct regardless, no owner action changes. No patches applied.
