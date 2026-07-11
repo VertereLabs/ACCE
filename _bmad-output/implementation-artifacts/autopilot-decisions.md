@@ -431,3 +431,13 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Clean pass on all acceptance criteria. The sitemap.test.ts failure for /subjects (by-design, deferred to Story 1.8) is a pre-existing pattern identical to all six DONE siblings.
 - **Reversibility:** git revert the commit or delete acce-nextjs/src/app/subjects/page.tsx and revert render-smoke.test.tsx.
 - **Files touched:** acce-nextjs/src/app/subjects/page.tsx, acce-nextjs/tests/unit/render-smoke.test.tsx, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/1-7-subjects-hub-subjects.md, _bmad-output/implementation-artifacts/autopilot-decisions.md
+
+### [2026-07-11T14:11:24Z] 1-7-subjects-hub-subjects — Code-review: clean, resolve to done
+- **Risk:** low
+- **Workflow / step:** code-review step 3 (triage) + step 4 (present/act)
+- **Decision point:** Adversarial review (Blind Hunter, Edge Case Hunter, Acceptance Auditor) of `/subjects` hub. Determine final status at the fix-vs-action-items ask.
+- **Options considered:** A) resolve to `done` (clean) / B) fix HIGH/MEDIUM findings then re-review / C) leave findings as action items → `in-progress`
+- **Chosen:** A — resolve to `done`. Zero findings survived triage across all three layers.
+- **Rationale:** Fresh review (did not assume dev step correct) confirmed all 7 ACs: shell mirrors sibling exactly with single H1 "Subjects We Tutor"; metadata colon-variant title (53 chars) + desc (142 chars), canonical `/subjects/` relative, OG/Twitter mirror; ~495 words substantive hub prose with SA E-E-A-T context, ZERO em dashes; BreadcrumbList-only JSON-LD valid with absolute item URLs at correct origin; all 4 spokes + 2 hubs linked, no self-link; tokens/a11y/additive-only respected; render-smoke extended, 27/27 green, tsc clean on new files, sitemap/middleware/next.config untouched. The 3 `variant="hero"` CTAs sit in 3 separate view groups (matches the 3-4-per-page pattern of every DONE sibling that passed review) — "one per view group" not "per page"; dismissed as noise, not a finding.
+- **Reversibility:** Fully reversible. To reopen: set `development_status[1-7-subjects-hub-subjects]` back to `review` in sprint-status.yaml and revert the story-file Status line + Review Findings section; no code was modified by this review.
+- **Files touched:** _bmad-output/implementation-artifacts/1-7-subjects-hub-subjects.md, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/autopilot-decisions.md

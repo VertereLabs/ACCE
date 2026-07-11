@@ -1,5 +1,5 @@
 # generated: 2026-07-11
-# last_updated: 2026-07-11
+# last_updated: 2026-07-11 (1-7 code-review: review -> done)
 # project: ACCE
 # project_key: SEO
 # tracking_system: file-system
@@ -69,7 +69,7 @@ development_status:
   1-4-tax-subject-spoke-tax-tutor: done
   1-5-auditing-subject-spoke-auditing-tutor: done
   1-6-pgda-qualification-hub-pgda-tutor: done
-  1-7-subjects-hub-subjects: review
+  1-7-subjects-hub-subjects: done
   1-8-register-new-routes-in-sitemap: backlog
   epic-1-retrospective: optional
 

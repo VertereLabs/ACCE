@@ -4,7 +4,7 @@ baseline_commit: ea951b998464b36a3a201a3a32b0198297eedb90
 
 # Story 1.7: Subjects hub (`/subjects`)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -172,6 +172,24 @@ claude-sonnet-4-6
 - _bmad-output/implementation-artifacts/sprint-status.yaml (UPDATED: 1-7 status → review)
 - _bmad-output/implementation-artifacts/autopilot-decisions.md (UPDATED: dev-story decisions appended)
 
+## Review Findings
+
+Adversarial code review (2026-07-11) — Blind Hunter, Edge Case Hunter, Acceptance Auditor. Fresh reasoning; the dev step was not assumed correct.
+
+**Result: Clean review — all layers passed. Zero findings after triage. Status resolved to `done`.**
+
+Verified:
+- AC1 — shell mirrors the DONE sibling exactly (`min-h-screen bg-background` → Navbar → `main pt-32 pb-24` → `container mx-auto px-6` → Footer); exactly one `<h1>` "Subjects We Tutor"; H2/H3 with no level skips.
+- AC2 — metadata is the colon-variant title (`Subjects We Tutor: Accounting, Tax, Audit & FM | ACCE`, 53 chars ≤60) and colon-variant description (142 chars ≤155); `alternates.canonical` = `/subjects/` (relative); OG/Twitter mirror the colon variant.
+- AC3 — ~495 words of substantive hub-level prose (intro, four one-line subject cards, qualifications routing, group-vs-1:1, final CTA); SA E-E-A-T context (CA(SA), SAICA, PGDA, CTA, ITC, UNISA/UCT/Wits/UJ/UP/Stellenbosch); ZERO em dashes (grep 0); no doorway/spoke-duplication.
+- AC4 — BreadcrumbList JSON-LD ONLY, single `<Script id="subjects-jsonld-breadcrumb">` block, exact two-item trail (Home → Subjects) with absolute `item` URLs at `https://accetutors.co.za`; JSON validated.
+- AC5 — links out to all four spokes (`/accounting-tutor`, `/tax-tutor`, `/financial-management-tutor`, `/auditing-tutor`) and both hubs (`/cta-tutor`, `/pgda-tutor`); no self-link to `/subjects`.
+- AC6 — navy+gold tokens only, no new palette/components; decorative icons `aria-hidden`; the three `variant="hero"` CTAs sit in three distinct view groups (matches the 3–4-per-page convention of every DONE sibling — "one per view group", not per page; dismissed as noise).
+- AC7 — render-smoke extended with a `SubjectsPage` describe (H1 `level:1` anchored regex, `/accounting-tutor` link, WhatsApp count); full unit suite 27/27 green; `tsc --noEmit` clean on the new page and test; `sitemap.ts` / `middleware.ts` / `next.config.ts` untouched (additive-only, sitemap deferred to Story 1.8).
+
+- [x] [Review][Clean] No decision-needed, patch, or defer findings raised.
+
 ## Change Log
 
+- 2026-07-11: Code review passed clean (zero findings); status review → done.
 - 2026-07-11: Implemented `/subjects` hub page. Created `acce-nextjs/src/app/subjects/page.tsx` (server component, BreadcrumbList JSON-LD, 4-subject + 2-qualification card grids, group-vs-1:1 section, WhatsApp CTAs). Extended render-smoke suite with 3 SubjectsPage assertions. All 27 render-smoke tests green; 0 em dashes; zero sitemap.ts changes (deferred to Story 1.8).
