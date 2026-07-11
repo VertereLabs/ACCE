@@ -923,3 +923,13 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Makes the AC a durable contract instead of a one-time scrub; consistent with lessons-learned "cheap safety net" pattern already used on this project.
 - **Reversibility:** Delete the test file; purely additive.
 - **Files touched:** _bmad-output/implementation-artifacts/4-1-site-wide-em-dash-cleanup.md
+
+### [2026-07-11T16:30:15Z] 4-1-site-wide-em-dash-cleanup — code-review verdict: CLEAN -> done
+- **Risk:** low
+- **Workflow / step:** code-review (fix-vs-action-items <ask>), FRESH adversarial reasoning, did not trust the dev step
+- **Decision point:** After adversarially re-verifying all 5 ACs on the dev-story diff (98d59f9..92849e6), decide the fix-vs-action-items <ask> and the final story status.
+- **Options considered:** A) FIX findings + set in-progress with Review Follow-ups. B) No findings survived verification -> mark done. C) Reject / send back.
+- **Chosen:** B. Zero HIGH/MEDIUM findings survived fresh verification; nothing to fix; set status `done`.
+- **Rationale:** AC1 39 rendered/metadata em dashes removed + 0 re-added (git diff: 39 `-` lines with U+2014, 0 `+` lines); the only 4 U+2014 remaining site-wide are non-rendered code comments (guides/page L51, Logo L13, groupSessions L8/L23) exactly as scoped; investigated globals.css em dashes NOT in the story inventory -> all inside CSS `/* */` comments, none rendered, no leak. AC2 en dashes intact (15 in groupSessions numeric ranges) + ellipsis untouched. AC3 copy-only: structural grep shows only string-content edits inside existing literals (className/import/prop values byte-identical), no JSX/logic change, +1 new test file only. AC4 three tutor titles -> colon, title/og/twitter mirrored, 53/48/53 chars (<=60, NFR2), no test encoded old titles. AC5 no-em-dash.test.ts guard MUTATION-TESTED (injected an em dash into rendered mixSummary -> test failed; restored working tree clean) so it genuinely catches re-entry; full vitest 77 pass / 0 fail; tsc no new errors (only pre-existing stale .next/types validator errors, documented Epic 1-3). Meaning/tone preserved across all 25 edit sites (sensible colon/comma/semicolon/paren/two-sentence choices; grammar fix at part-2 L245). 1 stderr probe DISMISSED as noise: `priority` non-boolean-attribute warning = pre-existing Navbar/Hero warning outside this diff (adjudicated in 3-3 review).
+- **Reversibility:** Status-only decision; to reverse, set 4-1 back to `review`/`in-progress` in sprint-status.yaml. No code patched during review.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml (status flip only)
