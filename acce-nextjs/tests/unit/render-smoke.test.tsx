@@ -8,6 +8,7 @@ import AccountingTutorPage from "@/app/accounting-tutor/page";
 import FinancialManagementTutorPage from "@/app/financial-management-tutor/page";
 import TaxTutorPage from "@/app/tax-tutor/page";
 import AuditingTutorPage from "@/app/auditing-tutor/page";
+import PgdaTutorPage from "@/app/pgda-tutor/page";
 
 /**
  * Render smoke tests. A component that throws at render is invisible to `tsc` and unit
@@ -145,6 +146,26 @@ describe("AuditingTutorPage renders", () => {
 
   it("routes the primary CTA to the WhatsApp number", () => {
     const { container } = render(<AuditingTutorPage />);
+    const whatsapp = container.querySelectorAll('a[href="https://wa.me/27713255295"]');
+    expect(whatsapp.length).toBeGreaterThan(0);
+  });
+});
+
+describe("PgdaTutorPage renders", () => {
+  it("mounts without throwing and shows the correct H1", () => {
+    render(<PgdaTutorPage />);
+    expect(
+      screen.getByRole("heading", { name: /PGDA Tutoring/i, level: 1 }),
+    ).toBeInTheDocument();
+  });
+
+  it("contains a link to the cta-tutor qualification hub", () => {
+    const { container } = render(<PgdaTutorPage />);
+    expect(container.querySelector('a[href="/cta-tutor"]')).not.toBeNull();
+  });
+
+  it("routes the primary CTA to the WhatsApp number", () => {
+    const { container } = render(<PgdaTutorPage />);
     const whatsapp = container.querySelectorAll('a[href="https://wa.me/27713255295"]');
     expect(whatsapp.length).toBeGreaterThan(0);
   });

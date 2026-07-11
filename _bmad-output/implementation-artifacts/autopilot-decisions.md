@@ -313,3 +313,57 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All 7 ACs independently re-verified (not trusting the dev step): server component + single h1; metadata shape/title 48ch/meta 146ch colon-variant/canonical trailing-slash matching all siblings; genuinely differentiated auditing syllabus (ISA framework, assertions, audit-risk-model, opinion types, SAICA/IRBA Code, King IV) satisfying NFR1 anti-doorway; zero em dashes grep-confirmed (no sanctioned exception on this page); Service+FAQPage JSON-LD from a single FAQ_ITEMS source with provider @id; the three required outbound links; tokens-only design reuse; additive-only footprint (git diff since c37ec18 = only the new page + a +21-line test block; no sitemap/Services/Navbar/config touched). Verified live: render-smoke 21/21 green (incl. 3 new AuditingTutorPage assertions), `tsc --noEmit` no new errors. The word-count overrun is pre-adjudicated dismissible (Task 5 + 1.2/1.3/1.4 reviews); the extra h2 is the sibling-template final CTA and breaks no heading rule. No HIGH/MEDIUM findings survived triage, so no patches to apply.
 - **Reversibility:** Fully reversible — to reopen, set `1-5-auditing-subject-spoke-auditing-tutor` back to `review`/`in-progress` in sprint-status.yaml and the story Status header, and add Review Follow-up bullets under Review Findings. No code was changed by this review (review-only); the reviewed page + test remain at HEAD.
 - **Files touched:** _bmad-output/implementation-artifacts/1-5-auditing-subject-spoke-auditing-tutor.md (Status -> done, Review Findings appended); _bmad-output/implementation-artifacts/sprint-status.yaml (1-5 -> done, last_updated, review comment); _bmad-output/implementation-artifacts/autopilot-decisions.md (this entry)
+
+---
+
+### [2026-07-11T13:38:41Z] 1-6-pgda-qualification-hub-pgda-tutor — Story scoping: mirror the DONE /cta-tutor flagship qualification-hub template
+- **Risk:** low
+- **Workflow / step:** create-story step 2-5 (scope + template selection)
+- **Decision point:** Story 1.6 is the second qualification hub (`/pgda-tutor`). Which existing page is the correct template, and what is the file footprint?
+- **Options considered:** A) Derive from a subject spoke (1.2-1.5, Service+FAQPage). B) Derive from the DONE flagship qualification hub /cta-tutor (Story 1.1, Course+FAQPage). C) Introduce a shared marketing layout.tsx now.
+- **Chosen:** B — mirror `acce-nextjs/src/app/cta-tutor/page.tsx` (Story 1.1). It is the sibling qualification hub with the identical schema contract (Course + FAQPage, NOT Service), the same 5-outbound-link shape, and the same H2 skeleton family. Footprint is additive-only: NEW `acce-nextjs/src/app/pgda-tutor/page.tsx` + UPDATE `tests/unit/render-smoke.test.tsx`. No sitemap/Navbar/Services/config edits (deferred to 1.8/2.x).
+- **Rationale:** CAP-7 schema is Course+FAQPage (matches 1.1, differs from the spokes' Service+FAQPage). Reusing the proven flagship template minimises risk and keeps house style consistent. Rejected C per Story 1.1 Dev Note (shared layout deferred; keep additive-local).
+- **Reversibility:** Delete the new page.tsx + revert the test hunk. A shared layout can still be introduced later without touching this page.
+- **Files touched:** _bmad-output/implementation-artifacts/1-6-pgda-qualification-hub-pgda-tutor.md (story file only, this stage)
+
+### [2026-07-11T13:38:41Z] 1-6-pgda-qualification-hub-pgda-tutor — Em-dash handling: title verbatim exception, meta em dash -> colon (NFR6)
+- **Risk:** medium
+- **Workflow / step:** create-story step 5 (metadata AC authoring)
+- **Decision point:** CAP-7 pins title `PGDA Tutor — Postgraduate Diploma in Accounting | ACCE` (contains an em dash) and a meta description that also contains an em dash (`...MAF and Auditing — for...`). NFR6 forbids em dashes in rendered copy/metadata. How to reconcile?
+- **Options considered:** A) Strip the em dash from BOTH title and meta. B) Keep title verbatim (single sanctioned exception, as catalog-pinned) and convert the meta em dash to a colon, preserving every other word.
+- **Chosen:** B. Title kept verbatim per CAP-7 = the single sanctioned em-dash exception (established precedent: Stories 1.1 and 1.4 both kept catalog-pinned em-dash titles; OG/Twitter mirror is expected, not a violation). Meta rewritten `PGDA tutoring for the Postgraduate Diploma in Accounting: Accounting, Tax, MAF and Auditing support to help you convert to CTA and CA(SA). ACCE Tutors.` (em dash -> colon; ~150 chars). Body/FAQ/JSON-LD stay 100% em-dash-free.
+- **Rationale:** Direct continuation of the 1.2/1.3/1.4/1.5 house rule (title pinned verbatim where the catalog specifies it; meta and everything else scrubbed). Keeps the page catalog traceable while satisfying NFR6.
+- **Reversibility:** Edit the two strings in the story AC / final page.tsx; trivial.
+- **Files touched:** _bmad-output/implementation-artifacts/1-6-pgda-qualification-hub-pgda-tutor.md
+
+### [2026-07-11T13:38:41Z] 1-6-pgda-qualification-hub-pgda-tutor — NFR1 differentiation: frame PGDA distinctly from the /cta-tutor sibling (TOP RISK)
+- **Risk:** medium
+- **Workflow / step:** create-story step 3-5 (anti-doorway content guardrail)
+- **Decision point:** PGDA and CTA are effectively the SAME qualification (the Certificate in Theory of Accounting IS a Postgraduate Diploma in Accounting; /cta-tutor already exists and is DONE). Two hubs on the same qualification risk near-duplicate content, which trips NFR1 (anti-doorway) and self-cannibalisation.
+- **Options considered:** A) Reuse the /cta-tutor copy with light rewording (fails NFR1 - doorway/duplicate). B) Give /pgda-tutor a genuinely distinct angle: PGDA-as-qualification framing (what the postgraduate diploma is, admission/entry from an accredited degree or bridging, distance/UNISA context per the "unisa pgda tutor" secondary kw), the PGDA -> CTA -> CA(SA) pathway as the spine, and how tutoring supports the diploma year; while /cta-tutor keeps the ITC/APC exam-technique angle.
+- **Chosen:** B. The story mandates PGDA-specific framing and targets the CAP-7 secondaries (postgraduate diploma in accounting tutor, pgda accounting tutor, unisa pgda tutor). Overlap subjects (the 4 spokes) are presented as link-out cards, not re-explained in depth, to avoid duplicating spoke content. The "PGDA -> CTA -> CA(SA) pathway" H2 is the differentiator vs /cta-tutor's "ITC/board-exam prep" H2.
+- **Rationale:** Satisfies NFR1 while both hubs coexist. Flagged as the story's top risk so dev + review both weigh differentiation explicitly (same treatment 1.2-1.5 got for differentiation).
+- **Reversibility:** Content-only; reword the body copy. No structural impact.
+- **Files touched:** _bmad-output/implementation-artifacts/1-6-pgda-qualification-hub-pgda-tutor.md
+
+---
+
+### [2026-07-11T13:42:52Z] 1-6-pgda-qualification-hub-pgda-tutor — dev-story: implementation approach and content strategy
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (implement tasks 1-5)
+- **Decision point:** Two-hub situation (PGDA and CTA are the same qualification). Need to write genuinely distinct content for /pgda-tutor that passes NFR1 and coexists cleanly with the DONE /cta-tutor page. Deciding content strategy for the 6 H2 sections.
+- **Options considered:** A) Mirror /cta-tutor content with light rewording (near-duplicate, fails NFR1). B) Frame /pgda-tutor exclusively as "the qualification" (what the PGDA IS, who qualifies for entry, the UNISA distance-learning angle, how the diploma year is structured) vs /cta-tutor's exam-technique angle; "PGDA -> CTA -> CA(SA) pathway" H2 as a progression narrative; subjects as link-out cards only; distinct FAQ questions about diploma entry, UNISA modules, and recognition vs /cta-tutor's ITC/APC-pass-rate FAQ.
+- **Chosen:** B — PGDA-as-qualification framing throughout. Every H2 takes a distinct angle from its /cta-tutor counterpart: "What PGDA is" (not "What CTA is and why it's hard"), "PGDA -> CTA -> CA(SA) pathway" (not "ITC and board exam prep"), "How it works" (same structure, different PGDA-year-specific detail), "Why ACCE" (same E-E-A-T angle, new phrasing), FAQ (diploma-entry/UNISA/recognition questions, not ITC-pass-rate questions).
+- **Rationale:** AC3 explicitly calls this the TOP RISK. Story Dev Notes provide detailed differentiation guidance. Following it exactly gives the best NFR1 and code-review outcome.
+- **Reversibility:** Content-only JSX; edit freely. Delete acce-nextjs/src/app/pgda-tutor/page.tsx to undo.
+- **Files touched:** acce-nextjs/src/app/pgda-tutor/page.tsx (new file), acce-nextjs/tests/unit/render-smoke.test.tsx (+1 describe block)
+
+### [2026-07-11T13:47:35Z] 1-6-pgda-qualification-hub-pgda-tutor — dev-story complete: all 5 tasks done, status set to review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (completion)
+- **Decision point:** All 5 tasks complete; 36 render-smoke tests green; tsc no new errors; 3 sitemap.test.ts failures are pre-existing by-design (deferred Story 1.8); em-dash grep shows exactly 3 hits (all on the sanctioned title field). Story ready for code review.
+- **Options considered:** A) mark review (all ACs satisfied, all tests pass); B) hold pending additional verification
+- **Chosen:** A — mark review. All 7 ACs verified: AC1 server component shell + single H1 "PGDA Tutoring (Postgraduate Diploma in Accounting)"; AC2 metadata title=54ch with sanctioned em dash + meta description=~150ch colon variant + canonical /pgda-tutor/ + OG+twitter; AC3 genuinely differentiated PGDA-as-qualification content (6 H2 sections: What PGDA is / Subjects we cover / PGDA->CTA->CA(SA) pathway / How it works / Why ACCE / FAQ; UNISA FAC4861/TAX4862/AUE4862/MNG4863; SAICA/ITC/APC/TOPP/TIPP; SA context throughout); AC4 Course+FAQPage JSON-LD via two Script blocks with FAQ_ITEMS single source; AC5 all 4 spokes (/accounting-tutor,/financial-management-tutor,/tax-tutor,/auditing-tutor) + /cta-tutor link; AC6 design tokens only + 3 hero CTAs in 3 distinct view groups; AC7 render-smoke 36/36 green, sitemap.ts untouched.
+- **Rationale:** Clean pass on all acceptance criteria. NFR1 top risk satisfied: /pgda-tutor takes the qualification framing (entry/admission, UNISA distance angle, diploma year structure) while /cta-tutor keeps the ITC/exam-technique framing. No shared paragraphs between the two hubs.
+- **Reversibility:** git revert the commit or delete acce-nextjs/src/app/pgda-tutor/page.tsx.
+- **Files touched:** acce-nextjs/src/app/pgda-tutor/page.tsx, acce-nextjs/tests/unit/render-smoke.test.tsx, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/1-6-pgda-qualification-hub-pgda-tutor.md, _bmad-output/implementation-artifacts/autopilot-decisions.md
