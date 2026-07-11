@@ -67,3 +67,25 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Story 1.1 is additive only. sitemap failures pre-date this story. The 9 render-smoke tests all pass. The 3 sitemap failures are acceptable known issues until Story 1.8.
 - **Reversibility:** Story 1.8 will fix the sitemap.ts and all these tests should turn green.
 - **Files touched:** none (sitemap.ts intentionally not touched)
+
+---
+
+### [2026-07-11T12:17:00Z] 1-1-cta-qualification-hub-page-cta-tutor-flagship — Diff source: review dev-story commit, not stale cross-track baseline_commit
+- **Risk:** medium
+- **Workflow / step:** code-review step 1 (gather context) / step 3 (read code before rating)
+- **Decision point:** The story frontmatter `baseline_commit: 1d96dab` points at a commit on a DIFFERENT track (auth/prisma/portal, story 1-5-deployable-shell). Diffing HEAD vs that baseline shows 7510 deletions (the SEO branch dropped the auth scaffolding) — noise that would swamp the review and misattribute pre-existing changes to this story.
+- **Options considered:** A) Review the raw HEAD-vs-baseline_commit diff as literally specified. B) Review the actual dev-story commit `830ddbc` that introduced this story's change. C) Block on the stale baseline.
+- **Chosen:** B — reviewed commit `830ddbc` (the dev-story commit for this story), which cleanly adds only `acce-nextjs/src/app/cta-tutor/page.tsx` (NEW) + `tests/unit/render-smoke.test.tsx` (+21 lines), matching the story File List exactly.
+- **Rationale:** The baseline_commit is cross-track and stale; the true unit-of-review is what this story's dev step produced. Verified via `git show --stat 830ddbc` that no other code files were touched.
+- **Reversibility:** N/A (read-only analysis choice). To re-review against a different baseline, re-run with a corrected baseline_commit.
+- **Files touched:** none (review analysis only)
+
+### [2026-07-11T12:17:30Z] 1-1-cta-qualification-hub-page-cta-tutor-flagship — Adversarial review outcome + fix-vs-defer disposition
+- **Risk:** medium
+- **Workflow / step:** code-review step 3 (triage) / step 4 (present & act) — the fix-vs-action-items <ask>
+- **Decision point:** Autonomous override of the step-4 HALT: decide disposition of all findings. Applied Blind Hunter, Edge Case Hunter, and Acceptance Auditor lenses with fresh reasoning (did not assume the dev step was correct). Findings: (1) 3 sitemap.test.ts failures in the full suite; (2) OG/Twitter title contains an em dash; (3) meta description is 157 chars vs "≤ ~155".
+- **Options considered:** For (1) patch (register /cta-tutor in sitemap.ts now) vs defer. For (2)/(3) patch vs dismiss.
+- **Chosen:** (1) DEFER — pre-existing on the seo/epic-1 branch (two failures are guide-route-only; the `/cta-tutor` entry is by-design: AC7 + Dev Notes explicitly say do NOT touch sitemap.ts, it lands in Story 1.8). Verified commit 830ddbc did not touch sitemap.ts/sitemap.test.ts. (2) DISMISS — AC2 mandates OG/Twitter mirror the homepage metadata shape, and the sanctioned em-dash `title` string (page-catalog CAP-6) carries into its mirror; the homepage does the identical mirror. (3) DISMISS — the `~155` is a soft bound; 157 chars renders without truncation. No HIGH/MEDIUM findings survived; zero patch, zero decision-needed.
+- **Rationale:** All 7 ACs independently verified: shell exact (AC1), metadata shape (AC2), ~800 words across 6 H2 sections with em-dash-free body confirmed by grep (AC3), Course+FAQPage JSON-LD sharing one FAQ_ITEMS const with a resolvable Organization @id in layout (AC4), all 5 outbound spoke/pgda links present (AC5), design-token-only + focus-visible ring on Button + aria-hidden icons + one hero CTA per view group (AC6), additive-only with render-smoke extended and 9/9 green (AC7). tsc clean on story files.
+- **Reversibility:** Status set to `done` in story file + sprint-status.yaml. To reopen, flip both back to `review`/`in-progress` and add the deferred sitemap item as a Review Follow-up (already tracked for Story 1.8).
+- **Files touched:** _bmad-output/implementation-artifacts/1-1-cta-qualification-hub-page-cta-tutor-flagship.md, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/deferred-work.md

@@ -4,7 +4,7 @@ baseline_commit: 1d96dabac5261fc8f54f35d42653eeb26b45c790
 
 # Story 1.1: CTA qualification hub page (`/cta-tutor`) — flagship
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -153,3 +153,10 @@ claude-sonnet-4-6
 ### Change Log
 
 - 2026-07-11: Story 1.1 implementation complete — created /cta-tutor flagship hub page with full content, JSON-LD, metadata, and render-smoke test coverage.
+
+## Review Findings
+
+_Code review 2026-07-11 (autopilot, fresh reasoning; reviewed dev-story commit 830ddbc: `src/app/cta-tutor/page.tsx` + `tests/unit/render-smoke.test.tsx`). All 7 ACs verified. No decision-needed, no patch. Result: clean — status set to `done`._
+
+- [x] [Review][Defer] Sitemap registration for `/cta-tutor` deferred to Story 1.8 [acce-nextjs/tests/unit/sitemap.test.ts] — deferred, by-design (AC7 + Dev Notes forbid editing sitemap.ts in this story; the two guide-route sitemap failures are pre-existing on the branch).
+- Dismissed (noise): OG/Twitter title em dash (AC2 mandates mirroring the sanctioned homepage-shape title; homepage mirrors identically). Meta description 157 chars vs "≤ ~155" soft bound (renders without truncation).

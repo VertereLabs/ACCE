@@ -1,6 +1,8 @@
 # ACCE Tutors — Architecture
 
 > The website as it currently stands (`acce-nextjs/`). Generated 2026-07-04 (deep scan).
+> Sections 5 and 6 refreshed 2026-07-11 to reflect the shipped navy+gold Stage-1 rebrand
+> and the middleware-based guide/PDF gating (both landed after the original scan).
 
 ## 1. Executive summary
 
@@ -69,31 +71,69 @@ Implication: editing site copy = editing TSX. There is no content/code separatio
 
 ## 5. Publish-gating logic
 
-`src/config/guides.ts`:
+Guide visibility is controlled by **one flag map, enforced in two layers**.
+
+`src/config/guides.ts` (source of truth for the UI):
 
 ```ts
 GUIDE_PUBLISH_STATUS = { groups: false, "ifrs-15": false, "ifrs-16": false }
-isGuidePublished(id) => isDev ? true : (GUIDE_PUBLISH_STATUS[id] ?? false)
+isDev            = NODE_ENV === "development"
+isGuidesPreview  = NEXT_PUBLIC_GUIDES_PREVIEW === "true"
+isGuidePublished(id) => (isDev || isGuidesPreview) ? true : (GUIDE_PUBLISH_STATUS[id] ?? false)
+anyGuidePublished()  => some guide isGuidePublished
 ```
 
-- In `next dev`, **all guides are visible** (so you can author/preview).
-- In a production build, guides flip to **"Coming Soon"** on `/guides` until their flag is `true`.
-- The guide **detail pages themselves are always built and routable** (they're in
-  `sitemap.ts`); the flag only changes the index card's CTA. There is no redirect/404 guard
-  on the individual part pages.
+Two deploy paths from one codebase:
+
+- **PUBLIC (default)** — normal `npm run build` / deploy. Only guides flagged `true` are live;
+  the rest render **"Coming Soon"** on `/guides` and the homepage Resources section.
+- **REVIEW** — `NEXT_PUBLIC_GUIDES_PREVIEW=true` (dev, or a private preview deploy). **All**
+  guides + PDFs unlock so content can be reviewed before release, without exposing them publicly.
+
+`src/middleware.ts` (Edge runtime — **enforces** the gate for real):
+
+- It **cannot import** `config/guides.ts`, so it **duplicates** `GUIDE_PUBLISH_STATUS` and adds a
+  `PDF_TO_GUIDE` filename→id map. These copies **must be kept in sync** with the config by hand.
+- In dev or REVIEW mode it is a no-op. In a public build it actively **redirects**:
+  - `/guides/<id>/...` for an unpublished `<id>` → `redirect("/guides")`.
+  - `/pdfs/<file>.pdf` whose guide is unpublished → `redirect("/guides")`.
+- `matcher: ["/guides/:path+", "/pdfs/:path*"]`.
+
+So — unlike the original scan noted — the **detail/part pages and PDFs are guarded**: an
+unpublished guide page no longer merely shows a "Coming Soon" card, it is redirected away in
+public builds. `sitemap.ts` filters guide URLs on `isGuidePublished`, so unpublished guides are
+absent from the sitemap; PDFs are never in the sitemap.
+
+> **Known limitation (target of the SEO-architecture work):** today this single `GUIDE_PUBLISH_STATUS`
+> gates *both* the page and its PDF. The planned work splits it into independent page-published and
+> PDF-published states (adding `GUIDE_PDF_PUBLISH_STATUS` / `isGuidePdfPublished`) in both files, so a
+> guide page can be public while its PDF stays blocked. Not yet implemented.
 
 ## 6. Design system
 
-- **Tokens** in `src/app/globals.css` as HSL CSS variables (`--primary`, `--accent`,
-  `--background`, gradients `--gradient-hero/-accent/-card/-text`, shadows
-  `--shadow-soft/-elevated/-glow`). Exposed to Tailwind via `tailwind.config.ts` `theme.extend.colors`.
-- **Look:** dark navy background with a fixed `--gradient-hero` body background, warm
-  orange `--accent`, frosted-glass cards (`bg-white/10 backdrop-blur-md border-white/20`),
-  `Playfair Display` display font + `DM Sans` body font.
-- **Custom button variant `hero`** (`gradient-accent … hover:shadow-glow hover:scale-105`)
-  is the primary CTA style used across the site.
-- Theme is dark-first (`next-themes` `defaultTheme="dark"`, `enableSystem`), though the
-  palette is authored primarily for dark.
+Stage-1 "fresh look" rebrand (navy + gold, two-mode) has **shipped**. The authoritative spec is
+`_bmad-output/planning-artifacts/ux-designs/ux-ACCE-2026-07-05/DESIGN.md`; the code matches it.
+
+- **Palette — navy + gold, two modes.** `src/app/globals.css` defines a full HSL token set in both
+  `:root` (light — "Warm Scholar", warm ivory base) and `.dark` (**default** — "Deep Authority",
+  ink-navy base): `--primary` (navy in light, inverts to off-white in dark), `--accent` (brand gold),
+  plus non-native tokens `--accent-ink` (readable gold for text/icons on the base), `--primary-ink`
+  (tag text), and `--footer-bg`/`--footer-fg` (footer stays dark navy in **both** modes — does not
+  invert). Gradients (`--gradient-hero/-accent/-text`) and shadows (`--shadow-*`, incl. `--shadow-glow`)
+  remain. Exposed to Tailwind via `tailwind.config.ts`.
+- **Typography — Playfair Display + Inter.** Loaded via `next/font/google` in `layout.tsx` as
+  `--font-display` (Playfair) and `--font-body` (Inter), wired on `<html class="{playfair} {inter}">`.
+  (Supersedes the old Playfair **+ DM Sans** pairing — DM Sans is gone.)
+- **Surfaces:** solid `bg-card` on `border-border` with `shadow-elevated`, radius `0.625rem`
+  (pills `999px`). The old translucent "frosted-glass" cards (`bg-white/10 backdrop-blur`) are
+  retired for content cards; the sticky Navbar still uses a translucent `bg-background/80 backdrop-blur`.
+- **Buttons** (`components/ui/button.tsx`): `default` (navy `--primary`), `hero`
+  (`gradient-accent` gold — the **conversion CTA**, one gold per view group), `heroOutline`, `ghost`,
+  plus stock `outline`/`secondary`/`destructive`/`link`. Gold is accent-only; gold *text/icons* use
+  `accent-ink`, never raw `--accent`.
+- **Theme:** `next-themes` with `defaultTheme="dark"`; first paint honors the stored choice with no
+  flash (`suppressHydrationWarning` + inline script). A navbar sun/moon toggle switches dark ⇄ light;
+  only colors cross-fade (type, radius, layout, and logo intent are identical across modes).
 
 ## 7. Security & headers
 
