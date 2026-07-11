@@ -106,15 +106,29 @@ const MATRIX: PageSpec[] = [
   },
 ];
 
+/**
+ * Count outbound links to `href` that belong to the page BODY, excluding the shared
+ * chrome (Navbar/Footer). Every page renders <Navbar/>, whose desktop nav always emits
+ * a link to /subjects. Without this exclusion the spoke pages' required /subjects edge
+ * would be satisfied by the Navbar even if the in-body cross-link were dropped, so a
+ * regressed edge would stay green -- the exact failure mode this test exists to prevent.
+ * Scoping to non-nav/non-footer anchors makes each assertion enforce the real matrix edge.
+ */
+function bodyEdgeCount(container: HTMLElement, href: string): number {
+  return Array.from(container.querySelectorAll(`a[href="${href}"]`)).filter(
+    (a) => !a.closest("nav") && !a.closest("footer"),
+  ).length;
+}
+
 describe("internal link matrix", () => {
   for (const { name, Component, edges } of MATRIX) {
     it(`${name} contains all required outbound edges`, () => {
       const { container } = render(<Component />);
       for (const edge of edges) {
         expect(
-          container.querySelector(`a[href="${edge}"]`),
-          `${name} must contain a link to ${edge}`,
-        ).not.toBeNull();
+          bodyEdgeCount(container, edge),
+          `${name} must contain an in-body link to ${edge}`,
+        ).toBeGreaterThan(0);
       }
     });
   }

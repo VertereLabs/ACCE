@@ -4,7 +4,7 @@ baseline_commit: cd1c63ffe622d77dd98a7ed897f42a4511e7b748
 
 # Story 2.3: Complete and verify the internal-link matrix
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -185,3 +185,23 @@ claude-sonnet-4-6
 ## Change Log
 
 - 2026-07-11: Story 2.3 implemented (dev-story, autopilot). Additive-only: created full internal-link matrix regression test asserting complete outbound edge set for all 8 pages/components; recorded /accounting-tutor -> IFRS-guides as deferred pending Epic 3 guide release. 51 unit tests pass, 3 pre-existing guide-route failures unchanged.
+
+## Senior Developer Review (code-review, autopilot, 2026-07-11)
+
+Adversarial review with FRESH reasoning (did not assume the dev step was correct). Outcome: **1 MEDIUM finding, fixed in-review -> done.**
+
+### Findings
+
+- **[MEDIUM, FIXED] Spoke `/subjects` edge was Navbar-satisfied (false-green risk).** Every page component renders `<Navbar/>`, whose desktop nav always emits `<a href="/subjects">`. The matrix test asserted edges with an unscoped `container.querySelector('a[href="..."]')`, so the four spoke pages' required `/subjects` edge was satisfied by the Navbar even if the in-body cross-link were dropped -- exactly the "a dropped edge stays green" failure AC1 exists to prevent (probed: AccountingTutorPage renders 2 `/subjects` anchors, only 1 in-body). The Radix Qualifications dropdown links (`/cta-tutor`,`/pgda-tutor`) are portal-lazy and absent from the initial render, and the Footer emits no matrix targets, so `/subjects` on spokes was the sole affected edge. Fix: added a `bodyEdgeCount(container, href)` helper that excludes anchors inside `nav`/`footer` and asserts `> 0` per edge, so every assertion now enforces the real page-body matrix edge (future-proof against any later chrome collision). Test-only change; additive-only (AC3/NFR4) preserved.
+
+### AC verification (independent, on-disk)
+
+- **AC1 (matrix enforced by machine test):** PASS after fix. All four spoke bodies genuinely carry `/cta-tutor`+`/pgda-tutor`+`/subjects` (grep-confirmed L265-286); both hubs carry 4 spokes + sibling hub; `/subjects` and homepage carry their 6-edge sets. Test now enforces each on the page body.
+- **AC2 (pending IFRS-guides edge):** PASS. Not wired; recorded in `deferred-work.md` with the Story 3.3 wiring recipe.
+- **AC3 (additive-only):** PASS. `git diff` vs baseline shows zero `src/`/`Services`/`Navbar`/`sitemap`/`next.config` changes; only the new test file + `deferred-work.md` + tracking files.
+- **AC4 (no em dashes):** PASS. 0 em dashes in the new test file and in the added `deferred-work.md` lines (the one em dash in `deferred-work.md` is a pre-existing Story 1.1 entry, out of scope).
+- **AC5 (baseline held):** PASS. `npx vitest run` = 51 pass / 3 pre-existing guide-route sitemap fails (Epic 3) / 1 todo. `npx tsc --noEmit` = no non-`.next/types` errors.
+
+### Files changed by this review
+
+- acce-nextjs/tests/unit/internal-link-matrix.test.tsx (hardened edge assertions to exclude Navbar/Footer chrome)
