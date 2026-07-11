@@ -4,7 +4,7 @@ baseline_commit: 0ad8cdadc841505cf229794a8bbddb8fb85d94ac
 
 # Story 1.3: Financial Management / MAF subject spoke (`/financial-management-tutor`)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -195,3 +195,21 @@ claude-sonnet-4-6 (autopilot subagent, 2026-07-11)
 ### Change Log
 
 - 2026-07-11: Story 1.3 implemented — /financial-management-tutor page created (server component, Service+FAQPage JSON-LD, dual-naming MAF content, render-smoke extended, all 7 ACs satisfied)
+- 2026-07-11: Code review (autopilot, fresh reasoning) — CLEAN, status review → done
+
+### Review Findings
+
+Code review 2026-07-11 (autopilot subagent, fresh reasoning): **CLEAN REVIEW — all layers passed. 0 decision-needed, 0 patch, 0 defer, 2 dismissed as noise.**
+
+All 7 acceptance criteria verified independently:
+- **AC1** PASS — server component (no `"use client"`), exact shell (`min-h-screen bg-background` → `Navbar` → `main pt-32 pb-24` → `container mx-auto px-6` → content → `Footer`), exactly one `<h1>` = "Management Accounting & Finance Tutoring" (grep-confirmed: 1 h1, 7 h2, heading hierarchy h1→h2→h3 with no skips).
+- **AC2** PASS — `metadata` mirrors homepage/accounting-tutor shape; title 57 chars (≤60), description 149 chars (≤155) with the CAP-3 em dash replaced by a colon (NFR6, Story 1.2 precedent); relative `alternates.canonical` `/financial-management-tutor/`; OG + twitter blocks present; zero em dashes anywhere.
+- **AC3** PASS — genuinely differentiated MAF content (costing methods, budgeting, decision-making/relevant costing/CVP/make-or-buy, corporate finance/DCF/NPV/IRR/WACC/working capital), distinct from `/accounting-tutor` (IFRS/consolidations) and `/cta-tutor` (four-subject hub); dual-naming satisfied in the H1 opening paragraph, the "What MAF covers" H2, and the first FAQ ("Is management accounting the same as financial management?"); SA E-E-A-T woven (CA(SA), SAICA, ITC/APC, UNISA MNG modules, UCT/Wits/UP/Stellenbosch); the APC decision-focus angle used as the distinctive differentiator; zero em dashes (grep U+2014 = 0).
+- **AC4** PASS — valid `Service` + `FAQPage` JSON-LD via two `<Script id="…" type="application/ld+json">` blocks; `Service.provider` references `{"@id":"https://accetutors.co.za/#organization"}`; `FAQPAGE_DATA.mainEntity` is mapped from the same `FAQ_ITEMS` const rendered on-page (single source of truth guarantees the match requirement).
+- **AC5** PASS — outbound `<Link>`s to `/cta-tutor`, `/pgda-tutor`, `/subjects` in natural context; correctly no IFRS-guide edge for this page.
+- **AC6** PASS — tokens-only navy+gold (no hardcoded hex/rgb, no `text-white`/`bg-black`, grep-confirmed), gold used as accent-only (`text-accent`, no raw `--accent` text fill), shadcn `Button`, 4 `variant="hero"` CTAs across 4 distinct view groups (hero/how-sessions/pricing/final — consistent with the Story 1.2 "one hero per view group" precedent), decorative icons `aria-hidden`, WhatsApp anchors `rel="noopener noreferrer"`.
+- **AC7** PASS — additive only; render-smoke extended (H1 + `/cta-tutor` link + WhatsApp CTA assertions); full unit suite 27/30 pass with the only 3 failures being the by-design `sitemap.test.ts` unregistered-route checks (`/cta-tutor`, `/accounting-tutor`, `/financial-management-tutor` + guides) deferred to Story 1.8; `tsc --noEmit` shows no new errors in the page or test file; no forbidden files touched (`sitemap.ts`, `middleware.ts`, `next.config.ts`, `Navbar.tsx`, `guides.ts` all unchanged).
+
+Dismissed as noise (2): (a) title is 57 chars vs the story's stated "56 chars" — still well within the ≤60 SEO floor, cosmetic; (b) rendered word count ~1277 vs the 700-900 nominal — explicitly pre-adjudicated as acceptable by this story's own Verify task and the Story 1.2 reviewer precedent (genuine anti-doorway MAF depth serves NFR1 better than trimming to an arbitrary ceiling; do not pad or trim genuine syllabus detail).
+
+No code changes were required by this review.
