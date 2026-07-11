@@ -4,7 +4,7 @@ baseline_commit: ea951b998464b36a3a201a3a32b0198297eedb90
 
 # Story 1.6: PGDA qualification hub (`/pgda-tutor`)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -131,6 +131,27 @@ Exactly one `<h1>`; `title` ≤ ~60 chars (54); meta `description` ≤ ~155 char
 - [Source: acce-nextjs/tests/unit/render-smoke.test.tsx] (render-smoke pattern to extend)
 - [Source: _bmad-output/implementation-artifacts/1-4-tax-subject-spoke-tax-tutor.md] (em-dash title/meta house rule)
 - [Source: docs/architecture.md#Metadata/SEO] (per-route metadata + JSON-LD; Server Components by default)
+
+## Review Findings
+
+Code review 2026-07-11 (autopilot, fresh reasoning; Blind Hunter + Edge Case Hunter + Acceptance Auditor layers). **Result: CLEAN — 0 decision-needed, 0 patch, 0 defer, 2 dismissed as noise. No HIGH/MEDIUM findings. Status set to `done`.**
+
+Verification summary:
+- **AC1** PASS — server component (no `"use client"`); shell mirrors `/cta-tutor` exactly (`min-h-screen bg-background` → `Navbar` → `main pt-32 pb-24` → `container mx-auto px-6` → `Footer`); exactly one `<h1>` "PGDA Tutoring (Postgraduate Diploma in Accounting)"; headings h1 → h2(×7) → h3 with no level skips.
+- **AC2** PASS — `title` 54ch pinned verbatim (single sanctioned em dash); `description` 151ch colon-variant (≤155, em-dash-free); `alternates.canonical` `/pgda-tutor/`; OG + Twitter blocks mirror.
+- **AC3** PASS (NFR1 top risk genuinely satisfied) — PGDA-as-qualification framing (entry/admission from accredited degree, UNISA distance angle, honours-level diploma-year structure); "PGDA to CTA to CA(SA) pathway" H2 is a progression narrative (ITC → TOPP/TIPP training contract → APC → CA(SA)), distinct from `/cta-tutor`'s exam-technique framing; four subjects presented as link-out cards, not re-explained; no shared paragraphs with `/cta-tutor`. SA E-E-A-T woven (SAICA, UNISA module codes FAC4861/TAX4862/AUE4862/MNG4863, UCT/Wits/UP/UJ/Stellenbosch). Zero em dashes in body/FAQ/meta (grep-confirmed: only the 3 sanctioned title fields).
+- **AC4** PASS — `Course` + `FAQPage` JSON-LD as two `<Script type="application/ld+json">` blocks; `Course.provider` references Organization by `@id`; `FAQPage.mainEntity` and the on-page FAQ both derive from the single `FAQ_ITEMS` const (single source of truth).
+- **AC5** PASS — links out to all four spokes (`/accounting-tutor`, `/financial-management-tutor`, `/tax-tutor`, `/auditing-tutor`) and `/cta-tutor` (the OTHER hub, no self-link); each present exactly once; all five route dirs exist.
+- **AC6** PASS — design tokens + shadcn `Button` only, no new palette/components; exactly 3 gold `variant="hero"` CTAs across 3 distinct view groups (one per group, matches DONE `/cta-tutor` template); decorative icons `aria-hidden="true"`; `_blank` links carry `rel="noopener noreferrer"`.
+- **AC7** PASS — additive-only (only the 2 File-List files touched; `sitemap.ts` untouched); render-smoke extended with the 3 required assertions (H1 level 1 `/PGDA Tutoring/i`, `a[href="/cta-tutor"]` not null, WhatsApp count > 0); full unit suite green (24/24) incl. new assertions; `tsc --noEmit` no NEW errors in the touched files.
+
+Edge-case pass: static `JSON.stringify` (no injection surface), `rel=noopener` on all `_blank` anchors, `key={index}` safe for a static non-reordering FAQ list, no render-throw path (render-smoke confirms).
+
+Dismissed as noise (per 1.1–1.5 precedent):
+- Crude word-count estimate slightly over 900 counts headings/button labels/testimonials, not just prose; genuine differentiated content, upper-bound overrun pre-adjudicated dismissed in 1.2/1.3/1.4.
+- OG/Twitter `title` em-dash mirror — mandated by AC2, expected per Story 1.1/1.4 precedent.
+
+By-design deferred (not this story): `sitemap.test.ts` failure for the new `/pgda-tutor` route → Story 1.8 (route registration + e2e route-200 coverage).
 
 ## Dev Agent Record
 
