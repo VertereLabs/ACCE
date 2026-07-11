@@ -4,7 +4,7 @@ baseline_commit: de6b8d2eda5fd912bff484d47cee4945bc74c3bd
 
 # Story 3.2: Conditional Download-PDF CTA on guide pages
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -129,6 +129,10 @@ These ids match both `GUIDE_PDF_PUBLISH_STATUS` and `PDF_TO_GUIDE` (via `middlew
 - [Source: acce-nextjs/src/app/guides/ifrs-16/part-1/page.tsx#L32-44]: part-page header "PDF" link to gate (pattern identical across all 17 part pages).
 - [Source: acce-nextjs/tests/unit/render-smoke.test.tsx#L60-68]: the PDF-presence assertion to flip to the guarded (`.toBeNull()`) contract.
 - [Source: acce-nextjs/src/app/guides/page.tsx#L7]: precedent — a guide component already imports `isGuidePublished` from `@/config/guides`.
+
+## Review Findings
+
+Code review 2026-07-11 (autopilot, fresh adversarial reasoning across Blind Hunter / Edge Case Hunter / Acceptance Auditor): **CLEAN.** 0 decision-needed, 0 patch, 0 defer, 3 dismissed as noise. All 5 ACs re-verified independently. AC1/AC2: guard renders nothing when false (render-smoke `.toBeNull()` prod arm) and the same `/pdfs/*.pdf` link when true (preview dynamic-import arm), both pass. AC3: grep confirms exactly 20 `/pdfs/` affordances (3 top-level + 17 part pages), all wrapped, guard keys match config + href. AC4: import + JSX conditional only, 0 em dashes in added lines, 4-space indent, additive-only. AC5: assertion flipped + preview arm added. Verification: vitest 58 pass / 3 pre-existing sitemap.test.ts guide-route fails (Epic-3 scope, unchanged) / 1 todo; render-smoke 32/32 incl. both PDF arms; tsc no new errors. Dismissed: (1) guarded child indentation cosmetic (matches wrap-in-place directive, lint-clean); (2) part-page flex holds only "Part N of M" when held, collapses cleanly by design; (3) Button/Download imports still used by guarded block (tsc-confirmed, no unused-import). No HIGH/MEDIUM findings, no patches applied. Status -> done.
 
 ## Dev Agent Record
 
