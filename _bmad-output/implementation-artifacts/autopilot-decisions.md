@@ -123,3 +123,25 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** AC3 and the Differentiation Guard dev note are explicit: must be about "Accounting as a subject" not a reworded CTA hub. Content must have real syllabus detail (IFRS 15, 16, group statements, financial instruments), progression from undergrad to CTA, and SA context.
 - **Reversibility:** Content-only; can be edited freely at any time.
 - **Files touched:** acce-nextjs/src/app/accounting-tutor/page.tsx (new file)
+
+---
+
+### [2026-07-11T12:37:50Z] 1-2-accounting-subject-spoke-accounting-tutor — Diff source: review the dev-story commit, not the stale cross-track baseline
+- **Risk:** low
+- **Workflow / step:** code-review step 1 (gather context)
+- **Decision point:** The story frontmatter `baseline_commit: 93d68229…` is actually the Story 1.1 code-review commit (the true parent of the 1.2 dev-story commit `5eaa92b`), so `git diff 93d6822 HEAD` cleanly isolates exactly this story's work. Confirmed the working tree is clean and `5eaa92b` sits directly on `93d6822`.
+- **Options considered:** A) Diff HEAD vs baseline_commit (correct here — it is the immediate parent). B) Diff the single commit `5eaa92b`. Both yield the same code delta.
+- **Chosen:** A — reviewed `git diff 93d6822 HEAD`, code delta = `acce-nextjs/src/app/accounting-tutor/page.tsx` (NEW, 338 lines) + `tests/unit/render-smoke.test.tsx` (+21). Other diff entries are BMAD artifacts (story file, decision log, sprint-status), not code.
+- **Rationale:** Matches the story File List exactly; no cross-track noise (unlike Story 1.1, whose baseline was stale). review_mode = full (spec present).
+- **Reversibility:** N/A (read-only analysis choice).
+- **Files touched:** none (review analysis only)
+
+### [2026-07-11T12:37:50Z] 1-2-accounting-subject-spoke-accounting-tutor — Adversarial review outcome + fix-vs-defer disposition (fresh reasoning, did not assume dev step correct)
+- **Risk:** medium
+- **Workflow / step:** code-review step 3 (triage) / step 4 (present & act) — autonomous override of the fix-vs-action-items HALT
+- **Decision point:** Ran all three review lenses myself (subagents unavailable in this dispatch): Blind Hunter, Edge Case Hunter, Acceptance Auditor. Disposition of every finding, then set final status.
+- **Options considered:** For the two non-PASS observations — (1) word count over the AC3 "700–900" ceiling (~1074 main-section words + ~523 FAQ); (2) 4 `variant="hero"` CTAs vs the DONE `/cta-tutor` template's 3 — patch (trim content / remove a hero) vs dismiss.
+- **Chosen:** (1) DISMISS — the "700–900" bound exists to serve NFR1 (anti-doorway); more genuine, differentiated content STRENGTHENS that intent, and cutting real IFRS/consolidations syllabus detail to hit an arbitrary ceiling would weaken the story's own top-risk guard. Story 1.1 precedent treated the analogous `~` SEO bound as soft. (2) DISMISS — each of the 4 hero CTAs sits in a distinct view group (hero header, how-sessions callout, pricing callout, final CTA), so AC6's "exactly one hero per view group" is technically satisfied; the extra one vs the template is a stylistic choice, not a violation. No HIGH/MEDIUM findings survived verification. Zero patch, zero decision-needed.
+- **Rationale:** All 7 ACs independently verified with fresh eyes: exact server-component shell + single H1 (AC1); metadata shape with title=53ch, desc=137ch colon-not-em-dash, relative canonical `/accounting-tutor/`, OG/Twitter mirrored (AC2); genuinely differentiated accounting-subject content (IFRS 15/16, IAS 12/36, IFRS 3/9, consolidations depth, UNISA FAC2601/2602/3701/3702, SAICA/ITC/APC, undergrad→PGDA→CTA) with ZERO em dashes confirmed by grep (AC3); Service (@id-referenced provider) + FAQPage sharing one `FAQ_ITEMS` const so mainEntity matches the rendered FAQ (AC4); all three outbound `<Link>`s /cta-tutor, /pgda-tutor, /subjects present (AC5); design-token-only, aria-hidden decorative icons, `<Button asChild variant="hero">` WhatsApp CTA, no new palette/component (AC6); additive-only, render-smoke extended with 3 assertions, 12/12 render-smoke green, tsc clean on story files (AC7). Only failing unit test is the KNOWN pre-existing `sitemap.test.ts` (both `/accounting-tutor` AND the pre-existing `/cta-tutor` in the missing list) — deferred to Story 1.8 by AC7 design, not a regression. Clean review → `done`.
+- **Reversibility:** Status set to `done` in the story file + sprint-status.yaml. To reopen, flip both back to `review`/`in-progress`; the two dismissed observations are recorded here and in the story's Review Findings section if re-triage is ever wanted.
+- **Files touched:** _bmad-output/implementation-artifacts/1-2-accounting-subject-spoke-accounting-tutor.md, _bmad-output/implementation-artifacts/sprint-status.yaml
