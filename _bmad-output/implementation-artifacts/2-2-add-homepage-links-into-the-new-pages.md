@@ -4,7 +4,7 @@
 baseline_commit: da5f7c7b87957920182f91d075aee30fa19a346e
 ---
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -46,6 +46,10 @@ so that I can go deeper from the homepage and ranking authority flows to the spo
   - [x] Run the unit suite from `acce-nextjs/`: `npx vitest run`. Baseline is **41 pass / 3 pre-existing guide-route sitemap failures** (Epic 3 scope, `/guides/*` unpublished). Do NOT regress that: no NEW failures. The homepage render-smoke (`HomePage renders`) mounts `<Services/>`, so a render-time throw would surface there.
   - [x] Run `npx tsc --noEmit` from `acce-nextjs/`; confirm no NEW type errors (only pre-existing stale `.next/types` cache errors are acceptable).
   - [x] Optional but recommended guardrail: extend the existing `describe("HomePage renders")` block in `tests/unit/render-smoke.test.tsx` (or add a small `describe("Services homepage links")`) to assert the homepage now contains `a[href="/accounting-tutor"]`, `a[href="/tax-tutor"]`, `a[href="/financial-management-tutor"]`, `a[href="/auditing-tutor"]`, `a[href="/cta-tutor"]`, and `a[href="/pgda-tutor"]`. This is the cheap guardrail that Story 2.2 delivered its homepage edges. Keep it minimal; do NOT weaken any existing test.
+
+### Review Findings
+
+Code review (autopilot, fresh adversarial reasoning) 2026-07-11: CLEAN. All 7 ACs independently re-verified against the actual diff and repo. Zero decision-needed, zero patch, zero defer findings. 3 adversarial probes dismissed as noise (focus-ring = pre-existing site convention adjudicated in 2.1; text-accent vs accent-ink = pre-adjudicated cosmetic, Epic 1 precedent wins; inline Qualifications links = AC2-permitted). Tests: vitest 43 pass / 3 pre-existing guide-route sitemap failures (Epic 3, unchanged) + 2 new homepage-links guardrails pass; tsc no new errors. Status -> done.
 
 ## Dev Notes
 
@@ -144,3 +148,4 @@ claude-sonnet-4-6
 ## Change Log
 
 - 2026-07-11: Story 2.2 implemented. Added Learn-more links to all four Services cards and a Qualifications mention below the grid (Services.tsx only). Added homepage-links guardrail tests. 43 pass / 3 pre-existing failures. Status: review.
+- 2026-07-11: Code review (autopilot) CLEAN, all 7 ACs re-verified with fresh reasoning, no HIGH/MEDIUM findings. Status: done.
