@@ -933,3 +933,57 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** AC1 39 rendered/metadata em dashes removed + 0 re-added (git diff: 39 `-` lines with U+2014, 0 `+` lines); the only 4 U+2014 remaining site-wide are non-rendered code comments (guides/page L51, Logo L13, groupSessions L8/L23) exactly as scoped; investigated globals.css em dashes NOT in the story inventory -> all inside CSS `/* */` comments, none rendered, no leak. AC2 en dashes intact (15 in groupSessions numeric ranges) + ellipsis untouched. AC3 copy-only: structural grep shows only string-content edits inside existing literals (className/import/prop values byte-identical), no JSX/logic change, +1 new test file only. AC4 three tutor titles -> colon, title/og/twitter mirrored, 53/48/53 chars (<=60, NFR2), no test encoded old titles. AC5 no-em-dash.test.ts guard MUTATION-TESTED (injected an em dash into rendered mixSummary -> test failed; restored working tree clean) so it genuinely catches re-entry; full vitest 77 pass / 0 fail; tsc no new errors (only pre-existing stale .next/types validator errors, documented Epic 1-3). Meaning/tone preserved across all 25 edit sites (sensible colon/comma/semicolon/paren/two-sentence choices; grammar fix at part-2 L245). 1 stderr probe DISMISSED as noise: `priority` non-boolean-attribute warning = pre-existing Navbar/Hero warning outside this diff (adjudicated in 3-3 review).
 - **Reversibility:** Status-only decision; to reverse, set 4-1 back to `review`/`in-progress` in sprint-status.yaml. No code patched during review.
 - **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml (status flip only)
+
+---
+
+### [2026-07-11T16:34:00Z] 4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement — create-story: repo-committable deliverable for an ops/measurement story
+- **Risk:** medium
+- **Workflow / step:** create-story step 2/5 (scope interpretation + story-file authoring)
+- **Decision point:** Story 4.2's Definition of Done requires (a) submitting each new URL via GSC URL Inspection -> Request Indexing, (b) an indexing check per URL, and (c) documenting the monthly measurement runbook with the FIRST snapshot recorded. Parts (a) and (b) and the live snapshot require Google Search Console credentials and the live production site (accetutors.co.za); an autonomous dev agent working in the repo has neither. What is the concrete, committable dev-story deliverable?
+- **Options considered:** A) Mark the whole story BLOCKED (missing credential/external resource per contract clause (b)). B) Interpret the story as authoring an in-repo measurement runbook doc that (i) enumerates the exact URL-submission checklist, (ii) documents the monthly procedure with queries/baselines/snapshot source, and (iii) provides the first-snapshot record template + baseline table -- with the actual GSC clicks and live snapshot recorded as human/manual checklist actions Luke performs against the runbook. C) Attempt to script GSC API submission (needs a service-account + Indexing API + verified property -> new high-risk dependency + secret, and Indexing API is not even valid for these page types).
+- **Chosen:** B. The runbook markdown is the durable, reviewable artifact; the manual GSC actions are inherently human and are captured as an explicit checklist the owner ticks off. This mirrors the epics.md DoD split ("discrete/completable" = the runbook + submission checklist authored and first snapshot structure in place; the recurring month-over-month tracking is explicitly "out of this story's closure").
+- **Rationale:** Contract rule 4 (minimal reasonable interpretation of an underspecified/ops story) and BLOCKED clause is reserved for TRUE hard blockers; an ops runbook is fully authorable in-repo without credentials. Option A wastes the story; Option C invents a high-risk external dependency the spec never asked for (CAP-11 says "ClaudeSEO GSC snapshot", a manual/existing pipeline, not the Indexing API).
+- **Reversibility:** Fully reversible: the deliverable is a single new markdown doc (no code, no config, no dependency). If Luke later wants API automation, that is a separate future story; delete/rewrite the doc to change approach.
+- **Files touched:** _bmad-output/implementation-artifacts/4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement.md (story file)
+
+### [2026-07-11T16:34:30Z] 4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement — create-story: runbook file location + format
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (file-structure requirements in story)
+- **Decision point:** Where should the measurement runbook live, and what format? Options constrained by project layout (app under acce-nextjs/, project docs under docs/, planning under _bmad-output/).
+- **Options considered:** A) acce-nextjs/docs/seo-measurement-runbook.md (co-located with the app it measures, next to the existing acce-nextjs/docs/planning folder). B) docs/ at repo root (mixes BMAD-era brand/deploy docs). C) _bmad-output/ (planning artifacts, not an ops runbook home).
+- **Chosen:** A -- acce-nextjs/docs/seo-measurement-runbook.md. It sits with the application, is a plain ops doc (markdown, no code), and keeps the SEO measurement process discoverable next to the site it measures. Story leaves final path as a dev decision but recommends A.
+- **Rationale:** Ops runbook belongs with the deployable app; docs/ root is legacy BMAD/brand material; _bmad-output/ is planning, not living ops.
+- **Reversibility:** Trivial: move the one markdown file.
+- **Files touched:** (advisory only; realized by dev-story) acce-nextjs/docs/seo-measurement-runbook.md
+
+### [2026-07-11T16:35:00Z] 4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement — create-story: no automated test for a docs-only story
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (testing_requirements)
+- **Decision point:** Epic-1..4 stories all carried a vitest guardrail. This story ships only a markdown runbook (no rendered code), so a render/unit test has nothing to assert. Should a test be forced anyway?
+- **Options considered:** A) No new test; the acceptance gate is the runbook's completeness (a documentation checklist, human-verifiable). B) Add a trivial fs test asserting the runbook file exists + contains the baseline numbers (low value, brittle). C) Extend no-em-dash guard to include the runbook (the runbook is a doc, not rendered site copy; NFR6 is about rendered marketing copy/metadata).
+- **Chosen:** A -- no automated test. The story's DoD is a documentation deliverable; verification is a content checklist (all URLs listed, baselines correct, snapshot source named, first-snapshot template present). Keep the existing vitest suite green (77 pass) as a no-regression baseline -- the story must not touch app code.
+- **Rationale:** Forcing a test on a docs-only artifact is noise. NFR4 additive-only is satisfied by touching zero app files. The em-dash guard already covers rendered site copy; a runbook markdown is internal ops, not marketing copy, but the story still directs em-dash-free authoring for house-style consistency.
+- **Reversibility:** N/A (no test added). If a doc-lint is later desired it is additive.
+- **Files touched:** none
+
+---
+
+### [2026-07-11T16:37:58Z] 4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement — dev-story: mark in-progress, author runbook
+- **Risk:** low
+- **Workflow / step:** dev-story steps 4-9 (mark in-progress, implement tasks 1-6, mark review)
+- **Decision point:** Docs-only story: create `acce-nextjs/docs/seo-measurement-runbook.md` containing the URL-submission checklist, indexing-check procedure + per-page table, monthly measurement runbook, flagship watch, and snapshot log with first (baseline) row. No app code, no tests added, no config changes.
+- **Options considered:** A) Single markdown file at `acce-nextjs/docs/seo-measurement-runbook.md` (story-recommended path). B) Root-level or `_bmad-output/` location. C) Different structure (multiple files).
+- **Chosen:** A -- story Dev Notes explicitly recommend this path and it co-locates the runbook with the app it measures.
+- **Rationale:** Follows story specification exactly. Minimal interpretation per contract rule 4.
+- **Reversibility:** Delete `acce-nextjs/docs/seo-measurement-runbook.md`. All app code unaffected (zero app files touched).
+- **Files touched:** acce-nextjs/docs/seo-measurement-runbook.md (new)
+
+### [2026-07-11T16:37:58Z] 4-2-submit-new-urls-for-indexing-and-set-up-monthly-measurement — guide pages have no JSON-LD schema
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (Task 3 -- per-page expected title/H1/schema table)
+- **Decision point:** Guide index pages (`/guides/groups`, `/guides/ifrs-15`, `/guides/ifrs-16`) have no JSON-LD `<Script type="application/ld+json">` blocks in their page.tsx files. The schema column for those rows in the indexing-check table cannot reference a structured-data type.
+- **Options considered:** A) Note "none" in the schema column. B) Omit the schema column for guide rows. C) Fabricate a schema type.
+- **Chosen:** A -- note "none (guide index page)" in the schema column for the 3 guide pages. This is accurate and signals to the checker that no structured-data verification is needed for those pages.
+- **Rationale:** Accurate representation of the live codebase. Guide pages are informational content pages, not service/course/FAQ pages, so lack of JSON-LD is correct.
+- **Reversibility:** Edit the table in the runbook if structured data is later added to guide pages.
+- **Files touched:** acce-nextjs/docs/seo-measurement-runbook.md
