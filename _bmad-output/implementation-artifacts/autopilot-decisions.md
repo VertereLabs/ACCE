@@ -577,3 +577,55 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All 7 ACs re-verified with fresh reasoning. AC1 Subjects->/subjects (line 19, drives both desktop+mobile .map). AC2 Qualifications reaches /cta-tutor+/pgda-tutor via desktop shadcn DropdownMenu (lines 50-67) + mobile flat grouped links (112-129) = exactly the permitted "dropdown desktop / grouped mobile" pattern. AC3 six other items + WhatsApp CTA + ThemeToggle byte-unchanged. AC4 dropdown trigger keyboard-operable (Radix) with an ADDED explicit focus ring; mobile children py-2 pl-4 close via setIsOpen(false); open/close intact. AC5 reuse-only tokens (text-muted-foreground, hover:text-accent-ink verified present in tailwind.config+globals.css, bg-popover via DropdownMenuContent), no new hue, dual-mode via tokens. AC6 em-dash grep = 0. AC7 additive (only Navbar.tsx + test touched), all 3 targets on disk, no homepage removed. Three adversarial probes dissolved on verification: (1) missing explicit focus rings on the plain nav links is the PRE-EXISTING site-wide convention (original Navbar + globals.css have no focus classes; browser default outline), not regressed and the trigger was improved; (2) desktop dropdown links are portal/lazy-mounted so absent from initial SSR HTML, but crawl discovery is already guaranteed by sitemap.ts (/cta-tutor,/pgda-tutor registered in Story 1.8) and AC2 explicitly permits a dropdown as a human affordance; (3) opacity-60/text-sm on the mobile Qualifications label are utilities, not palette. Navbar has no prop/interface change so none of its ~20 server-page consumers break. tsc clean (only stale .next/types cache). Vitest 41 pass / 3 pre-existing guide-route sitemap failures (Epic 3, /guides/* unpublished) unchanged from the documented 39+2-new baseline.
 - **Reversibility:** If a defect surfaces post-merge, flip 2-1 back to in-progress in sprint-status.yaml and add a Review Follow-up bullet to the story; dev-story picks it up next loop. No code changed this step.
 - **Files touched:** _bmad-output/implementation-artifacts/2-1-repoint-the-navbar-to-the-new-pages.md (Status -> done + Review Findings note), _bmad-output/implementation-artifacts/sprint-status.yaml (2-1 review -> done)
+
+---
+
+### [2026-07-11T14:44:23Z] 2-2-add-homepage-links-into-the-new-pages — Qualifications mention placement on the homepage
+- **Risk:** medium
+- **Workflow / step:** create-story step 2/3 (artifact analysis, homepage structure)
+- **Decision point:** AC2 requires "a short Qualifications mention" on the homepage linking /cta-tutor and /pgda-tutor. The homepage (src/app/page.tsx) has NO dedicated Qualifications section and the story forbids adding/restructuring sections (NFR4). Where should the mention live?
+- **Options considered:** A) New standalone Qualifications section component inserted into page.tsx (restructures the homepage, violates NFR4 "no section added/restructured" spirit and adds a new component). B) Add the mention as an additive block INSIDE the existing Services section (Services.tsx), below the subject grid — same section already themed "Core Subjects", natural adjacency, no new page-level section, no page.tsx edit. C) Put it in Footer or Hero (semantically wrong, scatters the edit).
+- **Chosen:** B — append a compact Qualifications line/mini-card inside Services.tsx below the grid (e.g. "Studying towards a qualification? CTA tutoring / PGDA tutoring" with two inline links). Keeps the whole story to ONE component file, additive-only, no page.tsx restructure.
+- **Rationale:** Contains the entire story in Services.tsx (both the four Learn-more links AND the Qualifications mention), satisfies AC2 without adding or reordering any homepage section (NFR4). Services is the subjects section, so a "and by qualification" pointer is topically correct.
+- **Reversibility:** Fully local to Services.tsx; delete the appended block to revert. If a standalone section is later wanted, extract the block into its own component and mount in page.tsx.
+- **Files touched:** acce-nextjs/src/components/Services.tsx
+
+### [2026-07-11T14:44:23Z] 2-2-add-homepage-links-into-the-new-pages — Link component + styling convention for the new homepage links
+- **Risk:** low
+- **Workflow / step:** create-story step 3 (architecture guardrails)
+- **Decision point:** Services.tsx is currently a plain server component importing only lucide-react icons; it has no internal links yet. Which link primitive and styling to use for the 4 "Learn more" links + 2 Qualifications links?
+- **Options considered:** A) Plain <a href> (Navbar convention). B) next/link <Link> with the Epic 1 spoke convention `className="text-accent hover:underline"` (used across all /accounting-tutor,/tax-tutor,etc. cross-links, review-passed). C) Button asChild variant.
+- **Chosen:** B — import Link from "next/link" and style each link `text-accent hover:underline` (Learn more links get a trailing arrow glyph, plain ">" or "→", NOT an em dash), matching the DONE Epic 1 spoke pages exactly.
+- **Rationale:** Consistency with the sibling new pages (all Epic 1 cross-links use next/link + text-accent hover:underline and passed adversarial review); client-side nav + prefetch for real routes. project-context nominally prefers accent-ink for gold TEXT, but the established, review-approved in-repo precedent for these exact internal cross-links is text-accent; matching precedent beats introducing a second divergent style. Flagged for the dev/review agent.
+- **Reversibility:** Swap className token or primitive in one file; trivial.
+- **Files touched:** acce-nextjs/src/components/Services.tsx
+
+### [2026-07-11T14:44:23Z] 2-2-add-homepage-links-into-the-new-pages — Card-to-spoke mapping is by title, not array index
+- **Risk:** low
+- **Workflow / step:** create-story step 2 (story foundation)
+- **Decision point:** The AC lists the four card->spoke edges by subject NAME (Financial Accounting -> /accounting-tutor, Management Accounting -> /financial-management-tutor, Tax -> /tax-tutor, Auditing -> /auditing-tutor). The Services.tsx `services` array order is [Financial Accounting, Taxation, Management Accounting, Auditing] (Taxation is index 1, Management Accounting index 2), which does NOT match the AC listing order.
+- **Options considered:** A) Map by array position (WRONG: would send Taxation card to /financial-management-tutor). B) Add an explicit `href` field to each service object keyed to the correct spoke by subject, so the mapping is name-correct regardless of array order.
+- **Chosen:** B — add `href` to each of the four service objects: Financial Accounting -> /accounting-tutor, Taxation -> /tax-tutor, Management Accounting -> /financial-management-tutor, Auditing -> /auditing-tutor.
+- **Rationale:** The card order in the file differs from the AC's listing order; mapping by index would mis-route two cards. Encoding href per-object makes it explicit and index-independent.
+- **Reversibility:** Local data edit in Services.tsx.
+- **Files touched:** acce-nextjs/src/components/Services.tsx
+
+### [2026-07-11T14:48:59Z] 2-2-add-homepage-links-into-the-new-pages — Arrow glyph encoding for Learn-more links
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (implement Task 1)
+- **Decision point:** How to render the "→" right-arrow glyph in JSX without introducing a literal Unicode character in source (avoids invisible character issues and matches clean HTML encoding practices).
+- **Options considered:** A) Literal Unicode "→" in JSX string. B) HTML entity `&rarr;` in JSX. C) Text ">".
+- **Chosen:** B — `&rarr;` HTML entity, which JSX/React renders as the → character correctly.
+- **Rationale:** HTML entities are standard, readable, and avoid potential encoding issues with literal Unicode in TypeScript files. The story explicitly allows ">" or "→" — using the named entity is a safe, conventional choice.
+- **Reversibility:** One-line change in Services.tsx; swap `&rarr;` for literal `→` or `>` trivially.
+- **Files touched:** acce-nextjs/src/components/Services.tsx
+
+### [2026-07-11T14:48:59Z] 2-2-add-homepage-links-into-the-new-pages — Qualifications block separator choice
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (implement Task 2)
+- **Decision point:** How to separate the two Qualifications inline links (CTA Tutoring and PGDA Tutoring). Story says: middot "·", "and", commas, or own rows. No em dash.
+- **Options considered:** A) " and " text. B) Middot "·" character. C) Line break (separate rows). D) Comma.
+- **Chosen:** B — middot "·" in JSX as literal character with surrounding spaces. Clean visual separator, common web convention for inline links, avoids prose awkwardness.
+- **Rationale:** Middot is the recommended option named first in story Task 2. It reads cleanly inline and is widely used for horizontal link lists. Zero em dashes; grep confirms 0.
+- **Reversibility:** One-token swap in Services.tsx Qualifications block.
+- **Files touched:** acce-nextjs/src/components/Services.tsx

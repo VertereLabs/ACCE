@@ -207,6 +207,22 @@ describe("SubjectsPage renders", () => {
   });
 });
 
+describe("Services homepage links", () => {
+  it("contains Learn-more links to all four subject spokes", () => {
+    const { container } = render(<HomePage />);
+    expect(container.querySelector('a[href="/accounting-tutor"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/tax-tutor"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/financial-management-tutor"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/auditing-tutor"]')).not.toBeNull();
+  });
+
+  it("contains Qualifications mention links to both hubs", () => {
+    const { container } = render(<HomePage />);
+    expect(container.querySelector('a[href="/cta-tutor"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/pgda-tutor"]')).not.toBeNull();
+  });
+});
+
 /**
  * Regression guard for the fix applied on 2026-07-04: the homepage Resources section must
  * agree with the guide publish config. With all guides unpublished (shipped state), it must

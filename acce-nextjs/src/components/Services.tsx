@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Calculator, BookOpen, Coins, Scale } from "lucide-react";
 
 const services = [
@@ -5,21 +6,25 @@ const services = [
         icon: BookOpen,
         title: "Financial Accounting",
         description: "From IFRS fundamentals to advanced group consolidations. Master the Analysis of Equity, FCTRs, and complex scenarios. I improved my score by 25% by going back to basics; I'll show you how.",
+        href: "/accounting-tutor",
     },
     {
         icon: Scale,
         title: "Taxation",
         description: "Navigate the Income Tax Act with confidence. Corporate tax, VAT, estate duty, and everything in between. Fine-tuning and targeted revision strategies that actually work.",
+        href: "/tax-tutor",
     },
     {
         icon: Coins,
         title: "Management Accounting",
         description: "Excel in costing, budgeting, and financial strategy. Time management is key - I'll help you score marks efficiently within allocated time through smart exam techniques.",
+        href: "/financial-management-tutor",
     },
     {
         icon: Calculator,
         title: "Auditing",
         description: "Understand ISA standards and apply them to practical scenarios. From audit processes to governance and ethics, build a solid foundation for board exam success.",
+        href: "/auditing-tutor",
     },
 ];
 
@@ -56,8 +61,27 @@ const Services = () => {
                             <p className="text-muted-foreground leading-relaxed">
                                 {service.description}
                             </p>
+                            <Link
+                                href={service.href}
+                                className="inline-flex items-center gap-1 mt-4 font-medium text-accent hover:underline"
+                            >
+                                Learn more &rarr;
+                            </Link>
                         </div>
                     ))}
+                </div>
+
+                <div className="mt-12 text-center text-muted-foreground">
+                    <p>
+                        Studying towards a qualification? Get structured support for the whole programme:{" "}
+                        <Link href="/cta-tutor" className="text-accent hover:underline">
+                            CTA Tutoring
+                        </Link>
+                        {" · "}
+                        <Link href="/pgda-tutor" className="text-accent hover:underline">
+                            PGDA Tutoring
+                        </Link>
+                    </p>
                 </div>
             </div>
         </section>
