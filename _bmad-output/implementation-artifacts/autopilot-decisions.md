@@ -8,6 +8,18 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 
 ---
 
+### [2026-07-11T15:21:44Z] 3-1-decouple-guide-page-gating-from-pdf-gating — dev-story: implementation plan for two-file gating decouple
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (implement tasks 1-4)
+- **Decision point:** Story requires adding `GUIDE_PDF_PUBLISH_STATUS` + `isGuidePdfPublished` to `src/config/guides.ts`, mirroring both maps in `src/middleware.ts` and swapping the PDF branch to read the new PDF map, then extending `tests/unit/guides-config.test.ts` with independence/dev-branch coverage. Deciding on exact placement and whether to add a middleware test.
+- **Options considered:** A) Add middleware unit test harness. B) Config-level tests only + tsc pass (per story Dev Notes, which explicitly say "middleware.ts has no existing unit test and testing Edge middleware in vitest is out of scope here"). C) Test the middleware indirectly via integration tests.
+- **Chosen:** B -- follow the story's explicit out-of-scope declaration; config-level tests are sufficient and the tsc pass validates the middleware change is type-safe.
+- **Rationale:** Story Dev Notes explicitly state "middleware.ts has no existing unit test and testing Edge middleware in vitest is out of scope here; rely on the config-level tests plus a tsc pass." This is the minimal-scope interpretation per contract rule 4.
+- **Reversibility:** Delete `GUIDE_PDF_PUBLISH_STATUS` + `isGuidePdfPublished` from guides.ts; revert middleware.ts PDF branch back to reading `GUIDE_PUBLISH_STATUS[guideId]`; remove the new test describe blocks.
+- **Files touched:** acce-nextjs/src/config/guides.ts, acce-nextjs/src/middleware.ts, acce-nextjs/tests/unit/guides-config.test.ts
+
+---
+
 ### [2026-07-11T11:30:41Z] 1-1-cta-qualification-hub-page-cta-tutor-flagship — Reconcile epic-1 branch with current SEO sprint artifacts
 - **Risk:** high
 - **Workflow / step:** create-story — engine boot / branch setup (pre-workflow)
@@ -701,3 +713,23 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Per the code-review workflow, a story whose findings are all resolved in-review with a green baseline resolves to `done`. Independently re-verified all 5 ACs rather than trusting the dev record: the matrix is genuinely fully wired on disk, the test now enforces page-body edges, additive-only holds, no em dashes, baseline unchanged.
 - **Reversibility:** Status is a sprint-status.yaml scalar; flip back to `in-progress`/`review` if a later regression surfaces.
 - **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-11T15:18:07Z] 3-1-decouple-guide-page-gating-from-pdf-gating — Branch setup for Epic 3
+- **Risk:** low
+- **Workflow / step:** create-story — branch setup (pre-workflow)
+- **Decision point:** Dispatch VERSION CONTROL block sets TARGET BRANCH `seo/epic-3` cut from base `seo/epic-2`. HEAD was on `seo/epic-2`. Existence-first: `seo/epic-3` did not exist locally nor on origin (no remote ref; `git fetch origin seo/epic-3` returned "couldn't find remote ref").
+- **Options considered:** A) reuse existing local branch (none) / B) resume from origin (no remote ref) / C) create from base `seo/epic-2` (exists locally).
+- **Chosen:** C — `git checkout -b seo/epic-3 seo/epic-2`.
+- **Rationale:** Follows the block exactly; base exists locally so no HEAD fallback needed. Epic 2 is fully done (all 3 stories), so cutting Epic 3 off it chains correctly.
+- **Reversibility:** `git branch -D seo/epic-3` and re-cut. No commits made at this stage.
+- **Files touched:** none (branch only)
+
+### [2026-07-11T15:18:07Z] 3-1-decouple-guide-page-gating-from-pdf-gating — Epic-3 status flip + story scope
+- **Risk:** low
+- **Workflow / step:** create-story — step 1 (target story) / step 6 (sprint-status)
+- **Decision point:** 3-1 is the FIRST story of Epic 3 (`epic-3` currently `backlog`). Skill step 1 flips the epic to `in-progress` on first story creation. Also scoping: the story is a pure config+middleware decouple with no page/PDF behavior change (existing published states unchanged; additive-only per AC3).
+- **Options considered:** For the new helper naming — the project-context.md + epic FR8 both prescribe exact identifiers `GUIDE_PDF_PUBLISH_STATUS` + `isGuidePdfPublished(id)`, so no interpretation latitude. For test strategy: extend existing `tests/unit/guides-config.test.ts` (locks the gate today) vs new file — extend, since it already owns the gating contract.
+- **Chosen:** Flip `epic-3` backlog -> in-progress; story scoped to `src/config/guides.ts` + `src/middleware.ts` only, with matching new coverage in `tests/unit/guides-config.test.ts`. Download-PDF CTA gating is explicitly OUT of scope (Story 3.2).
+- **Rationale:** FR8/CAP-8 and project-context.md dictate the exact API and the two-file mirror rule. Keeping the CTA out avoids scope creep (3.2 owns it) and keeps 3.1 additive so existing tests stay green (AC3).
+- **Reversibility:** Story file is regenerable; epic status is a one-line yaml edit.
+- **Files touched:** _bmad-output/implementation-artifacts/sprint-status.yaml (epic-3 flip + 3-1 status), _bmad-output/implementation-artifacts/3-1-decouple-guide-page-gating-from-pdf-gating.md (new)

@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   GUIDE_PUBLISH_STATUS,
+  GUIDE_PDF_PUBLISH_STATUS,
   isGuidePublished,
+  isGuidePdfPublished,
 } from "@/config/guides";
 
 /**
@@ -64,5 +66,70 @@ describe("isGuidePublished — development behavior (NODE_ENV = development)", (
     expect(devModule.isGuidePublished("groups")).toBe(true);
     expect(devModule.isGuidePublished("ifrs-15")).toBe(true);
     expect(devModule.isGuidePublished("anything-at-all")).toBe(true);
+  });
+});
+
+describe("isGuidePdfPublished: production behavior (NODE_ENV != development)", () => {
+  afterEach(() => {
+    // Restore any PDF flags mutated within a test.
+    GUIDE_PDF_PUBLISH_STATUS.groups = false;
+    GUIDE_PDF_PUBLISH_STATUS["ifrs-15"] = false;
+    GUIDE_PDF_PUBLISH_STATUS["ifrs-16"] = false;
+  });
+
+  it("covers exactly the three guide series in the PDF map", () => {
+    expect(Object.keys(GUIDE_PDF_PUBLISH_STATUS).sort()).toEqual([
+      "groups",
+      "ifrs-15",
+      "ifrs-16",
+    ]);
+  });
+
+  it("blocks all three PDFs in the current shipped/production state", () => {
+    expect(isGuidePdfPublished("groups")).toBe(false);
+    expect(isGuidePdfPublished("ifrs-15")).toBe(false);
+    expect(isGuidePdfPublished("ifrs-16")).toBe(false);
+  });
+
+  it("treats unknown and empty guide ids as unpublished (safe default)", () => {
+    expect(isGuidePdfPublished("does-not-exist")).toBe(false);
+    expect(isGuidePdfPublished("")).toBe(false);
+  });
+
+  it("releases only the flipped PDF without leaking to others", () => {
+    GUIDE_PDF_PUBLISH_STATUS["ifrs-16"] = true;
+    expect(isGuidePdfPublished("ifrs-16")).toBe(true);
+    expect(isGuidePdfPublished("groups")).toBe(false);
+    expect(isGuidePdfPublished("ifrs-15")).toBe(false);
+  });
+
+  it("AC1 independence: page-published while PDF-unpublished (core guarantee)", () => {
+    // Flip the page flag to true; leave the PDF flag false.
+    GUIDE_PUBLISH_STATUS["ifrs-16"] = true;
+    GUIDE_PDF_PUBLISH_STATUS["ifrs-16"] = false;
+
+    expect(isGuidePublished("ifrs-16")).toBe(true);
+    expect(isGuidePdfPublished("ifrs-16")).toBe(false);
+
+    // Restore the page flag (PDF flag reset happens in afterEach above).
+    GUIDE_PUBLISH_STATUS["ifrs-16"] = false;
+  });
+});
+
+describe("isGuidePdfPublished: development behavior (NODE_ENV = development)", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  it("treats every PDF (even unknown ones) as published in dev", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.resetModules();
+    const devModule = await import("@/config/guides");
+
+    expect(devModule.isDev).toBe(true);
+    expect(devModule.isGuidePdfPublished("groups")).toBe(true);
+    expect(devModule.isGuidePdfPublished("ifrs-15")).toBe(true);
+    expect(devModule.isGuidePdfPublished("anything-at-all")).toBe(true);
   });
 });

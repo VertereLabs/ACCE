@@ -2,11 +2,22 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Per-guide publish status — must stay in sync with src/config/guides.ts.
- * Duplicated here because middleware runs in the Edge runtime and has
- * restricted import capabilities in some Next.js versions.
+ * Per-guide page publish status: must stay in sync with src/config/guides.ts
+ * (GUIDE_PUBLISH_STATUS). Duplicated here because middleware runs in the Edge
+ * runtime and has restricted import capabilities in some Next.js versions.
  */
 const GUIDE_PUBLISH_STATUS: Record<string, boolean> = {
+    groups: false,
+    "ifrs-15": false,
+    "ifrs-16": false,
+};
+
+/**
+ * Per-guide PDF publish status: must stay in sync with src/config/guides.ts
+ * (GUIDE_PDF_PUBLISH_STATUS). Independent of the page gate: a page can be
+ * public while its PDF remains held.
+ */
+const GUIDE_PDF_PUBLISH_STATUS: Record<string, boolean> = {
     groups: false,
     "ifrs-15": false,
     "ifrs-16": false,
@@ -48,7 +59,7 @@ export function middleware(request: NextRequest) {
     const pdfMatch = pathname.match(/^\/pdfs\/([^/]+\.pdf)$/i);
     if (pdfMatch) {
         const guideId = PDF_TO_GUIDE[pdfMatch[1].toLowerCase()];
-        if (guideId && !GUIDE_PUBLISH_STATUS[guideId]) {
+        if (guideId && !GUIDE_PDF_PUBLISH_STATUS[guideId]) {
             return NextResponse.redirect(new URL("/guides", request.url));
         }
     }
