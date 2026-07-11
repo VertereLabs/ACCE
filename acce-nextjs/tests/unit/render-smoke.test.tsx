@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import HomePage from "@/app/page";
 import GuidesPage from "@/app/guides/page";
 import IFRS16Part1Page from "@/app/guides/ifrs-16/part-1/page";
+import CtaTutorPage from "@/app/cta-tutor/page";
 
 /**
  * Render smoke tests. A component that throws at render is invisible to `tsc` and unit
@@ -42,6 +43,26 @@ describe("A representative guide article renders", () => {
       screen.getByRole("heading", { name: /IFRS 16: Introduction & Key Changes/i }),
     ).toBeInTheDocument();
     expect(container.querySelector('a[href="/pdfs/ifrs-16-leases.pdf"]')).not.toBeNull();
+  });
+});
+
+describe("CtaTutorPage renders", () => {
+  it("mounts without throwing and shows the correct H1", () => {
+    render(<CtaTutorPage />);
+    expect(
+      screen.getByRole("heading", { name: /CTA Tutoring/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("contains a link to the accounting-tutor spoke", () => {
+    const { container } = render(<CtaTutorPage />);
+    expect(container.querySelector('a[href="/accounting-tutor"]')).not.toBeNull();
+  });
+
+  it("routes the primary CTA to the WhatsApp number", () => {
+    const { container } = render(<CtaTutorPage />);
+    const whatsapp = container.querySelectorAll('a[href="https://wa.me/27713255295"]');
+    expect(whatsapp.length).toBeGreaterThan(0);
   });
 });
 
