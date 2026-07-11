@@ -241,25 +241,25 @@ describe("Services homepage links", () => {
 });
 
 /**
- * Regression guard for the fix applied on 2026-07-04: the homepage Resources section must
- * agree with the guide publish config. With all guides unpublished (shipped state), it must
- * show "Coming Soon", never a false "Available" badge, and must not deep-link into guides.
+ * Regression guard: the homepage Resources section must agree with the guide publish config.
+ * With all three guide pages published (released state), it must show "Available" badges,
+ * deep-link into each guide, and retain the index link.
  */
 describe("Resources section reflects the publish config", () => {
-  it("shows Coming Soon for every guide and no false Available badge", () => {
+  it("shows Available for every released guide and no Coming Soon badge", () => {
     render(<HomePage />);
     const resources = document.getElementById("resources")!;
     expect(resources).not.toBeNull();
     const scoped = within(resources);
-    expect(scoped.getAllByText("Coming Soon")).toHaveLength(3);
-    expect(scoped.queryByText("Available")).toBeNull();
+    expect(scoped.getAllByText("Available")).toHaveLength(3);
+    expect(scoped.queryByText("Coming Soon")).toBeNull();
   });
 
-  it("does not deep-link into unpublished guides, but still links to the guides index", () => {
+  it("deep-links into the three published guides and still links to the guides index", () => {
     const { container } = render(<HomePage />);
     const resources = container.querySelector("#resources")!;
-    expect(resources.querySelector('a[href="/guides/groups"]')).toBeNull();
-    expect(resources.querySelector('a[href="/guides/ifrs-16"]')).toBeNull();
+    expect(resources.querySelector('a[href="/guides/groups"]')).not.toBeNull();
+    expect(resources.querySelector('a[href="/guides/ifrs-16"]')).not.toBeNull();
     // The section-level "View All Guides" button still points at the index.
     expect(resources.querySelector('a[href="/guides/"]')).not.toBeNull();
   });

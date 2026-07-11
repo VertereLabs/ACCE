@@ -7,9 +7,9 @@ import type { NextRequest } from "next/server";
  * runtime and has restricted import capabilities in some Next.js versions.
  */
 const GUIDE_PUBLISH_STATUS: Record<string, boolean> = {
-    groups: false,
-    "ifrs-15": false,
-    "ifrs-16": false,
+    groups: true,
+    "ifrs-15": true,
+    "ifrs-16": true,
 };
 
 /**

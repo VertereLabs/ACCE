@@ -16,9 +16,9 @@
  * cannot import this in the Edge runtime).
  */
 export const GUIDE_PUBLISH_STATUS: Record<string, boolean> = {
-    groups: false,
-    "ifrs-15": false,
-    "ifrs-16": false,
+    groups: true,
+    "ifrs-15": true,
+    "ifrs-16": true,
 };
 
 export const GUIDE_PDF_PUBLISH_STATUS: Record<string, boolean> = {

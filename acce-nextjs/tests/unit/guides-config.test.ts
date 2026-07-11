@@ -32,10 +32,13 @@ describe("isGuidePublished — production behavior (NODE_ENV != development)", (
     ]);
   });
 
-  it("hides guides whose flag is false (current shipped state)", () => {
-    expect(isGuidePublished("groups")).toBe(false);
-    expect(isGuidePublished("ifrs-15")).toBe(false);
-    expect(isGuidePublished("ifrs-16")).toBe(false);
+  it("publishes the three reviewed guides (released state)", () => {
+    GUIDE_PUBLISH_STATUS.groups = true;
+    GUIDE_PUBLISH_STATUS["ifrs-15"] = true;
+    GUIDE_PUBLISH_STATUS["ifrs-16"] = true;
+    expect(isGuidePublished("groups")).toBe(true);
+    expect(isGuidePublished("ifrs-15")).toBe(true);
+    expect(isGuidePublished("ifrs-16")).toBe(true);
   });
 
   it("shows a guide once its flag is flipped to true", () => {

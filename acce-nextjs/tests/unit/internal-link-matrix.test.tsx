@@ -22,12 +22,9 @@ import PgdaTutorPage from "@/app/pgda-tutor/page";
  *   /subjects: 4 spokes + /cta-tutor + /pgda-tutor
  *   each spoke (/accounting-tutor, /financial-management-tutor, /tax-tutor, /auditing-tutor):
  *     /cta-tutor + /pgda-tutor + /subjects
+ *   /accounting-tutor additionally: /guides/ifrs-15 + /guides/ifrs-16 (wired Story 3.3)
  *   /cta-tutor: 4 spokes + /pgda-tutor
  *   /pgda-tutor: 4 spokes + /cta-tutor
- *
- * NOT asserted here:
- *   /accounting-tutor -> /guides/ifrs-15, /guides/ifrs-16
- *   (pending Epic 3 guide release, GUIDE_PUBLISH_STATUS: false; wired by Story 3.3)
  */
 
 type PageSpec = {
@@ -65,7 +62,7 @@ const MATRIX: PageSpec[] = [
   {
     name: "AccountingTutorPage",
     Component: AccountingTutorPage,
-    edges: ["/cta-tutor", "/pgda-tutor", "/subjects"],
+    edges: ["/cta-tutor", "/pgda-tutor", "/subjects", "/guides/ifrs-15", "/guides/ifrs-16"],
   },
   {
     name: "FinancialManagementTutorPage",
@@ -133,11 +130,4 @@ describe("internal link matrix", () => {
     });
   }
 
-  // Pending edge: /accounting-tutor -> IFRS guides (Epic 3 gate, GUIDE_PUBLISH_STATUS: false)
-  // Wire by Story 3.3 when guide flags flip to true:
-  //   add <Link href="/guides/ifrs-15" ...> + <Link href="/guides/ifrs-16" ...> to
-  //   src/app/accounting-tutor/page.tsx and extend the AccountingTutorPage edges above.
-  it.todo(
-    "accounting-tutor links to relevant IFRS guides once Epic 3 releases them",
-  );
 });

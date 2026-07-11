@@ -273,6 +273,14 @@ export default function AccountingTutorPage() {
                                 <Link href="/subjects" className="text-accent hover:underline">
                                     subjects page
                                 </Link>
+                                . For the IFRS standards Accounting leans on most, see my{" "}
+                                <Link href="/guides/ifrs-15" className="text-accent hover:underline">
+                                    IFRS 15 study guide
+                                </Link>{" "}
+                                and{" "}
+                                <Link href="/guides/ifrs-16" className="text-accent hover:underline">
+                                    IFRS 16 study guide
+                                </Link>
                                 .
                             </p>
                         </div>
