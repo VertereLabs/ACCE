@@ -379,3 +379,55 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** All 7 ACs verified with fresh reasoning: AC1 single H1 + exact sibling shell + no heading skips; AC2 title 54ch (sanctioned em dash) / desc 151ch colon-variant / canonical /pgda-tutor/ / OG+Twitter mirrors; AC3 NFR1 differentiation GENUINELY satisfied (PGDA-as-qualification framing: entry/admission, UNISA distance, honours structure; pathway H2 = progression narrative ITC->TOPP/TIPP->APC->CA(SA), distinct from cta-tutor's exam-technique framing; subjects as link-out cards; no shared paragraphs with /cta-tutor); AC4 Course+FAQPage JSON-LD as two Script blocks, provider @id correct, FAQPage.mainEntity + on-page FAQ both derive from the single FAQ_ITEMS const; AC5 all 4 spokes + /cta-tutor (no self-link), each present once and route dirs exist; AC6 3 hero CTAs across 3 distinct view groups (one per group, matches DONE cta-tutor template), aria-hidden icons, tokens only; AC7 additive-only (only the 2 File-List files; sitemap.ts untouched), render-smoke extended with the 3 required assertions. Em-dash grep = exactly 3 sanctioned title fields, zero in body/FAQ/meta (NFR6). render-smoke 24/24 green; tsc no NEW errors in the touched files. Edge-case pass clean (static JSON.stringify, rel=noopener on all _blank, key=index safe for static list, no render-throw path). 2 low observations dismissed as noise per 1.1-1.5 precedent (word-count upper-bound overrun of genuine content; OG/Twitter em-dash title mirror mandated by AC2). Zero HIGH/MEDIUM.
 - **Reversibility:** Read-only review + status flip. To reopen: set development_status[1-6-...] back to review in sprint-status.yaml and revert the story Status to review; no code was modified.
 - **Files touched:** _bmad-output/implementation-artifacts/1-6-pgda-qualification-hub-pgda-tutor.md (Status + Review Findings), _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-11T13:54:44Z] 1-7-subjects-hub-subjects — BreadcrumbList JSON-LD shape for /subjects (first Breadcrumb schema on the site)
+- **Risk:** medium
+- **Workflow / step:** create-story step 3-5 (structured-data contract for the story file)
+- **Decision point:** CAP-1 assigns `/subjects` a **BreadcrumbList** schema (not the Course/Service used by every DONE sibling). No BreadcrumbList JSON-LD exists anywhere in the codebase yet (only a UI `breadcrumb.tsx` component, unrelated), so there is no in-repo precedent to mirror; I must specify the exact shape in the story.
+- **Options considered:** A) Two-item trail Home (`/`) → Subjects (`/subjects/`). B) Single-item trail (Subjects only). C) Add a fabricated intermediate crawl level.
+- **Chosen:** A — a 2-item BreadcrumbList: position 1 = "Home" → `https://accetutors.co.za/`, position 2 = "Subjects" → `https://accetutors.co.za/subjects/`, injected via `<Script id="subjects-jsonld-breadcrumb" type="application/ld+json">` mirroring the sibling injection pattern. `item` uses absolute URLs (schema.org requires absolute for BreadcrumbList `item`), consistent with the Organization/@id absolute URLs already in `layout.tsx`.
+- **Rationale:** `/subjects` sits one level under the homepage in the real site hierarchy; a Home→Subjects trail is the accurate, minimal, valid BreadcrumbList. Absolute URLs are required by the spec for breadcrumb items (unlike `alternates.canonical`, which stays relative because `metadataBase` resolves it).
+- **Reversibility:** Trivially editable in the single `BREADCRUMB_DATA` const in `page.tsx`; add/remove positions or swap to relative-with-@id if a different convention is later adopted. Local to one file.
+- **Files touched:** _bmad-output/implementation-artifacts/1-7-subjects-hub-subjects.md (story spec only; dev implements)
+
+### [2026-07-11T13:54:44Z] 1-7-subjects-hub-subjects — "Substantive, not a thin index" word-count target for the hub page
+- **Risk:** medium
+- **Workflow / step:** create-story step 2-5 (content-depth AC interpretation)
+- **Decision point:** AC3/epic says total copy must read as "substantive (not a thin index)" but, unlike the six spoke/hub stories, CAP-1 does NOT pin the 700–900-word floor to `/subjects` (its outline is intro → 4 cards → group-vs-1:1 → CTA). NFR1 anti-doorway still applies site-wide. Ambiguous how much prose the hub needs.
+- **Options considered:** A) Enforce the full 700–900 floor. B) No floor (pure link index). C) Set a moderate substantive floor (~450–650 words) with genuinely differentiated hub-level framing, explicitly NOT re-explaining each subject (the spokes own depth).
+- **Chosen:** C — target ~450–650 words of real hub-level content (who-we-help intro, group-vs-1:1 framing, qualifications routing, CTA) with the 4 subject cards as one-line link-outs, and instruct dev not to pad toward 900 by duplicating spoke content (which would create the doorway/near-duplicate NFR1 risk). Differentiation from siblings is the load-bearing check.
+- **Rationale:** A hub's job is distribution, not depth; forcing 700–900 words here would pressure the author to re-explain subjects and manufacture the exact scaled-content/duplication NFR1 forbids. "Substantive not thin" is satisfied by genuine hub framing well below 900 words. Matches CAP-1 which deliberately omits the 700–900 pin for this row.
+- **Reversibility:** Word target is guidance in the story text only; adjust the range in the AC/Dev Note if review wants more or less. No code impact.
+- **Files touched:** _bmad-output/implementation-artifacts/1-7-subjects-hub-subjects.md
+
+### [2026-07-11T13:54:44Z] 1-7-subjects-hub-subjects — Meta description em dash replaced with a colon (NFR6 house rule)
+- **Risk:** low
+- **Workflow / step:** create-story step 5 (metadata contract)
+- **Decision point:** The CAP-1 catalog meta description contains one em dash (`Financial Accounting, Taxation, Management Accounting & Finance, and Auditing — for undergrad...`). NFR6 forbids em dashes in metadata, and unlike the CAP-6/CAP-7 hub TITLES, the CAP-1 title has NO em dash, so there is no sanctioned exception on this page.
+- **Options considered:** A) Keep the em dash. B) Replace with a colon (Stories 1.2–1.6 precedent). C) Rewrite the sentence.
+- **Chosen:** B — replace the single em dash with a colon, preserving every other word; whole page (title, meta, H1, body, FAQ-if-any, JSON-LD) is 100% em-dash-free (no sanctioned exception, matching the /auditing-tutor treatment).
+- **Rationale:** Established house rule applied identically in 1.2/1.3/1.4/1.5/1.6; `/subjects` has no pinned-em-dash title so it is the fully-clean case like `/auditing-tutor`.
+- **Reversibility:** One-character edit in the `description` string.
+- **Files touched:** _bmad-output/implementation-artifacts/1-7-subjects-hub-subjects.md
+
+---
+
+### [2026-07-11T13:59:19Z] 1-7-subjects-hub-subjects — dev-story: implementation approach for /subjects hub
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (implement tasks 1-5)
+- **Decision point:** Three key decisions for the /subjects hub: (1) content scope vs the CAP-1 outline, (2) BreadcrumbList JSON-LD shape (no in-repo precedent), (3) which existing sibling to mirror for structure.
+- **Options considered:** A) Mirror /cta-tutor (qualification hub, Course+FAQPage schema). B) Mirror /auditing-tutor (most recent fully-em-dash-free page, Service+FAQPage). C) Use /cta-tutor shell structure but change schema to BreadcrumbList only (as specified) and reduce word count to the ~450-650 hub target. For content: write genuine hub-level framing (who-we-help, distribution to spokes/hubs, group-vs-1:1) without re-explaining each subject in depth.
+- **Chosen:** C — mirror /cta-tutor shell exactly (same component imports, same hero badge pattern, same 4-card subject grid, same conversion CTA convention) but use BreadcrumbList-only JSON-LD schema and write hub-level copy at the ~450-650-word target. No FAQ section (AC3 explicitly marks it optional; adding one purely to inflate length is forbidden). Title and OG/Twitter all use colon variant (no em dash anywhere, no sanctioned exception).
+- **Rationale:** The story explicitly names /cta-tutor as the "direct structural template". BreadcrumbList is the ONLY schema per AC4/CAP-1 (not Course+Service+FAQPage). Word count of 450-650 is correct for a hub; padding to 900 would duplicate spoke content and trigger NFR1. Em-dash-free like /auditing-tutor (no verbatim-pinned em-dash title = no exception).
+- **Reversibility:** Delete acce-nextjs/src/app/subjects/page.tsx and revert render-smoke.test.tsx to undo. No config/sitemap changes needed.
+- **Files touched:** acce-nextjs/src/app/subjects/page.tsx (new), acce-nextjs/tests/unit/render-smoke.test.tsx (+1 describe block)
+
+### [2026-07-11T14:10:00Z] 1-7-subjects-hub-subjects — dev-story complete: all 5 tasks done, status set to review
+- **Risk:** low
+- **Workflow / step:** dev-story step 9 (completion)
+- **Decision point:** All 5 tasks complete; 27 render-smoke tests green (3 new SubjectsPage assertions + 24 previous); tsc no new errors; em-dash grep = 0; BreadcrumbList JSON-LD correct shape; 6 outbound links present. Story ready for code review.
+- **Options considered:** A) Mark review (all ACs satisfied, all tests pass). B) Hold pending additional verification.
+- **Chosen:** A — mark review. All 7 ACs verified: AC1 server component shell + single H1 "Subjects We Tutor" (level:1 test passes); AC2 title colon variant 52ch/desc colon variant ~140ch/canonical /subjects//OG+Twitter mirrors, zero em dashes; AC3 ~459 prose words genuine hub-level content (intro, four one-line subject cards, qualifications routing, group-vs-1:1, CTAs; no spoke content re-explained; no FAQ per explicit AC3 guidance); AC4 BreadcrumbList ONLY via single Script id=subjects-jsonld-breadcrumb with absolute item URLs; AC5 all 4 spokes + both hubs present in SUBJECTS+QUALIFICATIONS const arrays; AC6 design tokens only, hero CTAs per view group (hero, group-vs-1:1 callout, final CTA), aria-hidden icons; AC7 render-smoke extended (3 assertions), sitemap.ts untouched, 27/27 green.
+- **Rationale:** Clean pass on all acceptance criteria. The sitemap.test.ts failure for /subjects (by-design, deferred to Story 1.8) is a pre-existing pattern identical to all six DONE siblings.
+- **Reversibility:** git revert the commit or delete acce-nextjs/src/app/subjects/page.tsx and revert render-smoke.test.tsx.
+- **Files touched:** acce-nextjs/src/app/subjects/page.tsx, acce-nextjs/tests/unit/render-smoke.test.tsx, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/1-7-subjects-hub-subjects.md, _bmad-output/implementation-artifacts/autopilot-decisions.md
