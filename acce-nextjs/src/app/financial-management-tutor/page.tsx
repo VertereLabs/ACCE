@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -79,18 +79,8 @@ const FAQPAGE_DATA = {
 export default function FinancialManagementTutorPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Script
-                id="financial-management-tutor-jsonld-service"
-                type="application/ld+json"
-            >
-                {JSON.stringify(SERVICE_DATA)}
-            </Script>
-            <Script
-                id="financial-management-tutor-jsonld-faq"
-                type="application/ld+json"
-            >
-                {JSON.stringify(FAQPAGE_DATA)}
-            </Script>
+            <JsonLd id="financial-management-tutor-jsonld-service" data={SERVICE_DATA} />
+            <JsonLd id="financial-management-tutor-jsonld-faq" data={FAQPAGE_DATA} />
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">

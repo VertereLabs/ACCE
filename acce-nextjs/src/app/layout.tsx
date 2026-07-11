@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import JsonLd from "@/components/JsonLd";
 import { Playfair_Display, Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -78,9 +79,7 @@ export default function RootLayout({
           src="https://stats.verterelabs.co.za/script.js"
           data-website-id="6c7e46f6-fba8-40d3-80fa-79a00cedad07"
         />
-        <Script id="structured-data" type="application/ld+json">
-          {JSON.stringify(STRUCTURED_DATA)}
-        </Script>
+        <JsonLd id="structured-data" data={STRUCTURED_DATA} />
       </head>
       <body>
         <Providers>

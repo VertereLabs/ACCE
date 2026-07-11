@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -89,12 +89,7 @@ const BREADCRUMB_DATA = {
 export default function SubjectsPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Script
-                id="subjects-jsonld-breadcrumb"
-                type="application/ld+json"
-            >
-                {JSON.stringify(BREADCRUMB_DATA)}
-            </Script>
+            <JsonLd id="subjects-jsonld-breadcrumb" data={BREADCRUMB_DATA} />
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">

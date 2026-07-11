@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -35,12 +35,36 @@ const BREADCRUMB_DATA = {
     ],
 };
 
+// ContactPage + a ContactPoint merged onto the site Organization by @id.
+const CONTACT_DATA = {
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "ContactPage",
+            "@id": "https://accetutors.co.za/contact/#contactpage",
+            url: "https://accetutors.co.za/contact/",
+            name: "Contact ACCE Tutors",
+        },
+        {
+            "@type": "Organization",
+            "@id": "https://accetutors.co.za/#organization",
+            contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "Customer Support",
+                telephone: "+27-71-325-5295",
+                email: "priyankamikaya21@gmail.com",
+                areaServed: "ZA",
+                availableLanguage: "English",
+            },
+        },
+    ],
+};
+
 export default function ContactPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Script id="contact-jsonld-breadcrumb" type="application/ld+json">
-                {JSON.stringify(BREADCRUMB_DATA)}
-            </Script>
+            <JsonLd id="contact-jsonld-breadcrumb" data={BREADCRUMB_DATA} />
+            <JsonLd id="contact-jsonld-contactpage" data={CONTACT_DATA} />
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">

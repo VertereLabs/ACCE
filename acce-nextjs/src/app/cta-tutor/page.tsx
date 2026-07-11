@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -76,18 +76,8 @@ const FAQPAGE_DATA = {
 export default function CtaTutorPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Script
-                id="cta-tutor-jsonld-course"
-                type="application/ld+json"
-            >
-                {JSON.stringify(COURSE_DATA)}
-            </Script>
-            <Script
-                id="cta-tutor-jsonld-faq"
-                type="application/ld+json"
-            >
-                {JSON.stringify(FAQPAGE_DATA)}
-            </Script>
+            <JsonLd id="cta-tutor-jsonld-course" data={COURSE_DATA} />
+            <JsonLd id="cta-tutor-jsonld-faq" data={FAQPAGE_DATA} />
             <Navbar />
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">

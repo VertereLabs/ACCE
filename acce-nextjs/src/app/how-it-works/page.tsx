@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import HowItWorks from "@/components/HowItWorks";
+import HowItWorks, { howItWorksSteps } from "@/components/HowItWorks";
 
 export const metadata: Metadata = {
     title: "How ACCE Tutoring Works | From First Message to Exam Success",
@@ -33,12 +33,26 @@ const BREADCRUMB_DATA = {
     ],
 };
 
+// HowTo schema built from the same 4 steps the page renders.
+const HOWTO_DATA = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How ACCE tutoring works",
+    description:
+        "Getting started with ACCE tutoring takes four steps, from your first message through to consistent exam support.",
+    step: howItWorksSteps.map((step, index) => ({
+        "@type": "HowToStep",
+        position: index + 1,
+        name: step.title,
+        text: step.description,
+    })),
+};
+
 export default function HowItWorksPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Script id="how-it-works-jsonld-breadcrumb" type="application/ld+json">
-                {JSON.stringify(BREADCRUMB_DATA)}
-            </Script>
+            <JsonLd id="how-it-works-jsonld-breadcrumb" data={BREADCRUMB_DATA} />
+            <JsonLd id="how-it-works-jsonld-howto" data={HOWTO_DATA} />
             <Navbar />
             <main className="pt-20">
                 <HowItWorks />

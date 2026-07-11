@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -33,12 +33,53 @@ const BREADCRUMB_DATA = {
     ],
 };
 
+// Person (E-E-A-T) + ProfilePage, with founder linked back onto the site
+// Organization (node-merged by @id with the definition in the root layout).
+const PROFILE_DATA = {
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "ProfilePage",
+            "@id": "https://accetutors.co.za/about/#profilepage",
+            url: "https://accetutors.co.za/about/",
+            name: "About Priyanka",
+            mainEntity: { "@id": "https://accetutors.co.za/#priyanka" },
+        },
+        {
+            "@type": "Person",
+            "@id": "https://accetutors.co.za/#priyanka",
+            name: "Priyanka Govender",
+            jobTitle: "CA(SA) Tutor & Founder",
+            description:
+                "PGDA graduate and CA(SA) candidate who tutors Financial Accounting, Taxation, Management Accounting & Finance, and Auditing for undergraduate, PGDA and CTA students.",
+            image: "https://accetutors.co.za/images/priyanka.png",
+            alumniOf: { "@type": "EducationalOrganization", name: "Milpark Education" },
+            knowsAbout: [
+                "Financial Accounting",
+                "Taxation",
+                "Management Accounting and Finance",
+                "Auditing",
+                "IFRS",
+                "CA(SA)",
+                "CTA",
+            ],
+            worksFor: { "@id": "https://accetutors.co.za/#organization" },
+            sameAs: ["https://www.linkedin.com/in/priyanka-govender21-724096186/"],
+        },
+        {
+            "@type": "Organization",
+            "@id": "https://accetutors.co.za/#organization",
+            founder: { "@id": "https://accetutors.co.za/#priyanka" },
+            sameAs: ["https://www.instagram.com/acce.tutorscta/"],
+        },
+    ],
+};
+
 export default function AboutPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Script id="about-jsonld-breadcrumb" type="application/ld+json">
-                {JSON.stringify(BREADCRUMB_DATA)}
-            </Script>
+            <JsonLd id="about-jsonld-breadcrumb" data={BREADCRUMB_DATA} />
+            <JsonLd id="about-jsonld-profile" data={PROFILE_DATA} />
             <Navbar />
             <main className="pt-20">
                 <About />

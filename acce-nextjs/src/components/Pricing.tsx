@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Check, MessageCircle, ArrowRight } from "lucide-react";
 
-const plans = [
+export const pricingPlans = [
     {
         name: "Single Session",
         price: "TBD",
@@ -63,7 +63,7 @@ const PricingTeaser = () => (
                     Rates vary by subject and level; reach out for a personalized quote.
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
-                    {plans.map((plan) => (
+                    {pricingPlans.map((plan) => (
                         <span
                             key={plan.name}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-muted-foreground text-sm font-medium"
@@ -103,7 +103,7 @@ const Pricing = ({ teaser = false }: { teaser?: boolean }) => {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    {plans.map((plan) => (
+                    {pricingPlans.map((plan) => (
                         <div
                             key={plan.name}
                             className={`relative surface-card rounded-2xl p-8 border-2 transition-all duration-500 hover:-translate-y-2 ${plan.popular

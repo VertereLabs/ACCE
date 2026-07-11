@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MessageCircle, Users, FileText, Trophy, ArrowRight } from "lucide-react";
 
-const steps = [
+export const howItWorksSteps = [
     {
         number: "01",
         icon: MessageCircle,
@@ -44,7 +44,7 @@ const HowItWorksTeaser = () => (
                 </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-10">
-                {steps.map((step) => (
+                {howItWorksSteps.map((step) => (
                     <div
                         key={step.title}
                         className="surface-card rounded-2xl p-6 border border-border text-center"
@@ -94,7 +94,7 @@ const HowItWorks = ({ teaser = false }: { teaser?: boolean }) => {
                     <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-border -translate-y-1/2" />
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {steps.map((step, index) => (
+                        {howItWorksSteps.map((step, index) => (
                             <div
                                 key={step.title}
                                 className="relative group"
@@ -119,7 +119,7 @@ const HowItWorks = ({ teaser = false }: { teaser?: boolean }) => {
                                 </div>
 
                                 {/* Connector Dot */}
-                                {index < steps.length - 1 && (
+                                {index < howItWorksSteps.length - 1 && (
                                     <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-8 rounded-full bg-primary border-4 border-accent z-20 -translate-y-1/2" />
                                 )}
                             </div>
