@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Lightbulb, ClipboardCheck, Split, DollarSign, Calculator, Unlock, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "Part 2: The Five-Step Model (IFRS 15) | ACCE Tutors",
@@ -30,6 +31,7 @@ export default function IFRS15Part2Page() {
                             Back to IFRS 15
                         </Link>
                         <div className="flex items-center gap-4">
+                            {isGuidePdfPublished("ifrs-15") && (
                             <a
                                 href="/pdfs/ifrs-15-revenue.pdf"
                                 download
@@ -38,6 +40,7 @@ export default function IFRS15Part2Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
+                            )}
                             <div className="text-muted-foreground text-sm">
                                 Part 2 of 5
                             </div>

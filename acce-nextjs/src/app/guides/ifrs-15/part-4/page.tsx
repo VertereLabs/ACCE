@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, ArrowRight, ShieldCheck, UserCog, RefreshCcw, Info, Lightbulb, CheckCircle2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "Part 4: IFRS 15 Complex Scenarios | ACCE Tutors",
@@ -30,6 +31,7 @@ export default function IFRS15Part4Page() {
                             Back to IFRS 15
                         </Link>
                         <div className="flex items-center gap-4">
+                            {isGuidePdfPublished("ifrs-15") && (
                             <a
                                 href="/pdfs/ifrs-15-revenue.pdf"
                                 download
@@ -38,6 +40,7 @@ export default function IFRS15Part4Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
+                            )}
                             <div className="text-muted-foreground text-sm">
                                 Part 4 of 5
                             </div>

@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Lightbulb, Calculator, Table as TableIcon, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "Part 4: Analysis of Equity (AOE) | ACCE Tutors",
@@ -30,6 +31,7 @@ export default function GroupsPart4Page() {
                             Back to Guide
                         </Link>
                         <div className="flex items-center gap-4">
+                            {isGuidePdfPublished("groups") && (
                             <a
                                 href="/pdfs/groups-business-combinations.pdf"
                                 download
@@ -38,6 +40,7 @@ export default function GroupsPart4Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
+                            )}
                             <div className="text-muted-foreground text-sm">
                                 Part 4 of 7
                             </div>

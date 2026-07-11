@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, Clock, Target, AlertTriangle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "Groups & Business Combinations | ACCE Tutors Study Guides",
@@ -141,6 +142,7 @@ export default function GroupsGuidePage() {
                         </div>
 
                         {/* Download Full Guide */}
+                        {isGuidePdfPublished("groups") && (
                         <div className="mt-8 bg-gradient-to-r from-accent/20 to-accent/5 rounded-xl p-6 border border-accent/30">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div>
@@ -159,6 +161,7 @@ export default function GroupsGuidePage() {
                                 </Button>
                             </div>
                         </div>
+                        )}
                     </div>
 
                     {/* Key Standards */}

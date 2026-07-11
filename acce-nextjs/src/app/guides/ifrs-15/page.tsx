@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, ArrowRight, BookOpen, Clock, Target, Receipt, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "IFRS 15 Revenue Guide | ACCE Tutors",
@@ -122,6 +123,7 @@ export default function IFRS15GuidePage() {
                         </div>
 
                         {/* Download Full Guide */}
+                        {isGuidePdfPublished("ifrs-15") && (
                         <div className="mt-8 bg-gradient-to-r from-accent/20 to-accent/5 rounded-xl p-6 border border-accent/30">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div>
@@ -140,6 +142,7 @@ export default function IFRS15GuidePage() {
                                 </Button>
                             </div>
                         </div>
+                        )}
                     </div>
 
                     {/* Preview of Parts */}

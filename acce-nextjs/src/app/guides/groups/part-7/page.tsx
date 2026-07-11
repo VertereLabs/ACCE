@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, CheckCircle2, Lightbulb, FileText, BarChart3, PieChart, GraduationCap, RefreshCw, Users, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
     title: "Part 7: Group Financial Statements & Exam Prep | ACCE Tutors",
@@ -30,6 +31,7 @@ export default function GroupsPart7Page() {
                             Back to Guide
                         </Link>
                         <div className="flex items-center gap-4">
+                            {isGuidePdfPublished("groups") && (
                             <a
                                 href="/pdfs/groups-business-combinations.pdf"
                                 download
@@ -38,6 +40,7 @@ export default function GroupsPart7Page() {
                                 <Download className="w-3.5 h-3.5" />
                                 PDF
                             </a>
+                            )}
                             <div className="text-muted-foreground text-sm">
                                 Part 7 of 7
                             </div>

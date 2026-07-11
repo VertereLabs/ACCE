@@ -1,5 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import Navbar from "@/components/Navbar";
 import HomePage from "@/app/page";
 import GuidesPage from "@/app/guides/page";
@@ -58,12 +58,29 @@ describe("GuidesPage renders", () => {
 });
 
 describe("A representative guide article renders", () => {
-  it("mounts IFRS 16 Part 1 with its heading and PDF download", () => {
+  it("mounts IFRS 16 Part 1 with its heading and PDF link absent (guarded: PDF held in prod)", () => {
     const { container } = render(<IFRS16Part1Page />);
     expect(
       screen.getByRole("heading", { name: /IFRS 16: Introduction & Key Changes/i }),
     ).toBeInTheDocument();
+    // In the default test env (NODE_ENV="test", no NEXT_PUBLIC_GUIDES_PREVIEW),
+    // isGuidePdfPublished("ifrs-16") returns false (production branch, all flags false).
+    // The guarded PDF link must be ABSENT.
+    expect(container.querySelector('a[href="/pdfs/ifrs-16-leases.pdf"]')).toBeNull();
+  });
+
+  it("mounts IFRS 16 Part 1 with PDF link present when preview env is active", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GUIDES_PREVIEW", "true");
+    vi.resetModules();
+    const { default: IFRS16Part1PagePreview } = await import(
+      "@/app/guides/ifrs-16/part-1/page"
+    );
+    const { container } = render(<IFRS16Part1PagePreview />);
     expect(container.querySelector('a[href="/pdfs/ifrs-16-leases.pdf"]')).not.toBeNull();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 });
 
