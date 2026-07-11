@@ -14,6 +14,13 @@ function isRouteIndexable(path: string): boolean {
 
 const ROUTES = [
   "/",
+  "/subjects",
+  "/accounting-tutor",
+  "/financial-management-tutor",
+  "/tax-tutor",
+  "/auditing-tutor",
+  "/cta-tutor",
+  "/pgda-tutor",
   "/guides",
   "/guides/ifrs-15",
   "/guides/ifrs-15/part-1",

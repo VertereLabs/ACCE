@@ -441,3 +441,55 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Fresh review (did not assume dev step correct) confirmed all 7 ACs: shell mirrors sibling exactly with single H1 "Subjects We Tutor"; metadata colon-variant title (53 chars) + desc (142 chars), canonical `/subjects/` relative, OG/Twitter mirror; ~495 words substantive hub prose with SA E-E-A-T context, ZERO em dashes; BreadcrumbList-only JSON-LD valid with absolute item URLs at correct origin; all 4 spokes + 2 hubs linked, no self-link; tokens/a11y/additive-only respected; render-smoke extended, 27/27 green, tsc clean on new files, sitemap/middleware/next.config untouched. The 3 `variant="hero"` CTAs sit in 3 separate view groups (matches the 3-4-per-page pattern of every DONE sibling that passed review) — "one per view group" not "per page"; dismissed as noise, not a finding.
 - **Reversibility:** Fully reversible. To reopen: set `development_status[1-7-subjects-hub-subjects]` back to `review` in sprint-status.yaml and revert the story-file Status line + Review Findings section; no code was modified by this review.
 - **Files touched:** _bmad-output/implementation-artifacts/1-7-subjects-hub-subjects.md, _bmad-output/implementation-artifacts/sprint-status.yaml, _bmad-output/implementation-artifacts/autopilot-decisions.md
+
+### [2026-07-11T14:14:30Z] 1-8-register-new-routes-in-sitemap — Sitemap entries omit trailing slash (match ROUTES + test convention, not canonical metadata)
+- **Risk:** medium
+- **Workflow / step:** create-story step 3-5 (architecture analysis + story authoring)
+- **Decision point:** The 7 new page routes register canonical metadata WITH a trailing slash (e.g. `canonical: "/cta-tutor/"`), but `src/app/sitemap.ts`'s `ROUTES` array lists every existing route WITHOUT a trailing slash (`"/guides"`, `"/"`). The story must pick the exact string form to append.
+- **Options considered:** A) Add entries with trailing slash to mirror the pages' canonical metadata. B) Add entries WITHOUT trailing slash to match the existing `ROUTES` convention and the sitemap↔filesystem test.
+- **Chosen:** B — append `"/cta-tutor"`, `"/pgda-tutor"`, `"/subjects"`, `"/accounting-tutor"`, `"/financial-management-tutor"`, `"/tax-tutor"`, `"/auditing-tutor"` (no trailing slash).
+- **Rationale:** `tests/unit/sitemap.test.ts` derives expected routes via `collectPageRoutes` (yields `/cta-tutor`) and strips trailing slashes in `routeToPageFile`; the "every content page.tsx is registered" assertion compares against `routeSet` built from raw sitemap URLs. A trailing-slash entry would still pass that test (route stripped for file lookup) but would break the reverse "no duplicate / every route resolves" symmetry with the no-slash `ROUTES` convention and diverge stylistically from all 22 existing entries. Canonical-vs-sitemap URL form differing is normal (Next.js normalizes; canonical is a separate SEO signal). Consistency with the established `ROUTES` pattern wins.
+- **Reversibility:** Trivial — edit the 7 string literals in `ROUTES` to add/remove the trailing slash; one-line-each change, no downstream coupling.
+- **Files touched:** _bmad-output/implementation-artifacts/1-8-register-new-routes-in-sitemap.md (story spec only; code change happens in dev-story)
+
+### [2026-07-11T14:14:30Z] 1-8-register-new-routes-in-sitemap — Scope is purely additive to ROUTES; guide-filter + priority logic untouched
+- **Risk:** low
+- **Workflow / step:** create-story step 2-3 (scope interpretation)
+- **Decision point:** AC says "add all seven routes; existing routes and guide-URL filtering remain unchanged (additive only, NFR4)." Need to confirm no other sitemap.ts change (priority tiers, changeFrequency, isRouteIndexable) is in scope.
+- **Options considered:** A) Only append to `ROUTES`; leave `getPriority`, `isRouteIndexable`, `changeFrequency` as-is. B) Also tune priority/changeFrequency for the new marketing pages.
+- **Chosen:** A — append-only to `ROUTES`. `getPriority` already returns 0.8 for depth-1 routes (correct for these top-level pages); `isRouteIndexable` returns true for non-`/guides` paths (correct); `changeFrequency: "weekly"` applies uniformly.
+- **Rationale:** NFR4 mandates additive-only, no regressions. The existing depth-based priority + guide-filter logic already handles the new routes correctly with zero edits, so touching them would be unnecessary scope invention (contract rule 4). This also unblocks the 3 currently-failing `sitemap.test.ts` assertions that all prior stories (1.1-1.7) deferred here by design.
+- **Reversibility:** N/A — no logic changed; purely a data-array append.
+- **Files touched:** _bmad-output/implementation-artifacts/1-8-register-new-routes-in-sitemap.md
+
+---
+
+### [2026-07-11T14:17:13Z] 1-8-register-new-routes-in-sitemap — dev-story: implementation approach: append placement (top vs. end of ROUTES array)
+- **Risk:** low
+- **Workflow / step:** dev-story step 5 (implement Task 1)
+- **Decision point:** Story says the 7 new routes can go at the TOP of the array (after "/" before "/guides") or at the END after the guide block; both are acceptable and neither affects any test. Must choose a placement.
+- **Options considered:** A) Insert after "/" at the top of the array so highest-value marketing pages lead the sitemap. B) Append at the end of the array after the guide block.
+- **Chosen:** A — insert after "/" at the top, before "/guides". This is the story's own "recommended placement" and better reflects SEO priority (marketing pages lead, guide series follow).
+- **Rationale:** Story Dev Notes explicitly state "Recommended placement: add them at the top of the array (right after '/', before '/guides') so the highest-value marketing pages lead the sitemap." Order does not affect any test assertion; both are fully valid. Recommended placement followed.
+- **Reversibility:** Trivial to reorder; move the 7 strings to the end of the array without any other change.
+- **Files touched:** acce-nextjs/src/app/sitemap.ts
+
+### [2026-07-11T14:17:13Z] 1-8-register-new-routes-in-sitemap — dev-story: mark in-progress, baseline_commit set
+- **Risk:** low
+- **Workflow / step:** dev-story step 4 (mark in-progress)
+- **Decision point:** Story was ready-for-dev; setting baseline_commit and marking in-progress.
+- **Options considered:** N/A (standard workflow step).
+- **Chosen:** Set baseline_commit to HEAD (73e647fa515f5b7e6ee3d26fe096abbc9ff6f060), updated story Status to in-progress, updated sprint-status.yaml.
+- **Rationale:** Standard dev-story step 4 procedure.
+- **Reversibility:** Revert story frontmatter and sprint-status to ready-for-dev.
+- **Files touched:** _bmad-output/implementation-artifacts/1-8-register-new-routes-in-sitemap.md, _bmad-output/implementation-artifacts/sprint-status.yaml
+
+### [2026-07-11T14:17:13Z] 1-8-register-new-routes-in-sitemap — dev-story complete: guide-route test failures are pre-existing, not regressions
+- **Risk:** low
+- **Workflow / step:** dev-story step 7 (run validations) + step 8 (validate and mark task complete)
+- **Decision point:** After adding the 7 routes, sitemap.test.ts still has 3 failing tests: "includes the homepage and guides index", "registers all three guide series", "every content page.tsx on disk is registered". All 3 failures are due to guide routes being filtered out by `isRouteIndexable` (guides not published in test env). Story AC #4 says "all six assertions pass" but the guide-publishing issue is pre-existing (predates Epic 1) and is Epic 3 scope.
+- **Options considered:** A) Publish guides by setting guide config to true (out of scope, Epic 3 story 3.3 does this). B) Accept guide-route failures as pre-existing; confirm the 7 new routes no longer appear in the "missing" list (the specific portion of AC #4 that this story addresses). C) Block.
+- **Chosen:** B -- the 7 new routes no longer appear in the failing test's output. The guide-route failures existed before my change and are unchanged. This is the maximal correctness achievable within story scope (NFR4 additive-only; do NOT touch guide config).
+- **Rationale:** The story's AC #4 says "which is currently RED because the 7 pages exist on disk but are unregistered" -- that specific cause is now fixed. Guide-route failures are a pre-existing out-of-scope concern (baseline confirmed by running test before and after). Full unit suite: 39 tests pass, 3 guide-route failures unchanged from baseline. tsc: no new errors (pre-existing .next/types/validator.ts cache errors only). AC #1/#2/#3/#5/#6 all verified: 7 routes added with no trailing slash, no logic changes, priority 0.8 via getPriority depth-1, no em dashes.
+- **Reversibility:** Remove the 7 string literals from acce-nextjs/src/app/sitemap.ts ROUTES array.
+- **Files touched:** acce-nextjs/src/app/sitemap.ts
