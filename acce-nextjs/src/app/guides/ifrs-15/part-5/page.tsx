@@ -153,7 +153,7 @@ export default function IFRS15Part5Page() {
                                         <div>
                                             <h3 className="font-display text-xl font-bold text-foreground mb-3">You&apos;ve Mastered IFRS 15!</h3>
                                             <p className="text-sm text-muted-foreground m-0 leading-relaxed italic">
-                                                From the core principle to complex repurchase agreements, you now have the tools to tackle revenue recognition with confidence. Practice as many past papers as you can—revenue is all about identifying those subtle &quot;hooks&quot; in the question narrative.
+                                                From the core principle to complex repurchase agreements, you now have the tools to tackle revenue recognition with confidence. Practice as many past papers as you can, because revenue is all about identifying those subtle &quot;hooks&quot; in the question narrative.
                                             </p>
                                         </div>
                                     </div>

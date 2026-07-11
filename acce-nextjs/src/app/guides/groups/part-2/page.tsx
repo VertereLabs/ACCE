@@ -67,7 +67,7 @@ export default function GroupsPart2Page() {
                             {/* Introduction */}
                             <div className="bg-card rounded-2xl border border-border p-8 mb-10">
                                 <p className="text-muted-foreground text-lg leading-relaxed m-0">
-                                    IFRS 3 mandates the <strong className="text-foreground">acquisition method</strong> for all business combinations. This part walks through each step — from identifying the acquirer to calculating goodwill. Get this right, and your consolidation journals will flow naturally.
+                                    IFRS 3 mandates the <strong className="text-foreground">acquisition method</strong> for all business combinations. This part walks through each step, from identifying the acquirer to calculating goodwill. Get this right, and your consolidation journals will flow naturally.
                                 </p>
                             </div>
 
@@ -78,7 +78,7 @@ export default function GroupsPart2Page() {
                                     Identifying the Acquirer
                                 </h2>
                                 <p className="text-muted-foreground leading-relaxed mb-6">
-                                    The <strong className="text-foreground">acquirer</strong> is the entity that obtains control of the acquiree. In most cases, this is straightforward — the entity paying cash or issuing shares is the acquirer. However, some situations require careful analysis:
+                                    The <strong className="text-foreground">acquirer</strong> is the entity that obtains control of the acquiree. In most cases, this is straightforward: the entity paying cash or issuing shares is the acquirer. However, some situations require careful analysis:
                                 </p>
 
                                 <div className="bg-card rounded-xl border border-border p-6 mb-6">
@@ -178,7 +178,7 @@ export default function GroupsPart2Page() {
                                             <li>• Investment property</li>
                                             <li>• Financial instruments</li>
                                             <li>• Inventories</li>
-                                            <li>• Contingent assets (not recognized — see note)</li>
+                                            <li>• Contingent assets (not recognized, see note)</li>
                                         </ul>
                                     </div>
 
@@ -242,7 +242,7 @@ export default function GroupsPart2Page() {
                                     Measuring Non-Controlling Interest (NCI)
                                 </h2>
                                 <p className="text-muted-foreground leading-relaxed mb-6">
-                                    IFRS 3 provides two choices for measuring NCI at acquisition — this choice affects your goodwill calculation:
+                                    IFRS 3 provides two choices for measuring NCI at acquisition, and this choice affects your goodwill calculation:
                                 </p>
 
                                 <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -346,7 +346,7 @@ export default function GroupsPart2Page() {
                                         <div>
                                             <h4 className="font-display font-semibold text-foreground mb-1">Acquisition Costs</h4>
                                             <p className="text-muted-foreground text-sm m-0">
-                                                Transaction costs (legal fees, due diligence, advisory fees) are <strong>expensed as incurred</strong> — they are NOT part of consideration and do NOT affect goodwill. Only costs to issue shares are deducted from equity.
+                                                Transaction costs (legal fees, due diligence, advisory fees) are <strong>expensed as incurred</strong>: they are NOT part of consideration and do NOT affect goodwill. Only costs to issue shares are deducted from equity.
                                             </p>
                                         </div>
                                     </div>
@@ -406,7 +406,7 @@ export default function GroupsPart2Page() {
                                         <li className="flex items-start gap-3">
                                             <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                                             <span className="text-muted-foreground">
-                                                <strong className="text-foreground">Acquisition date:</strong> When control is obtained — all FVs measured at this date.
+                                                <strong className="text-foreground">Acquisition date:</strong> When control is obtained; all FVs measured at this date.
                                             </span>
                                         </li>
                                         <li className="flex items-start gap-3">
@@ -437,7 +437,7 @@ export default function GroupsPart2Page() {
                                     Coming in Part 3...
                                 </h2>
                                 <p className="text-muted-foreground mb-6">
-                                    We&apos;ll cover <strong className="text-foreground">IFRS 10: Consolidation Mechanics</strong> — the procedures for combining parent and subsidiary, eliminating intra-group transactions, and presenting unified group financial statements.
+                                    We&apos;ll cover <strong className="text-foreground">IFRS 10: Consolidation Mechanics</strong>: the procedures for combining parent and subsidiary, eliminating intra-group transactions, and presenting unified group financial statements.
                                 </p>
                             </section>
                         </div>

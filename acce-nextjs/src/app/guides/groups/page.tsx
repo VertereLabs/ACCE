@@ -106,7 +106,7 @@ export default function GroupsGuidePage() {
                             Groups & Business Combinations
                         </h1>
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-                            Let&apos;s talk about Group Financial Accounting… Daunting, right? From FCTRs to changes in degrees of influence to eliminating pro formas — where do you even begin? This comprehensive guide breaks down everything you need to master consolidated financial statements.
+                            Let&apos;s talk about Group Financial Accounting… Daunting, right? From FCTRs to changes in degrees of influence to eliminating pro formas: where do you even begin? This comprehensive guide breaks down everything you need to master consolidated financial statements.
                         </p>
 
                         {/* Progress Stats */}
@@ -274,7 +274,7 @@ export default function GroupsGuidePage() {
                                         Pro Tip: The Analysis of Equity
                                     </h3>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        Always work in the 100% column first, then multiply out to NCI or parent as needed. This reduces errors significantly. The AOE is the heart of group accounting — your journals flow from here.
+                                        Always work in the 100% column first, then multiply out to NCI or parent as needed. This reduces errors significantly. The AOE is the heart of group accounting: your journals flow from here.
                                     </p>
                                 </div>
                             </div>

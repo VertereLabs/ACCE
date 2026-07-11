@@ -157,7 +157,7 @@ export default function GroupsPart6Page() {
                                     <div className="flex items-start gap-4">
                                         <Lightbulb className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
                                         <p className="text-muted-foreground m-0 text-sm">
-                                            <strong className="text-foreground">Crucial Distinction:</strong> In consolidation, dividends from a sub are eliminated in full. In the equity method, dividends from an associate <strong className="text-foreground">reduce the carrying amount</strong> of the investment — they are not recognized as income in the group P/L.
+                                            <strong className="text-foreground">Crucial Distinction:</strong> In consolidation, dividends from a sub are eliminated in full. In the equity method, dividends from an associate <strong className="text-foreground">reduce the carrying amount</strong> of the investment; they are not recognized as income in the group P/L.
                                         </p>
                                     </div>
                                 </div>

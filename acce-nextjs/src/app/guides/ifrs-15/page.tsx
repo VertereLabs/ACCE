@@ -87,7 +87,7 @@ export default function IFRS15GuidePage() {
                             IFRS 15: Revenue from Contracts with Customers
                         </h1>
                         <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-                            IFRS 15 establishes a comprehensive framework for revenue recognition, replacing IAS 18 and IAS 11. The five-step model is the heart of this standard — master it and you&apos;ll unlock consistent revenue recognition across any scenario.
+                            IFRS 15 establishes a comprehensive framework for revenue recognition, replacing IAS 18 and IAS 11. The five-step model is the heart of this standard: master it and you&apos;ll unlock consistent revenue recognition across any scenario.
                         </p>
 
                         {/* Progress Stats */}

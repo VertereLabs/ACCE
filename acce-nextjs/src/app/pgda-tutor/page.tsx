@@ -7,17 +7,17 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "PGDA Tutor — Postgraduate Diploma in Accounting | ACCE",
+    title: "PGDA Tutor: Postgraduate Diploma in Accounting | ACCE",
     description: "PGDA tutoring for the Postgraduate Diploma in Accounting: Accounting, Tax, MAF and Auditing support to help you convert to CTA and CA(SA). ACCE Tutors.",
     alternates: {
         canonical: "/pgda-tutor/",
     },
     openGraph: {
-        title: "PGDA Tutor — Postgraduate Diploma in Accounting | ACCE",
+        title: "PGDA Tutor: Postgraduate Diploma in Accounting | ACCE",
         description: "PGDA tutoring for the Postgraduate Diploma in Accounting: Accounting, Tax, MAF and Auditing support to help you convert to CTA and CA(SA). ACCE Tutors.",
     },
     twitter: {
-        title: "PGDA Tutor — Postgraduate Diploma in Accounting | ACCE",
+        title: "PGDA Tutor: Postgraduate Diploma in Accounting | ACCE",
         description: "PGDA tutoring for the Postgraduate Diploma in Accounting: Accounting, Tax, MAF and Auditing support to help you convert to CTA and CA(SA). ACCE Tutors.",
     },
 };

@@ -27,7 +27,7 @@ const parts = [
     {
         id: 2,
         title: "Lessee Accounting (The Big Change!)",
-        description: "Master ROU assets and lease liabilities — initial recognition, subsequent measurement, and modifications.",
+        description: "Master ROU assets and lease liabilities: initial recognition, subsequent measurement, and modifications.",
         duration: "75 min read",
         status: "available",
         topics: ["ROU Asset", "Lease Liability", "Modifications", "Financial Ratios Impact"],

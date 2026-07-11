@@ -55,7 +55,7 @@ export default function GroupsPart4Page() {
                                 Part 4
                             </span>
                             <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                                Analysis of Equity (AOE) — The Heart of Groups
+                                Analysis of Equity (AOE): The Heart of Groups
                             </h1>
                             <p className="text-muted-foreground text-lg">
                                 90 min read • Last updated January 2026

@@ -67,7 +67,7 @@ export default function GroupsPart3Page() {
                             {/* Introduction */}
                             <div className="bg-card rounded-2xl border border-border p-8 mb-10">
                                 <p className="text-muted-foreground text-lg leading-relaxed m-0">
-                                    IFRS 10 sets the rules for consolidated financial statements when an entity has <strong className="text-foreground">control</strong> over another entity. This part focuses on the mechanics — how to build the statements once control is clear.
+                                    IFRS 10 sets the rules for consolidated financial statements when an entity has <strong className="text-foreground">control</strong> over another entity. This part focuses on the mechanics: how to build the statements once control is clear.
                                 </p>
                             </div>
 
@@ -87,7 +87,7 @@ export default function GroupsPart3Page() {
                                             1. Power over the Investee
                                         </h3>
                                         <p className="text-muted-foreground text-sm m-0">
-                                            Existing rights that give the investor the current ability to direct the <strong className="text-foreground">relevant activities</strong> — the activities that significantly affect the investee&apos;s returns.
+                                            Existing rights that give the investor the current ability to direct the <strong className="text-foreground">relevant activities</strong> (the activities that significantly affect the investee&apos;s returns).
                                         </p>
                                     </div>
 
@@ -185,31 +185,31 @@ export default function GroupsPart3Page() {
                                         <li className="flex items-start gap-4 text-muted-foreground">
                                             <span className="w-7 h-7 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
                                             <div>
-                                                <strong className="text-foreground">Combine like items</strong> — Add together assets, liabilities, equity, income, and expenses line by line
+                                                <strong className="text-foreground">Combine like items</strong>: Add together assets, liabilities, equity, income, and expenses line by line
                                             </div>
                                         </li>
                                         <li className="flex items-start gap-4 text-muted-foreground">
                                             <span className="w-7 h-7 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
                                             <div>
-                                                <strong className="text-foreground">Eliminate parent&apos;s investment</strong> — Remove the parent&apos;s investment in subsidiary against subsidiary&apos;s equity
+                                                <strong className="text-foreground">Eliminate parent&apos;s investment</strong>: Remove the parent&apos;s investment in subsidiary against subsidiary&apos;s equity
                                             </div>
                                         </li>
                                         <li className="flex items-start gap-4 text-muted-foreground">
                                             <span className="w-7 h-7 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
                                             <div>
-                                                <strong className="text-foreground">Recognize goodwill or bargain purchase</strong> — Calculate and present on SOFP
+                                                <strong className="text-foreground">Recognize goodwill or bargain purchase</strong>: Calculate and present on SOFP
                                             </div>
                                         </li>
                                         <li className="flex items-start gap-4 text-muted-foreground">
                                             <span className="w-7 h-7 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
                                             <div>
-                                                <strong className="text-foreground">Eliminate intra-group transactions</strong> — Remove all intercompany balances, sales, dividends
+                                                <strong className="text-foreground">Eliminate intra-group transactions</strong>: Remove all intercompany balances, sales, dividends
                                             </div>
                                         </li>
                                         <li className="flex items-start gap-4 text-muted-foreground">
                                             <span className="w-7 h-7 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold flex-shrink-0">5</span>
                                             <div>
-                                                <strong className="text-foreground">Recognize NCI</strong> — Present NCI in equity and allocate profit/loss
+                                                <strong className="text-foreground">Recognize NCI</strong>: Present NCI in equity and allocate profit/loss
                                             </div>
                                         </li>
                                     </ol>
@@ -434,7 +434,7 @@ export default function GroupsPart3Page() {
                                     Coming in Part 4...
                                 </h2>
                                 <p className="text-muted-foreground mb-6">
-                                    We&apos;ll dive deep into the <strong className="text-foreground">Analysis of Equity (AOE)</strong> — the heart of group accounting. You&apos;ll learn to work through at acquisition, since acquisition, and current year columns to derive all your consolidation journals.
+                                    We&apos;ll dive deep into the <strong className="text-foreground">Analysis of Equity (AOE)</strong>, the heart of group accounting. You&apos;ll learn to work through at acquisition, since acquisition, and current year columns to derive all your consolidation journals.
                                 </p>
                             </section>
                         </div>

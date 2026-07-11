@@ -7,17 +7,17 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "CTA Tutor — Certificate in Theory of Accounting | ACCE",
+    title: "CTA Tutor: Certificate in Theory of Accounting | ACCE",
     description: "CTA tutoring across Accounting, Tax, MAF and Auditing. Structured support for the Certificate in Theory of Accounting and the road to CA(SA). Book with ACCE.",
     alternates: {
         canonical: "/cta-tutor/",
     },
     openGraph: {
-        title: "CTA Tutor — Certificate in Theory of Accounting | ACCE",
+        title: "CTA Tutor: Certificate in Theory of Accounting | ACCE",
         description: "CTA tutoring across Accounting, Tax, MAF and Auditing. Structured support for the Certificate in Theory of Accounting and the road to CA(SA). Book with ACCE.",
     },
     twitter: {
-        title: "CTA Tutor — Certificate in Theory of Accounting | ACCE",
+        title: "CTA Tutor: Certificate in Theory of Accounting | ACCE",
         description: "CTA tutoring across Accounting, Tax, MAF and Auditing. Structured support for the Certificate in Theory of Accounting and the road to CA(SA). Book with ACCE.",
     },
 };

@@ -162,7 +162,7 @@ export default function IFRS16Part1Page() {
                                     </div>
                                 </div>
                                 <div className="bg-accent/10 rounded-xl p-5 border border-accent/20 text-xs text-muted-foreground italic text-center leading-relaxed">
-                                    If you use these exemptions, you simply recognize the lease payments as an <strong className="text-foreground">expense</strong> on a straight-line basis over the lease term—just like the old operating lease model.
+                                    If you use these exemptions, you simply recognize the lease payments as an <strong className="text-foreground">expense</strong> on a straight-line basis over the lease term, just like the old operating lease model.
                                 </div>
                             </section>
 

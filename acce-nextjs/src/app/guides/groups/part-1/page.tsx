@@ -67,7 +67,7 @@ export default function GroupsPart1Page() {
                             {/* Introduction */}
                             <div className="bg-card rounded-2xl border border-border p-8 mb-10">
                                 <p className="text-muted-foreground text-lg leading-relaxed m-0">
-                                    Let&apos;s talk about Group Financial Accounting… Daunting, right? From FCTRs to changes in degrees of influence to eliminating pro formas — where do you even begin? This part covers the essential foundations you need before diving into the mechanics.
+                                    Let&apos;s talk about Group Financial Accounting… Daunting, right? From FCTRs to changes in degrees of influence to eliminating pro formas: where do you even begin? This part covers the essential foundations you need before diving into the mechanics.
                                 </p>
                             </div>
 
@@ -146,7 +146,7 @@ export default function GroupsPart1Page() {
                                 </div>
 
                                 <p className="text-muted-foreground leading-relaxed mb-6">
-                                    This is the <strong className="text-foreground">heart of group accounting</strong> — your journals flow from here. Understanding the structure of an AOE is essential.
+                                    This is the <strong className="text-foreground">heart of group accounting</strong>: your journals flow from here. Understanding the structure of an AOE is essential.
                                 </p>
 
                                 {/* AOE Structure */}
@@ -364,7 +364,7 @@ export default function GroupsPart1Page() {
                                     Coming in Part 2...
                                 </h2>
                                 <p className="text-muted-foreground mb-6">
-                                    We&apos;ll dive deep into <strong className="text-foreground">IFRS 3: The Acquisition Method</strong> — covering how to identify the acquirer, determine the acquisition date, measure identifiable assets, calculate goodwill, and handle contingent consideration.
+                                    We&apos;ll dive deep into <strong className="text-foreground">IFRS 3: The Acquisition Method</strong>, covering how to identify the acquirer, determine the acquisition date, measure identifiable assets, calculate goodwill, and handle contingent consideration.
                                 </p>
                             </section>
                         </div>
@@ -393,7 +393,7 @@ export default function GroupsPart1Page() {
                                 Need Help with Groups?
                             </h3>
                             <p className="text-muted-foreground mb-6">
-                                If you&apos;re struggling with PGDA or your BCom Accounting degree and need guidance, support, or structure — book a session with Priyanka.
+                                If you&apos;re struggling with PGDA or your BCom Accounting degree and need guidance, support, or structure, book a session with Priyanka.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                                 <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">

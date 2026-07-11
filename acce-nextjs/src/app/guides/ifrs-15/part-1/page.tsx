@@ -104,7 +104,7 @@ export default function IFRS15Part1Page() {
                                     </p>
                                 </div>
                                 <p className="text-muted-foreground text-sm italic text-center">
-                                    — IFRS 15.2
+                                    (IFRS 15.2)
                                 </p>
                             </section>
 

@@ -194,7 +194,7 @@ export default function IFRS16Part5Page() {
                                 Ready for a Distinction?
                             </h3>
                             <p className="text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed text-lg">
-                                Don&apos;t just learn the theory—apply it. Get personalized feedback on your lease and revenue recognition calculations before your next exam.
+                                Don&apos;t just learn the theory. Apply it. Get personalized feedback on your lease and revenue recognition calculations before your next exam.
                             </p>
                             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-12 h-14 text-lg shadow-xl shadow-accent/20">
                                 <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">

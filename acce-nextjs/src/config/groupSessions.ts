@@ -67,7 +67,7 @@ export const groupSessions: GroupSessionCampaign = {
         { icon: Coins, label: "Key concepts recaps" },
         { icon: Scale, label: "Time for questions" },
     ],
-    mixSummary: "6 revision classes — 2 Accounting, 2 Tax, 1 Management Accounting, 1 Auditing",
+    mixSummary: "6 revision classes: 2 Accounting, 2 Tax, 1 Management Accounting, 1 Auditing",
     sessions: [
         {
             number: 1,

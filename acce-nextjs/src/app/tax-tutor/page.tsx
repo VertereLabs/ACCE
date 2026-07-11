@@ -7,17 +7,17 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "Tax Tutor — Taxation for PGDA & CTA | ACCE Tutors",
+    title: "Tax Tutor: Taxation for PGDA & CTA | ACCE Tutors",
     description: "Taxation tutoring for CA(SA) students: Income Tax Act, corporate tax, VAT, CGT and estate duty. Exam-focused revision with ACCE Tutors.",
     alternates: {
         canonical: "/tax-tutor/",
     },
     openGraph: {
-        title: "Tax Tutor — Taxation for PGDA & CTA | ACCE Tutors",
+        title: "Tax Tutor: Taxation for PGDA & CTA | ACCE Tutors",
         description: "Taxation tutoring for CA(SA) students: Income Tax Act, corporate tax, VAT, CGT and estate duty. Exam-focused revision with ACCE Tutors.",
     },
     twitter: {
-        title: "Tax Tutor — Taxation for PGDA & CTA | ACCE Tutors",
+        title: "Tax Tutor: Taxation for PGDA & CTA | ACCE Tutors",
         description: "Taxation tutoring for CA(SA) students: Income Tax Act, corporate tax, VAT, CGT and estate duty. Exam-focused revision with ACCE Tutors.",
     },
 };
