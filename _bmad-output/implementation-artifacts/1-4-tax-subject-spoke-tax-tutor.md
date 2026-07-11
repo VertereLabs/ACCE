@@ -4,7 +4,7 @@ baseline_commit: 179ff2cf8515e869a23f90fd043a088d8e9e2e51
 
 # Story 1.4: Tax subject spoke (`/tax-tutor`)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -192,6 +192,22 @@ claude-sonnet-4-6 (autopilot subagent, 2026-07-11)
 - _bmad-output/implementation-artifacts/sprint-status.yaml (UPDATED: status in-progress → review)
 - _bmad-output/implementation-artifacts/autopilot-decisions.md (UPDATED: decision log entries appended)
 
+## Review Findings
+
+Code review 2026-07-11 (autopilot, fresh reasoning). **CLEAN — all 7 ACs verified, zero HIGH/MEDIUM findings → done.**
+
+- AC1: server component, correct shell, exactly one `<h1>` ("Taxation Tutoring for PGDA & CTA").
+- AC2: title 49 chars verbatim (sanctioned em-dash exception, Story 1.1 precedent); description 135 chars, colon-not-em-dash, zero em dashes; canonical `/tax-tutor/`; OG+twitter mirror.
+- AC3: genuinely differentiated taxation content (Income Tax Act s11(a), individual/corporate tax, VAT Act, CGT Eighth Schedule, estate duty s4A) distinct from IFRS/costing siblings; all 6 H2 sections; SA E-E-A-T; zero em dashes in body+meta (grep: 3 total, all title-only).
+- AC4: two JSON-LD Script blocks, Service→Organization by @id, FAQPage.mainEntity mapped from the same FAQ_ITEMS as the on-page FAQ.
+- AC5: three outbound `<Link>`s (/cta-tutor, /pgda-tutor, /subjects); no IFRS-guide edge (correct).
+- AC6: navy+gold tokens only, gold via text-accent, one `variant="hero"` per view group, shadcn Button, no new palette/components.
+- AC7: render-smoke extended (18/18 green: H1 + /cta-tutor link + WhatsApp); additive footprint (page + test only); no sitemap/config/homepage regressions. `tsc --noEmit` = zero new errors (only pre-existing stale `.next/types` cache errors remain).
+- Dismissed as noise (pre-adjudicated by Story 1.1/1.2/1.3): word-count overrun (genuine differentiated depth serves NFR1) and the AC2-mandated OG/Twitter em-dash title mirror.
+
+No `decision-needed`, no `patch`, no `defer` findings.
+
 ## Change Log
 
+- 2026-07-11: Story 1.4 code-review (autopilot): CLEAN pass, all 7 ACs verified with fresh reasoning, zero HIGH/MEDIUM findings. Status: done.
 - 2026-07-11: Story 1.4 implemented. Created /tax-tutor page (server component, Service+FAQPage schema, differentiated taxation content covering Income Tax Act/VAT/CGT/estate duty, zero em dashes in body/meta, three outbound links). Render-smoke extended to 18 tests (3 new). All render-smoke green. tsc no new errors. Status: review.
