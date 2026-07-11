@@ -22,7 +22,7 @@ export default function IFRS15Part5Page() {
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     {/* Navigation */}
-                    <div className="flex items-center justify-between mb-8 max-w-4xl">
+                    <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto">
                         <Link
                             href="/guides/ifrs-15/"
                             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -48,7 +48,7 @@ export default function IFRS15Part5Page() {
                     </div>
 
                     {/* Article Content */}
-                    <article className="max-w-4xl">
+                    <article className="max-w-4xl mx-auto">
                         {/* Header */}
                         <header className="mb-12">
                             <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
@@ -179,7 +179,7 @@ export default function IFRS15Part5Page() {
                     </article>
 
                     {/* Final CTA */}
-                    <div className="max-w-4xl mt-16">
+                    <div className="max-w-4xl mx-auto mt-16">
                         <div className="bg-card border border-border rounded-2xl p-8 md:p-12 text-center">
                             <h3 className="font-display text-2xl font-bold text-foreground mb-4">
                                 Ready to Test Your Knowledge?

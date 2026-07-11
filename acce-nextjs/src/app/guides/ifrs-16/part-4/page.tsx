@@ -22,7 +22,7 @@ export default function IFRS16Part4Page() {
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     {/* Navigation */}
-                    <div className="flex items-center justify-between mb-8 max-w-4xl">
+                    <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto">
                         <Link
                             href="/guides/ifrs-16/"
                             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -48,7 +48,7 @@ export default function IFRS16Part4Page() {
                     </div>
 
                     {/* Article Content */}
-                    <article className="max-w-4xl">
+                    <article className="max-w-4xl mx-auto">
                         {/* Header */}
                         <header className="mb-12">
                             <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm font-medium mb-4">
@@ -180,7 +180,7 @@ export default function IFRS16Part4Page() {
                     </article>
 
                     {/* CTA */}
-                    <div className="max-w-4xl mt-16">
+                    <div className="max-w-4xl mx-auto mt-16">
                         <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-8 text-center">
                             <h3 className="font-display text-xl font-bold text-foreground mb-3 font-display">
                                 Finding the Sale & Leaseback Calculation Tricky?

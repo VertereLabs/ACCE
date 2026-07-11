@@ -69,7 +69,7 @@ export default function ContactPage() {
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     {/* Hero header */}
-                    <div className="max-w-3xl mb-12">
+                    <div className="max-w-3xl mx-auto mb-12">
                         <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
                             Get in touch
                         </span>
@@ -85,7 +85,7 @@ export default function ContactPage() {
                     </div>
 
                     {/* Contact methods */}
-                    <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mb-12">
+                    <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto mb-12">
                         <a
                             href="https://wa.me/27713255295"
                             target="_blank"
@@ -124,11 +124,11 @@ export default function ContactPage() {
                         </div>
                     </div>
 
-                    <div className="max-w-3xl mb-4">
+                    <div className="max-w-3xl mx-auto mb-4">
                         <ConversionCtas bookLabel="Message on WhatsApp" guidesHref="/guides" />
                     </div>
 
-                    <p className="max-w-3xl text-muted-foreground text-sm">
+                    <p className="max-w-3xl mx-auto text-muted-foreground text-sm">
                         Not sure where to start? Browse the{" "}
                         <Link href="/subjects" className="text-accent hover:underline">subjects I tutor</Link>, the{" "}
                         <Link href="/group-classes" className="text-accent hover:underline">group class schedule</Link>, or{" "}

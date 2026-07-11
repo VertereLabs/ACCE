@@ -90,7 +90,7 @@ export default function TaxTutorPage() {
                 <div className="container mx-auto px-6">
 
                     {/* Hero Header */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium">
                                 Taxation Subject
@@ -112,7 +112,7 @@ export default function TaxTutorPage() {
                     </div>
 
                     {/* Section 1: What we cover */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <BookOpen className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -139,7 +139,7 @@ export default function TaxTutorPage() {
                     </div>
 
                     {/* Section 2: Who it's for */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <Users className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -178,7 +178,7 @@ export default function TaxTutorPage() {
                     </div>
 
                     {/* Section 3: How sessions work */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -209,7 +209,7 @@ export default function TaxTutorPage() {
                     </div>
 
                     {/* Section 4: Why ACCE */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <Award className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -244,7 +244,7 @@ export default function TaxTutorPage() {
                     </div>
 
                     {/* Section 5: Pricing and how to start */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <TrendingUp className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -294,7 +294,7 @@ export default function TaxTutorPage() {
                     </div>
 
                     {/* Section 6: FAQ */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <HelpCircle className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -319,7 +319,7 @@ export default function TaxTutorPage() {
                     </div>
 
                     {/* Final CTA */}
-                    <div className="max-w-4xl">
+                    <div className="max-w-4xl mx-auto">
                         <div className="bg-accent/10 border border-accent/30 rounded-2xl p-8 text-center">
                             <h2 className="font-display text-2xl font-bold text-foreground mb-3">
                                 Ready to get serious about Taxation?

@@ -22,7 +22,7 @@ export default function IFRS16Part5Page() {
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     {/* Navigation */}
-                    <div className="flex items-center justify-between mb-8 max-w-4xl">
+                    <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto">
                         <Link
                             href="/guides/ifrs-16/"
                             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -48,7 +48,7 @@ export default function IFRS16Part5Page() {
                     </div>
 
                     {/* Article Content */}
-                    <article className="max-w-4xl">
+                    <article className="max-w-4xl mx-auto">
                         {/* Header */}
                         <header className="mb-12">
                             <span className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm font-medium mb-4">
@@ -188,7 +188,7 @@ export default function IFRS16Part5Page() {
                     </article>
 
                     {/* Final CTA */}
-                    <div className="max-w-4xl mt-16">
+                    <div className="max-w-4xl mx-auto mt-16">
                         <div className="bg-card border border-border rounded-3xl p-8 md:p-14 text-center">
                             <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
                                 Ready for a Distinction?

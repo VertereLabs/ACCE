@@ -22,7 +22,7 @@ export default function GroupsPart7Page() {
             <main className="pt-32 pb-24">
                 <div className="container mx-auto px-6">
                     {/* Navigation */}
-                    <div className="flex items-center justify-between mb-8 max-w-4xl">
+                    <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto">
                         <Link
                             href="/guides/groups/"
                             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -48,7 +48,7 @@ export default function GroupsPart7Page() {
                     </div>
 
                     {/* Article Content */}
-                    <article className="max-w-4xl">
+                    <article className="max-w-4xl mx-auto">
                         {/* Header */}
                         <header className="mb-12">
                             <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
@@ -251,7 +251,7 @@ export default function GroupsPart7Page() {
                     </article>
 
                     {/* Final CTA */}
-                    <div className="max-w-4xl mt-16">
+                    <div className="max-w-4xl mx-auto mt-16">
                         <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-10 text-center relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
                             <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full -ml-16 -mb-16 blur-3xl"></div>

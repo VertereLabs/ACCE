@@ -93,7 +93,7 @@ export default function GroupsGuidePage() {
                     </Link>
 
                     {/* Header */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm font-medium">
                                 Advanced
@@ -165,7 +165,7 @@ export default function GroupsGuidePage() {
                     </div>
 
                     {/* Key Standards */}
-                    <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-8 mb-12 max-w-4xl">
+                    <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-8 mb-12 max-w-4xl mx-auto">
                         <h2 className="font-display text-xl font-semibold text-foreground mb-4">
                             Standards Covered
                         </h2>
@@ -202,7 +202,7 @@ export default function GroupsGuidePage() {
                     </div>
 
                     {/* Parts List */}
-                    <div className="max-w-4xl">
+                    <div className="max-w-4xl mx-auto">
                         <h2 className="font-display text-2xl font-semibold text-foreground mb-8">
                             Course Content
                         </h2>
@@ -265,7 +265,7 @@ export default function GroupsGuidePage() {
                     </div>
 
                     {/* Tip Box */}
-                    <div className="max-w-4xl mt-12">
+                    <div className="max-w-4xl mx-auto mt-12">
                         <div className="bg-accent/10 border border-accent/30 rounded-xl p-6">
                             <div className="flex items-start gap-4">
                                 <AlertTriangle className="w-6 h-6 text-accent flex-shrink-0 mt-1" />

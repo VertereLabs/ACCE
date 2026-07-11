@@ -74,7 +74,7 @@ export default function IFRS16GuidePage() {
                     </Link>
 
                     {/* Header */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium">
                                 Intermediate
@@ -146,7 +146,7 @@ export default function IFRS16GuidePage() {
                     </div>
 
                     {/* Key Change Highlight */}
-                    <div className="max-w-4xl mb-12">
+                    <div className="max-w-4xl mx-auto mb-12">
                         <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8">
                             <h2 className="font-display text-xl font-bold text-foreground mb-3">
                                 ⚠️ The Big Change from IAS 17
@@ -160,7 +160,7 @@ export default function IFRS16GuidePage() {
 
 
                     {/* Preview of Parts */}
-                    <div className="max-w-4xl">
+                    <div className="max-w-4xl mx-auto">
                         <h2 className="font-display text-2xl font-semibold text-foreground mb-8">
                             Course Content
                         </h2>
@@ -223,7 +223,7 @@ export default function IFRS16GuidePage() {
                     </div>
 
                     {/* Practical Expedients Preview */}
-                    <div className="max-w-4xl mt-12">
+                    <div className="max-w-4xl mx-auto mt-12">
                         <div className="bg-card rounded-2xl border border-border p-8">
                             <h3 className="font-display text-xl font-semibold text-foreground mb-4">
                                 Key Exemptions (Practical Expedients)
@@ -246,7 +246,7 @@ export default function IFRS16GuidePage() {
                     </div>
 
                     {/* CTA Section */}
-                    <div className="max-w-4xl mt-16">
+                    <div className="max-w-4xl mx-auto mt-16">
                         <div className="bg-accent/10 border border-accent/30 rounded-2xl p-8 text-center">
                             <h3 className="font-display text-xl font-bold text-foreground mb-3">
                                 Need Extra Support with IFRS 16?

@@ -84,7 +84,7 @@ export default function CtaTutorPage() {
                 <div className="container mx-auto px-6">
 
                     {/* Hero Header */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium">
                                 Postgraduate
@@ -106,7 +106,7 @@ export default function CtaTutorPage() {
                     </div>
 
                     {/* Section 1: What CTA is and why it is hard */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <BookOpen className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -127,7 +127,7 @@ export default function CtaTutorPage() {
                     </div>
 
                     {/* Section 2: The four subjects */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <CheckCircle className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -203,7 +203,7 @@ export default function CtaTutorPage() {
                     </div>
 
                     {/* Section 3: ITC and board exam prep */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <Award className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -224,7 +224,7 @@ export default function CtaTutorPage() {
                     </div>
 
                     {/* Section 4: How it works */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -273,7 +273,7 @@ export default function CtaTutorPage() {
                     </div>
 
                     {/* Section 5: Results and testimonials */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <Users className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -305,7 +305,7 @@ export default function CtaTutorPage() {
                     </div>
 
                     {/* Section 6: FAQ */}
-                    <div className="max-w-4xl mb-16">
+                    <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <HelpCircle className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
@@ -330,7 +330,7 @@ export default function CtaTutorPage() {
                     </div>
 
                     {/* Final CTA */}
-                    <div className="max-w-4xl">
+                    <div className="max-w-4xl mx-auto">
                         <div className="bg-accent/10 border border-accent/30 rounded-2xl p-8 text-center">
                             <h2 className="font-display text-2xl font-bold text-foreground mb-3">
                                 Ready to get serious about the CTA?
