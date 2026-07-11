@@ -19,6 +19,10 @@ export type GroupSession = {
     date: string;
     /** e.g. "7:00PM – 9:00PM" */
     time: string;
+    /** ISO 8601 start, SAST (+02:00) — powers Course structured data */
+    startDate: string;
+    /** ISO 8601 end, SAST (+02:00) */
+    endDate: string;
     title: string;
     /** Subject bucket — selects the icon */
     subject: "accounting" | "tax" | "management" | "auditing" | "general";
@@ -74,6 +78,8 @@ export const groupSessions: GroupSessionCampaign = {
             day: "Wednesday",
             date: "8th of July",
             time: "7:00PM – 9:00PM",
+            startDate: "2026-07-08T19:00:00+02:00",
+            endDate: "2026-07-08T21:00:00+02:00",
             title: "Test 3 Preparation Revision Class",
             subject: "general",
             description: "For exam technique, exam papers and key concepts revision recaps for the main sections.",
@@ -84,6 +90,8 @@ export const groupSessions: GroupSessionCampaign = {
             day: "Saturday",
             date: "11th of July",
             time: "6:00PM – 8:00PM",
+            startDate: "2026-07-11T18:00:00+02:00",
+            endDate: "2026-07-11T20:00:00+02:00",
             title: "Auditing Revision Class",
             subject: "auditing",
             description: "Exam technique focusing on Test 3 content and exam papers.",
@@ -94,6 +102,8 @@ export const groupSessions: GroupSessionCampaign = {
             day: "Sunday",
             date: "12th of July",
             time: "8:00AM – 10:00AM",
+            startDate: "2026-07-12T08:00:00+02:00",
+            endDate: "2026-07-12T10:00:00+02:00",
             title: "Accounting Revision Class",
             subject: "accounting",
             description: "Exam technique and key concepts revision for Test 3. Exam papers.",
@@ -104,6 +114,8 @@ export const groupSessions: GroupSessionCampaign = {
             day: "Wednesday",
             date: "15th of July",
             time: "7:00PM – 9:00PM",
+            startDate: "2026-07-15T19:00:00+02:00",
+            endDate: "2026-07-15T21:00:00+02:00",
             title: "Tax Revision Class",
             subject: "tax",
             description: "Test 3 papers and revision of key concepts.",
@@ -114,6 +126,8 @@ export const groupSessions: GroupSessionCampaign = {
             day: "Saturday",
             date: "18th of July",
             time: "6:00PM – 8:00PM",
+            startDate: "2026-07-18T18:00:00+02:00",
+            endDate: "2026-07-18T20:00:00+02:00",
             title: "Tax Revision Class",
             subject: "tax",
             description: "Exam technique framework and exam papers.",
@@ -124,6 +138,8 @@ export const groupSessions: GroupSessionCampaign = {
             day: "Sunday",
             date: "19th of July",
             time: "8:00AM – 10:00AM",
+            startDate: "2026-07-19T08:00:00+02:00",
+            endDate: "2026-07-19T10:00:00+02:00",
             title: "Management Accounting Revision Class",
             subject: "management",
             description: "Exam technique framework and past papers.",

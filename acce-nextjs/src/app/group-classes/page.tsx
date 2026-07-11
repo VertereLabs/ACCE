@@ -54,6 +54,8 @@ const COURSE_DATA = {
         description: session.description,
         courseMode: "Online",
         courseWorkload: "PT2H",
+        startDate: session.startDate,
+        endDate: session.endDate,
         maximumAttendeeCapacity: 6,
         location: {
             "@type": "VirtualLocation",
