@@ -233,3 +233,73 @@ high (new dep / config / architecture / shared state) · critical (auth / paymen
 - **Rationale:** Zero HIGH/MEDIUM findings. Dismissed as noise (per Story 1.1/1.2/1.3 pre-adjudication): (1) word-count overrun — my apples-to-apples counter gives tax=2371 vs accepted accounting=1567 / financial-management=1900, i.e. same proportional overrun the 1.2/1.3 reviewers explicitly accepted because genuine differentiated depth serves NFR1's anti-doorway intent; (2) OG/Twitter `title` mirroring the sanctioned em-dash title — mandated by AC2, dismissed in Story 1.1's review. Nothing to fix → done.
 - **Reversibility:** To reopen: set sprint-status `1-4-...: in-progress` and the story Status back to `review`; add a `### Review Findings` section to the story. To undo the page itself: `git revert` the dev commit or delete acce-nextjs/src/app/tax-tutor/page.tsx and the render-smoke TaxTutorPage block.
 - **Files touched:** _bmad-output/implementation-artifacts/1-4-tax-subject-spoke-tax-tutor.md (Status → done), _bmad-output/implementation-artifacts/sprint-status.yaml (1-4 → done, last_updated), _bmad-output/implementation-artifacts/autopilot-decisions.md
+
+### [2026-07-11T13:18:00Z] 1-5-auditing-subject-spoke-auditing-tutor — create-story context engine
+- **Risk:** low
+- **Workflow / step:** create-story (v6-skill) steps 1-6 — turn backlog Story 1.5 into a fully-contexted ready-for-dev story file
+- **Decision point:** Story 1.5 (/auditing-tutor) is the fourth subject spoke; it shares the same Service+FAQPage / three-outbound-link contract as the DONE 1.2/1.3/1.4 pages. Which sibling to mirror and how to carry forward the accumulated precedents.
+- **Options considered:** A) mirror /tax-tutor (1.4, most recent DONE, closest structural template); B) mirror /accounting-tutor (1.2); C) write context from scratch.
+- **Chosen:** A — mirror /tax-tutor (1.4) as the primary structural template, cross-referencing /financial-management-tutor and /accounting-tutor for house style, exactly as 1.4 itself did.
+- **Rationale:** 1.4 is the freshest DONE example of the identical subject-spoke contract (Service+FAQPage, 3 outbound links, colon-not-em-dash meta). Reusing its proven dev-note structure minimises risk and keeps the epic consistent.
+- **Reversibility:** Story file is a spec doc; edit/rewrite freely before dev-story.
+- **Files touched:** _bmad-output/implementation-artifacts/1-5-auditing-subject-spoke-auditing-tutor.md (NEW)
+
+### [2026-07-11T13:18:00Z] 1-5-auditing-subject-spoke-auditing-tutor — title has NO em dash (differs from 1.1/1.4)
+- **Risk:** low
+- **Workflow / step:** create-story step 5 — metadata AC authoring
+- **Decision point:** CAP-5 / epic Story 1.5 title is "Auditing Tutor for CA(SA) Students | ACCE Tutors" (48 chars). Unlike CAP-4 (/tax, 1.4) and CAP-6 (/cta, 1.1) whose pinned titles CONTAINED an em dash (the "single sanctioned exception"), CAP-5 title has NO em dash.
+- **Options considered:** A) note explicitly that this page has NO sanctioned em-dash exception (whole page including title must be em-dash-free); B) copy 1.4 "single sanctioned exception" dev note verbatim (wrong — would imply an exception that does not exist here).
+- **Chosen:** A — story AC2 pins the title verbatim (no em dash) and explicitly states there is NO em-dash exception for this page; every string must have zero em dashes.
+- **Rationale:** Verbatim title contains no em dash, so NFR6 applies with no carve-out. Documenting the ABSENCE of the exception prevents dev/reviewer importing 1.4 exception by mistake.
+- **Reversibility:** Edit AC2 / metadata dev note in the story file.
+- **Files touched:** _bmad-output/implementation-artifacts/1-5-auditing-subject-spoke-auditing-tutor.md
+
+### [2026-07-11T13:18:00Z] 1-5-auditing-subject-spoke-auditing-tutor — meta em dash to colon (NFR6 precedent)
+- **Risk:** low
+- **Workflow / step:** create-story step 5 — metadata AC authoring
+- **Decision point:** CAP-5 catalog meta contains one em dash. NFR6 forbids em dashes in all metadata; epic AC references "the catalog meta description" by role WITHOUT reproducing it verbatim (so no verbatim mandate, unlike the title).
+- **Options considered:** A) replace the single em dash with a colon, keep every other word (146 chars, <=155); B) keep the em dash (violates NFR6); C) reword.
+- **Chosen:** A — colon variant "Auditing tutoring for undergrad, PGDA and CTA: ISA standards, the audit process, assertions and exam technique. Build confidence with ACCE Tutors." (146 chars).
+- **Rationale:** Exact precedent set and code-review-approved in Stories 1.2/1.3/1.4. AC pins meta by role not verbatim, so the em dash is not protected.
+- **Reversibility:** Edit AC2 / meta dev note in the story file.
+- **Files touched:** _bmad-output/implementation-artifacts/1-5-auditing-subject-spoke-auditing-tutor.md
+
+### [2026-07-11T13:18:00Z] 1-5-auditing-subject-spoke-auditing-tutor — "extract shared inner content" clause interpretation
+- **Risk:** medium
+- **Workflow / step:** create-story step 3/5 — architecture analysis + AC authoring
+- **Decision point:** Story 1.5 epic AC has a story-SPECIFIC clause absent from 1.2/1.3/1.4: "where content mirrors the homepage Auditing section, the shared inner content is extracted into a component used by both". The homepage "Auditing" content is a SINGLE card (title + one-sentence description) inside the services[] array in src/components/Services.tsx, not a standalone rich section.
+- **Options considered:** A) treat the clause as conditional ("WHERE content mirrors") and NOT triggered — a 700-900-word auditing page does not mirror a one-sentence card, so no forced extraction; author fresh content, leave Services.tsx untouched (homepage edits are Story 2.2 scope + NFR4 additive-only). B) force-extract the single Auditing card blurb into a shared component — but that edits a homepage component (regression surface, Story 2.2 territory) to share ONE sentence, and the 700-900-word body cannot be that sentence.
+- **Chosen:** A — clause is conditional and NOT satisfied here; page is authored as fresh differentiated auditing content; do NOT modify Services.tsx. Called out explicitly in the story Dev Notes as the top interpretation risk.
+- **Rationale:** (1) Clause is explicitly conditional. (2) Homepage Auditing is one card blurb; a full syllabus page cannot mirror it, so there is no divergence-prone duplicate to factor out. (3) Editing homepage Services is a regression surface; homepage links are Story 2.2 scope (NFR4 forbids restructuring homepage sections in Epic-1 spokes). (4) The three DONE siblings authored fresh content with no extraction and passed clean review. Flagged medium because it is an ambiguous AC a reviewer could challenge; rationale + reversal documented.
+- **Reversibility:** If a reviewer insists on literal extraction: create e.g. src/components/AuditingIntro.tsx (or a shared const) holding the card blurb, import into both Services.tsx and /auditing-tutor/page.tsx. Additive, doable as a follow-up. Documented in story Dev Note.
+- **Files touched:** _bmad-output/implementation-artifacts/1-5-auditing-subject-spoke-auditing-tutor.md
+
+### [2026-07-11T13:18:00Z] 1-5-auditing-subject-spoke-auditing-tutor — NFR1 differentiation focus (auditing-specific syllabus)
+- **Risk:** low
+- **Workflow / step:** create-story step 5 — content AC authoring
+- **Decision point:** Top failure mode (shared with all spokes) is a templated near-duplicate (doorway / scaled-content abuse, NFR1). Need to pin the auditing-specific syllabus so the dev writes genuinely differentiated content.
+- **Options considered:** A) enumerate the real auditing syllabus (ISAs, audit process/phases, assertions, audit risk model, materiality, audit evidence, sampling, audit opinion/report types, ethics & independence, King IV governance) distinct from IFRS/costing/tax siblings; B) leave it generic.
+- **Chosen:** A — story enumerates auditing-specific content distinct from the three sibling narratives.
+- **Rationale:** Precise syllabus enumeration is what let 1.2/1.3/1.4 pass NFR1 clean. Auditing is a genuinely different subject (assurance/ISAs, not measurement/recognition).
+- **Reversibility:** Edit AC3 / differentiation dev note in the story file.
+- **Files touched:** _bmad-output/implementation-artifacts/1-5-auditing-subject-spoke-auditing-tutor.md
+
+### [2026-07-11T13:35:00Z] 1-5-auditing-subject-spoke-auditing-tutor — dev-story: test assertion ambiguity fix (H1 vs FAQ H2/H3)
+- **Risk:** low
+- **Workflow / step:** dev-story step 7 (run validations) / step 8 (fix failing test)
+- **Decision point:** First render-smoke run failed: `getByRole("heading", { name: /Auditing Tutoring/i })` matched multiple elements because the FAQ H2 "Frequently asked questions about auditing tutoring" and a FAQ H3 "How do I book an auditing tutoring session?" also match the loose regex. The other sibling pages' H2s do not match their regex patterns (e.g. "Taxation Tutoring for PGDA" only matches `<h1>`). Need to pin the assertion to the H1 specifically.
+- **Options considered:** A) Use `{ name: /^Auditing Tutoring$/i, level: 1 }` (exact match + level constraint). B) Rename the FAQ H2 and FAQ H3 to remove "auditing tutoring" substring (content change just to fix a test: bad). C) Use `getAllByRole` and assert length=1 (less strict).
+- **Chosen:** A — exact regex `^Auditing Tutoring$` with `level: 1` pinpoints the H1. This is more rigorous than the prior sibling tests (which happened to be unambiguous) and aligns with the AC1 requirement of exactly one H1.
+- **Rationale:** Minimal fix that makes the test stricter (level: 1 is actually better practice). Does not alter page content or structure. The FAQ H2 and FAQ H3 are correctly named per the story's content guidelines.
+- **Reversibility:** Edit the one assertion in render-smoke.test.tsx; content unchanged.
+- **Files touched:** acce-nextjs/tests/unit/render-smoke.test.tsx
+
+### [2026-07-11T13:23:49Z] 1-5-auditing-subject-spoke-auditing-tutor — dev-story start: implementation approach and content strategy
+- **Risk:** medium
+- **Workflow / step:** dev-story step 5 (implement tasks 1-5)
+- **Decision point:** Story has 4 implementation tasks: create route, author differentiated auditing content (700-900+ words), inject Service+FAQPage JSON-LD, extend render-smoke test. Content strategy for genuine differentiation (NFR1) must be decided.
+- **Options considered:** A) Mirror /tax-tutor structure verbatim with renamed content (near-duplicate risk, violates NFR1). B) Write genuinely auditing-specific content centered on the ISA framework (ISA 200/240/315/330/500/700/705/706), the audit process phases, the assertions model, the audit risk model (inherent x control x detection), materiality, audit evidence and sampling, audit opinion types (unmodified vs qualified/adverse/disclaimer), ethics/independence (SAICA/IRBA Code, threats-and-safeguards), and King IV governance -- anchored in SA context (IRBA, SAICA, ITC/APC exam structure, UNISA AUE/AUI modules, UCT/Wits/UP/Stellenbosch).
+- **Chosen:** B -- mirror /tax-tutor STRUCTURE (shell, metadata shape, JSON-LD pattern, component imports) but write distinct AUDITING content that could not be confused with the IFRS/consolidations, MAF/costing, or Income-Tax-Act narratives. Key framing: auditing is ASSURANCE OVER information others prepared, not the preparation itself.
+- **Rationale:** AC3 + Differentiation Guard dev note require real auditing syllabus detail and genuine E-E-A-T proof (ISA numbers, IRBA, King IV). Story 1.1/1.2/1.3/1.4 code reviews all accepted word counts above the nominal ceiling when content served NFR1 anti-doorway intent.
+- **Reversibility:** Content-only JSX; edit freely. Delete acce-nextjs/src/app/auditing-tutor/page.tsx to undo.
+- **Files touched:** acce-nextjs/src/app/auditing-tutor/page.tsx (new file), acce-nextjs/tests/unit/render-smoke.test.tsx (+1 describe block)
