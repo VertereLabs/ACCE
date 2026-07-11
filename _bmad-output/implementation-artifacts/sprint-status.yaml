@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-11
-last_updated: 2026-07-11T13:35:00Z
+last_updated: 2026-07-11T13:35:09Z
 # epic-1 marked in-progress and 1-1 set ready-for-dev on 2026-07-11 (create-story: /cta-tutor flagship hub contexted; sitemap/navbar/homepage links scoped to later stories; cross-links to unbuilt siblings authored in place per NFR7)
 # 1-1 code-review 2026-07-11 (autopilot): clean, all 7 ACs verified, no HIGH/MEDIUM findings -> done. Sitemap registration for /cta-tutor deferred to Story 1.8 by AC7 design.
 # 1-2 set ready-for-dev on 2026-07-11 (create-story, autopilot): /accounting-tutor spoke contexted off the DONE /cta-tutor template. Service+FAQPage schema; outbound links scoped to /cta-tutor,/pgda-tutor,/subjects (IFRS-guide edge deferred to 2.3/Epic 3 gate); CAP-2 meta em dash -> colon per NFR6; sitemap deferred to 1.8. NFR1 differentiation flagged as top risk.
@@ -51,6 +51,7 @@ last_updated: 2026-07-11T13:35:00Z
 # 1-4 set ready-for-dev on 2026-07-11 (create-story, autopilot): /tax-tutor spoke contexted off the DONE /accounting-tutor + /financial-management-tutor template. Service+FAQPage schema; outbound /cta-tutor,/pgda-tutor,/subjects (no IFRS-guide edge for this page); CAP-4 title kept verbatim WITH its em dash = the single sanctioned exception (Story 1.1 precedent, title 49ch); CAP-4 meta em dash -> colon per NFR6 (Story 1.2/1.3 precedent, ~135ch); sitemap deferred to 1.8. Top risk: NFR1 differentiation (Income Tax Act/corporate tax/VAT/CGT/estate duty, distinct from IFRS and costing/finance).
 # 1-4 code-review 2026-07-11 (autopilot): CLEAN, all 7 ACs verified with fresh reasoning; NFR1 differentiation satisfied (Income Tax Act s11(a)/individual+corporate tax/VAT Act/CGT Eighth Schedule/estate duty s4A, distinct from IFRS and costing/finance); title=49ch sanctioned em-dash exception + meta=135ch colon variant (zero em dashes anywhere but the title, grep-confirmed); Service+FAQPage JSON-LD from single FAQ_ITEMS source; three outbound links present; render-smoke 18/18 green; tsc no new errors; no HIGH/MEDIUM findings (2 dismissed: word-count overrun pre-adjudicated per 1.2/1.3, AC2-mandated OG/Twitter title mirror) -> done. The sitemap.test failures (/cta-tutor,/accounting-tutor,/financial-management-tutor,/tax-tutor + guides) are by-design deferred to Story 1.8.
 # 1-5 set ready-for-dev on 2026-07-11 (create-story, autopilot): /auditing-tutor (Auditing) spoke contexted off the DONE /tax-tutor template. Service+FAQPage schema; outbound /cta-tutor,/pgda-tutor,/subjects (no guide edge for this row); title "Auditing Tutor for CA(SA) Students | ACCE Tutors" (48ch) has NO em dash so NO sanctioned exception -> WHOLE page (title+meta+body+FAQ+JSON-LD) must be em-dash-free (differs from 1.1/1.4); CAP-5 meta em dash -> colon per NFR6 (146ch); sitemap deferred to 1.8. Top risks: NFR1 differentiation (ISAs/audit process/assertions/audit-risk-model/opinions/ethics-King-IV, distinct from IFRS+costing+tax) + the story-specific "extract shared homepage-Auditing content" clause interpreted as NOT-triggered (homepage Auditing is a one-sentence Services.tsx card; do NOT edit Services.tsx - flagged medium).
+# 1-5 code-review 2026-07-11 (autopilot): CLEAN, all 7 ACs re-verified with fresh reasoning; NFR1 differentiation genuinely satisfied (ISA 200/240/315/330/500/700/705/706, assertions, audit-risk-model x materiality, opinion types, SAICA/IRBA Code, King IV; "assurance OVER info others prepared" framing; distinct from IFRS+costing+tax); zero em dashes grep-confirmed (no sanctioned exception on this page); title 48ch + meta 146ch colon-variant; Service+FAQPage JSON-LD from single FAQ_ITEMS source; three outbound links (/cta-tutor,/pgda-tutor,/subjects) present; additive-only footprint (only auditing-tutor/page.tsx + render-smoke.test.tsx; no sitemap/Services/Navbar/config touched); render-smoke 21/21 green; tsc no new errors; no HIGH/MEDIUM findings (2 dismissed: word-count overrun pre-adjudicated per 1.2/1.3/1.4, 7th h2 final-CTA matches sibling template) -> done. sitemap.test failures for the new route are by-design deferred to Story 1.8.
 project: ACCE
 project_key: SEO
 tracking_system: file-system
@@ -63,7 +64,7 @@ development_status:
   1-2-accounting-subject-spoke-accounting-tutor: done
   1-3-financial-management-maf-subject-spoke-financial-management-tutor: done
   1-4-tax-subject-spoke-tax-tutor: done
-  1-5-auditing-subject-spoke-auditing-tutor: review
+  1-5-auditing-subject-spoke-auditing-tutor: done
   1-6-pgda-qualification-hub-pgda-tutor: backlog
   1-7-subjects-hub-subjects: backlog
   1-8-register-new-routes-in-sitemap: backlog

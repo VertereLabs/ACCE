@@ -4,7 +4,7 @@ baseline_commit: c37ec1800670f01f85ca939e63cc1b1145109e28
 
 # Story 1.5: Auditing subject spoke (`/auditing-tutor`)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -69,6 +69,25 @@ so that I reach focused auditing-tutoring content.
   - [x] Run `npx tsc --noEmit` (or the project's typecheck) — no NEW errors in the new page or the test file (pre-existing `.next/types` / stale-cache errors unrelated to this story are acceptable; see Story 1.1/1.2/1.3/1.4 Debug Log).
   - [x] Run the vitest unit suite (`npm test` / `vitest run`) — all green including the new assertions. (Note: `sitemap.test.ts` has pre-existing failures for unregistered routes; `/auditing-tutor` being newly flagged there is EXPECTED and resolved by Story 1.8 — do not fix it here.)
   - [x] Manually confirm word count is in the 700–900 spirit (real, differentiated auditing content; do not pad or trim genuine syllabus detail purely to hit a number — see Story 1.2/1.3/1.4 review, which dismissed the upper-bound overrun) and grep the new file for `—` to confirm **zero** em dashes anywhere (this page has no sanctioned exception — title, meta AND body must all be em-dash-free).
+
+## Review Findings
+
+**Code review 2026-07-11 (autopilot, fresh reasoning) — CLEAN, no HIGH/MEDIUM findings. Status -> done.**
+
+All 7 ACs independently re-verified:
+- AC1: server component (no `"use client"`), correct shell (`min-h-screen bg-background` -> Navbar -> `main pt-32 pb-24` -> `container mx-auto px-6` -> Footer), exactly one `<h1>` "Auditing Tutoring". [PASS]
+- AC2: metadata mirrors homepage/tax-tutor shape; title "Auditing Tutor for CA(SA) Students | ACCE Tutors" (48ch, no em dash, no sanctioned exception); description colon-variant (~146ch); canonical `/auditing-tutor/` (trailing-slash convention consistent with all siblings + `trailingSlash:false` verified); OG/Twitter override title+description only (global `type`/`card`/images inherited from layout.tsx, same as siblings). [PASS]
+- AC3: genuinely differentiated auditing content (ISA 200/210/240/300/315/320/330/500/530/560/570/580/700/701/705/706, assertions model, audit risk model + materiality, evidence & sampling, opinion types, SAICA/IRBA Code, King IV); framing "assurance OVER information others prepared, not preparation" lands; SA E-E-A-T (IRBA, SAICA, ITC/APC, UNISA AUE2601/AUI3702, UCT/Wits/UP/Stellenbosch); zero em dashes grep-confirmed. Not a doorway clone of the sibling spokes (NFR1 satisfied). [PASS]
+- AC4: Service + FAQPage JSON-LD via two `<Script type="application/ld+json">` blocks; FAQ single-source (`FAQ_ITEMS` feeds both on-page FAQ and `FAQPAGE_DATA.mainEntity` — grep-verified); Service `provider` references Organization by `@id`. [PASS]
+- AC5: `/cta-tutor`, `/pgda-tutor`, `/subjects` via `next/link` `<Link>` (grep-verified, exactly the required set; no guide edge). [PASS]
+- AC6: navy+gold tokens + shadcn Button only, no new palette/components; gold accent-only; 4 `variant="hero"` CTAs each in a distinct view group (hero, how-sessions callout, related/pricing callout, final CTA) — accepted per 1.2/1.3/1.4 "one hero per view group" precedent. [PASS]
+- AC7: additive only — `git diff` since baseline `c37ec18` touches ONLY `auditing-tutor/page.tsx` (new) + `render-smoke.test.tsx` (+21 lines); no sitemap.ts / Services.tsx / Navbar.tsx / next.config.ts / middleware.ts change (grep-verified). render-smoke 21/21 green incl. 3 new AuditingTutorPage assertions; `tsc --noEmit` no new errors (only pre-existing `.next/types` cache noise). [PASS]
+
+Dismissed observations (noise, not defects):
+- [x] [Review][Dismiss] Word-count overrun — body ~1850 + FAQ ~1220 words vs the 700-900 target. Genuine differentiated syllabus detail; Task 5 explicitly says do not trim to hit a number, and the 1.2/1.3/1.4 reviews pre-adjudicated the same overrun in favour of NFR1 anti-doorway depth.
+- [x] [Review][Dismiss] A 7th `<h2>` (final CTA "Ready to get serious about Auditing?") beyond the 6-section content outline — matches the sibling template, keeps the single-h1 rule and h1->h2->h3 hierarchy intact (no skips).
+
+By-design deferred (not this story's regression): `sitemap.test.ts` failures for `/auditing-tutor` (and the other unregistered routes) are resolved in Story 1.8; do not fix here.
 
 ## Dev Notes
 
