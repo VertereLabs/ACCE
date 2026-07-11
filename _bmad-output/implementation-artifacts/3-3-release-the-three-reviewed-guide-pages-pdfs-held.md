@@ -4,7 +4,7 @@ baseline_commit: 15fb19d
 
 # Story 3.3: Release the three reviewed guide pages (PDFs held)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -160,3 +160,16 @@ None — all four tasks passed cleanly on first attempt. Test run: 61 pass / 0 f
 - acce-nextjs/tests/unit/render-smoke.test.tsx (modified: Resources block updated to released state)
 - _bmad-output/implementation-artifacts/sprint-status.yaml (updated: 3-3 in-progress -> review)
 - _bmad-output/implementation-artifacts/3-3-release-the-three-reviewed-guide-pages-pdfs-held.md (updated: tasks/status/dev-agent-record)
+
+## Review Findings
+
+Code review (autopilot, 2026-07-11) with FRESH adversarial reasoning (did not trust the dev step). Diff reviewed: `15fb19d..HEAD` (dev-story commit `59b996d`). Result: CLEAN, all 6 ACs re-verified, 0 HIGH/MEDIUM findings, 3 probes dismissed as noise. Status -> done.
+
+- 0 `decision-needed`, 0 `patch`, 0 `defer`, 3 dismissed.
+- **AC1** verified: both `GUIDE_PUBLISH_STATUS` maps (`src/config/guides.ts` + mirrored `src/middleware.ts`) flipped all-true and byte-match; middleware page branch (`guideId in GUIDE_PUBLISH_STATUS && !GUIDE_PUBLISH_STATUS[guideId]`) no longer 302s the three guides or their 17 part pages.
+- **AC2** verified: both `GUIDE_PDF_PUBLISH_STATUS` maps untouched (all-false), `PDF_TO_GUIDE` intact; the `/pdfs/*.pdf` middleware branch still redirects; Story-3.2 `isGuidePdfPublished` affordance guards keep every download hidden on the released pages; no PDFs in sitemap.
+- **AC3** verified: `sitemap.ts` UNEDITED; `isRouteIndexable` filters on `isGuidePublished`, so the flip auto-registers `/guides` + 3 guide index + 17 part routes; `sitemap.test.ts` now 6/6 green (the three long-standing guide-route failures red since 1.8 RESOLVED with no sitemap edit).
+- **AC4** verified: two in-body `<Link>` cross-links to `/guides/ifrs-15` + `/guides/ifrs-16` added to the `/accounting-tutor` related-links card (`text-accent hover:underline`, reuse-only); `it.todo` removed and `AccountingTutorPage` edges extended; both targets now page-live, so NFR7 single-shot holds (no dead/gated internal link at release); `bodyEdgeCount` (nav/footer-excluded) assertion passes.
+- **AC5** verified: exactly the superseded all-hidden assertions updated (`guides-config.test.ts` "publishes the three reviewed guides"; `render-smoke.test.tsx` Resources block: 3 Available / 0 Coming Soon + deep-links); PDF-guard arm (`render-smoke` L60-85) untouched and green; full suite 61 pass / 0 fail / 0 todo.
+- **AC6** verified: reuse-only tokens, additive-only, `tsc` no new errors outside stale `.next/types`, 0 em dashes added (grep across the three non-test files).
+- Probes dismissed: (1) `guides-config.test.ts` `afterEach` resets flags to false against a now-true source singleton = NOT cross-file pollution (vitest default `isolate: true` gives each test file its own module registry; sitemap/render-smoke read the true source in separate registries, all green); (2) `priority` non-boolean-attribute stderr = pre-existing Navbar/Hero warning, outside this diff; (3) `main`-branch `middleware.ts` backport intentionally deferred to a release-time deploy step (autopilot forbids branch switch).
