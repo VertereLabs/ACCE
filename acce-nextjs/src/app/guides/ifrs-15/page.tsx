@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, ArrowRight, BookOpen, Clock, Target, Receipt, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Target, Receipt, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isGuidePdfPublished } from "@/config/guides";
 
@@ -20,7 +20,6 @@ const parts = [
         id: 1,
         title: "Foundations & Core Principle",
         description: "Why IFRS 15 was introduced, replacing IAS 18 & IAS 11, scope, and the core principle of revenue recognition.",
-        duration: "30 min read",
         status: "available",
         topics: ["Introduction", "Scope", "Core Principle", "Key Definitions"],
     },
@@ -28,7 +27,6 @@ const parts = [
         id: 2,
         title: "The Five-Step Model (Deep Dive)",
         description: "Master each step: identify contract, identify performance obligations, determine transaction price, allocate, and recognize.",
-        duration: "75 min read",
         status: "available",
         topics: ["Step 1-5", "Contract Modifications", "Control Transfer"],
     },
@@ -36,7 +34,6 @@ const parts = [
         id: 3,
         title: "Variable Consideration & Financing",
         description: "Handle discounts, rebates, performance bonuses, and the time value of money in contracts.",
-        duration: "45 min read",
         status: "available",
         topics: ["Variable Consideration", "Constraint", "Financing Component"],
     },
@@ -44,7 +41,6 @@ const parts = [
         id: 4,
         title: "Complex Application Scenarios",
         description: "Master tricky topics like warranties, principal vs. agent, and repurchase agreements.",
-        duration: "60 min read",
         status: "available",
         topics: ["Warranties", "Principal vs Agent", "Repurchase Agreements"],
     },
@@ -52,7 +48,6 @@ const parts = [
         id: 5,
         title: "Disclosures & Exam Preparation",
         description: "Disclosure requirements, common exam mistakes, and practice questions with worked solutions.",
-        duration: "45 min read",
         status: "available",
         topics: ["Disclosures", "Exam Tips", "Practice Questions"],
     },
@@ -91,20 +86,13 @@ export default function IFRS15GuidePage() {
                         </p>
 
                         {/* Progress Stats */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
                                     <BookOpen className="w-4 h-4" />
                                     <span className="font-semibold">{parts.length}</span>
                                 </div>
                                 <span className="text-muted-foreground text-sm">Parts</span>
-                            </div>
-                            <div className="bg-card rounded-xl p-4 border border-border">
-                                <div className="flex items-center gap-2 text-accent mb-1">
-                                    <Clock className="w-4 h-4" />
-                                    <span className="font-semibold">4+ hrs</span>
-                                </div>
-                                <span className="text-muted-foreground text-sm">Total Time</span>
                             </div>
                             <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
@@ -151,12 +139,8 @@ export default function IFRS15GuidePage() {
                             Course Content
                         </h2>
                         <div className="space-y-4">
-                            {parts.map((part) => (
-                                <div
-                                    key={part.id}
-                                    className={`group bg-card backdrop-blur-md rounded-xl border border-border p-6 transition-all duration-300 ${part.status === "available" ? "hover:bg-muted cursor-pointer" : "opacity-60"
-                                        }`}
-                                >
+                            {parts.map((part) => {
+                                const inner = (
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${part.status === "available"
@@ -191,20 +175,31 @@ export default function IFRS15GuidePage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-end gap-2">
-                                            <span className="text-muted-foreground text-sm">{part.duration}</span>
-                                            {part.status === "available" && (
-                                                <Button asChild size="sm" variant="ghost" className="text-accent hover:text-accent hover:bg-accent/10">
-                                                    <Link href={`/guides/ifrs-15/part-${part.id}`}>
-                                                        Start Part {part.id}
-                                                        <ArrowRight className="w-4 h-4 ml-1" />
-                                                    </Link>
-                                                </Button>
-                                            )}
-                                        </div>
+                                        {part.status === "available" && (
+                                            <span className="inline-flex items-center text-accent text-sm font-medium whitespace-nowrap shrink-0">
+                                                Start Part {part.id}
+                                                <ArrowRight className="w-4 h-4 ml-1" />
+                                            </span>
+                                        )}
                                     </div>
-                                </div>
-                            ))}
+                                );
+                                return part.status === "available" ? (
+                                    <Link
+                                        key={part.id}
+                                        href={`/guides/ifrs-15/part-${part.id}`}
+                                        className="group block bg-card backdrop-blur-md rounded-xl border border-border p-6 transition-all duration-300 hover:bg-muted"
+                                    >
+                                        {inner}
+                                    </Link>
+                                ) : (
+                                    <div
+                                        key={part.id}
+                                        className="group bg-card backdrop-blur-md rounded-xl border border-border p-6 opacity-60"
+                                    >
+                                        {inner}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 

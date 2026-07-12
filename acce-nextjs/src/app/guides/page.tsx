@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { FileText, Building2, Receipt, ArrowRight, BookOpen, Clock, Users } from "lucide-react";
+import { FileText, Building2, Receipt, ArrowRight, BookOpen, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GUIDES, isGuidePublished } from "@/config/guides";
@@ -83,10 +83,10 @@ export default function GuidesPage() {
                         </div>
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-2 text-accent mb-2">
-                                <Clock className="w-5 h-5" />
-                                <span className="font-display text-2xl font-bold">50+</span>
+                                <FileText className="w-5 h-5" />
+                                <span className="font-display text-2xl font-bold">{guides.length}</span>
                             </div>
-                            <span className="text-muted-foreground text-sm">Hours of Content</span>
+                            <span className="text-muted-foreground text-sm">Free Guides</span>
                         </div>
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-2 text-accent mb-2">

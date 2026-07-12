@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, Clock, Target, AlertTriangle, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, Target, AlertTriangle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isGuidePdfPublished } from "@/config/guides";
 
@@ -20,7 +20,6 @@ const parts = [
         id: 1,
         title: "Foundations of Group Financial Reporting",
         description: "Understand when to consolidate vs equity account. Master the control vs significant influence decision tree.",
-        duration: "45 min read",
         status: "available",
         topics: ["Control vs Significant Influence", "Parent-Subsidiary Relationships", "Key Standards Overview"],
     },
@@ -28,7 +27,6 @@ const parts = [
         id: 2,
         title: "The Acquisition Method (IFRS 3)",
         description: "Learn to identify the acquirer, determine the acquisition date, and measure identifiable assets and liabilities.",
-        duration: "60 min read",
         status: "available",
         topics: ["Identifying the Acquirer", "Fair Value Measurement", "Contingent Consideration"],
     },
@@ -36,7 +34,6 @@ const parts = [
         id: 3,
         title: "Consolidation Mechanics (IFRS 10)",
         description: "Master the consolidation process from combining line items to eliminating intra-group transactions.",
-        duration: "50 min read",
         status: "available",
         topics: ["Control Definition", "Consolidation Procedures", "Intra-Group Eliminations"],
     },
@@ -44,7 +41,6 @@ const parts = [
         id: 4,
         title: "Analysis of Equity (AOE)",
         description: "The heart of group accounting. Work through at acquisition, since acquisition, and current year columns.",
-        duration: "90 min read",
         status: "available",
         topics: ["At Acquisition", "Since Acquisition", "Current Year", "NCI Allocation"],
     },
@@ -52,7 +48,6 @@ const parts = [
         id: 5,
         title: "Complex Transactions",
         description: "Tackle advanced topics like step acquisitions, disposals, foreign subsidiaries (FCTR), and complex intra-group transfers.",
-        duration: "75 min read",
         status: "available",
         topics: ["Step Acquisitions", "Loss of Control", "FCTR (IAS 21)", "Impairment"],
     },
@@ -60,7 +55,6 @@ const parts = [
         id: 6,
         title: "Associates & Joint Ventures",
         description: "Learn when to use the equity method instead of consolidation for associates (IAS 28) and joint ventures (IFRS 11).",
-        duration: "45 min read",
         status: "available",
         topics: ["Significant Influence", "Equity Method", "Joint Control", "Unrealised Profits"],
     },
@@ -68,7 +62,6 @@ const parts = [
         id: 7,
         title: "Group Statements & Exam Prep",
         description: "Pull it all together. Learn to draft group financial statements and master exam techniques for distinction-level results.",
-        duration: "60 min read",
         status: "available",
         topics: ["Group SOFP & SOCI", "SOCIE & SOCF", "Exam Strategy", "Common Mistakes"],
     },
@@ -110,20 +103,13 @@ export default function GroupsGuidePage() {
                         </p>
 
                         {/* Progress Stats */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
                                     <BookOpen className="w-4 h-4" />
                                     <span className="font-semibold">{parts.length}</span>
                                 </div>
                                 <span className="text-muted-foreground text-sm">Parts</span>
-                            </div>
-                            <div className="bg-card rounded-xl p-4 border border-border">
-                                <div className="flex items-center gap-2 text-accent mb-1">
-                                    <Clock className="w-4 h-4" />
-                                    <span className="font-semibold">7+ hrs</span>
-                                </div>
-                                <span className="text-muted-foreground text-sm">Total Time</span>
                             </div>
                             <div className="bg-card rounded-xl p-4 border border-border">
                                 <div className="flex items-center gap-2 text-accent mb-1">
@@ -207,12 +193,8 @@ export default function GroupsGuidePage() {
                             Course Content
                         </h2>
                         <div className="space-y-4">
-                            {parts.map((part) => (
-                                <div
-                                    key={part.id}
-                                    className={`group bg-card backdrop-blur-md rounded-xl border border-border p-6 transition-all duration-300 ${part.status === "available" ? "hover:bg-muted cursor-pointer" : "opacity-60"
-                                        }`}
-                                >
+                            {parts.map((part) => {
+                                const inner = (
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${part.status === "available"
@@ -247,20 +229,31 @@ export default function GroupsGuidePage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-end gap-2">
-                                            <span className="text-muted-foreground text-sm">{part.duration}</span>
-                                            {part.status === "available" && (
-                                                <Button asChild size="sm" variant="ghost" className="text-accent hover:text-accent hover:bg-accent/10">
-                                                    <Link href={`/guides/groups/part-${part.id}`}>
-                                                        Start Part {part.id}
-                                                        <ArrowRight className="w-4 h-4 ml-1" />
-                                                    </Link>
-                                                </Button>
-                                            )}
-                                        </div>
+                                        {part.status === "available" && (
+                                            <span className="inline-flex items-center text-accent text-sm font-medium whitespace-nowrap shrink-0">
+                                                Start Part {part.id}
+                                                <ArrowRight className="w-4 h-4 ml-1" />
+                                            </span>
+                                        )}
                                     </div>
-                                </div>
-                            ))}
+                                );
+                                return part.status === "available" ? (
+                                    <Link
+                                        key={part.id}
+                                        href={`/guides/groups/part-${part.id}`}
+                                        className="group block bg-card backdrop-blur-md rounded-xl border border-border p-6 transition-all duration-300 hover:bg-muted"
+                                    >
+                                        {inner}
+                                    </Link>
+                                ) : (
+                                    <div
+                                        key={part.id}
+                                        className="group bg-card backdrop-blur-md rounded-xl border border-border p-6 opacity-60"
+                                    >
+                                        {inner}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 
