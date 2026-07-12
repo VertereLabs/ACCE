@@ -2,8 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, ArrowRight, FileText, LayoutList, GraduationCap, CheckCircle2, AlertCircle, HelpCircle, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, FileText, LayoutList, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import GuideCompletionCard from "@/components/GuideCompletionCard";
 import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
@@ -125,7 +126,7 @@ export default function IFRS15Part5Page() {
                                         <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/40 flex flex-shrink-0 items-center justify-center text-accent font-bold">01</div>
                                         <div>
                                             <h4 className="font-bold text-foreground mb-2">Structure your answer by the FIVE STEPS</h4>
-                                            <p className="text-sm text-muted-foreground leading-relaxed">Even if the question is only about Step 3, briefly reference the fact that a valid contract and POs have been identified. It sets a professional tone for your response.</p>
+                                            <p className="text-sm text-muted-foreground leading-relaxed">Even if the question is only about Step 3, briefly reference the fact that a valid contract and POs have been identified. It shows you are able to identify the issue.</p>
                                         </div>
                                     </div>
                                     <div className="flex gap-4">
@@ -145,20 +146,12 @@ export default function IFRS15Part5Page() {
                                 </div>
                             </section>
 
-                            {/* Conclusion */}
-                            <section className="mb-12">
-                                <div className="bg-accent/10 border border-accent/30 rounded-2xl p-8">
-                                    <div className="flex items-start gap-4">
-                                        <GraduationCap className="w-8 h-8 text-accent flex-shrink-0" />
-                                        <div>
-                                            <h3 className="font-display text-xl font-bold text-foreground mb-3">You&apos;ve Mastered IFRS 15!</h3>
-                                            <p className="text-sm text-muted-foreground m-0 leading-relaxed italic">
-                                                From the core principle to complex repurchase agreements, you now have the tools to tackle revenue recognition with confidence. Practice as many past papers as you can, because revenue is all about identifying those subtle &quot;hooks&quot; in the question narrative.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+                            {/* Coming Soon Note */}
+                            <div className="bg-card border border-border rounded-xl p-6 mb-12">
+                                <p className="text-muted-foreground text-sm m-0">
+                                    <strong className="text-foreground">Coming soon:</strong> full guides with detailed worked examples and solutions. Keep an eye on this page.
+                                </p>
+                            </div>
                         </div>
 
                         {/* Navigation */}
@@ -169,30 +162,18 @@ export default function IFRS15Part5Page() {
                                     Part 4: Complex Scenarios
                                 </Link>
                             </Button>
-                            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
                                 <Link href="/guides/">
-                                    Back to All Guides
+                                    Master All Standards
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Link>
                             </Button>
                         </div>
                     </article>
 
-                    {/* Final CTA */}
+                    {/* Guide Completion Card */}
                     <div className="max-w-4xl mx-auto mt-16">
-                        <div className="bg-card border border-border rounded-2xl p-8 md:p-12 text-center">
-                            <h3 className="font-display text-2xl font-bold text-foreground mb-4">
-                                Ready to Test Your Knowledge?
-                            </h3>
-                            <p className="text-muted-foreground mb-8 max-w-lg mx-auto leading-relaxed text-balance">
-                                Get one-on-one coaching to review your past paper attempts and squash any recurring mistakes.
-                            </p>
-                            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-10 h-14 text-lg">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book Final Review
-                                </a>
-                            </Button>
-                        </div>
+                        <GuideCompletionCard guide="ifrs-15" />
                     </div>
                 </div>
             </main>

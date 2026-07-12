@@ -2,8 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, ArrowRight, Building2, Gavel, GraduationCap, CheckCircle2, Calculator, HelpCircle, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, Gavel, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import GuideCompletionCard from "@/components/GuideCompletionCard";
 import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
@@ -134,7 +135,7 @@ export default function IFRS16Part5Page() {
                                     <div className="relative pl-10 border-l border-accent/30 ml-4 pb-8">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">1</div>
                                         <h4 className="font-bold text-foreground mb-1 text-sm">Define the Lease & Term</h4>
-                                        <p className="text-xs text-muted-foreground m-0">Does the contract contain a lease? What is the non-cancellable period plus extension options?</p>
+                                        <p className="text-xs text-muted-foreground m-0">What is the identified asset? What is the non-cancellable period plus extension options?</p>
                                     </div>
                                     <div className="relative pl-10 border-l border-accent/30 ml-4 pb-8">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">2</div>
@@ -154,20 +155,12 @@ export default function IFRS16Part5Page() {
                                 </div>
                             </section>
 
-                            {/* Final Conclusion */}
-                            <section className="mb-12">
-                                <div className="bg-accent/10 border border-accent/30 rounded-2xl p-8">
-                                    <div className="flex items-start gap-4">
-                                        <GraduationCap className="w-8 h-8 text-accent flex-shrink-0" />
-                                        <div>
-                                            <h3 className="font-display text-xl font-bold text-foreground mb-3 font-display">You&apos;ve Completed IFRS 16!</h3>
-                                            <p className="text-sm text-muted-foreground m-0 leading-relaxed italic text-pretty">
-                                                Mastering leases is about managing the timeline and the math. From Day 1 measurement to Day 365 depreciation, you now have the full picture. Head back to all guides to tackle your next reporting standard.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+                            {/* Coming Soon Note */}
+                            <div className="bg-card border border-border rounded-xl p-6 mb-12">
+                                <p className="text-muted-foreground text-sm m-0">
+                                    <strong className="text-foreground">Coming soon:</strong> full guides with detailed worked examples and solutions. Keep an eye on this page.
+                                </p>
+                            </div>
                         </div>
 
                         {/* Navigation */}
@@ -187,21 +180,9 @@ export default function IFRS16Part5Page() {
                         </div>
                     </article>
 
-                    {/* Final CTA */}
+                    {/* Guide Completion Card */}
                     <div className="max-w-4xl mx-auto mt-16">
-                        <div className="bg-card border border-border rounded-3xl p-8 md:p-14 text-center">
-                            <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
-                                Ready for a Distinction?
-                            </h3>
-                            <p className="text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed text-lg">
-                                Don&apos;t just learn the theory. Apply it. Get personalized feedback on your lease and revenue recognition calculations before your next exam.
-                            </p>
-                            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-12 h-14 text-lg shadow-xl shadow-accent/20">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    WhatsApp for Exam Prep
-                                </a>
-                            </Button>
-                        </div>
+                        <GuideCompletionCard guide="ifrs-16" />
                     </div>
                 </div>
             </main>

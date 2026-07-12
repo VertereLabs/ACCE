@@ -2,8 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, CheckCircle2, Lightbulb, FileText, BarChart3, PieChart, GraduationCap, RefreshCw, Users, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Lightbulb, FileText, BarChart3, PieChart, GraduationCap, RefreshCw, Users, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import GuideCompletionCard from "@/components/GuideCompletionCard";
 import { isGuidePdfPublished } from "@/config/guides";
 
 export const metadata: Metadata = {
@@ -58,7 +59,7 @@ export default function GroupsPart7Page() {
                                 Group Financial Statements & Exam Preparation
                             </h1>
                             <p className="text-muted-foreground text-lg">
-                                60 min read • Last updated January 2026
+                                Last updated January 2026
                             </p>
                         </header>
 
@@ -224,13 +225,11 @@ export default function GroupsPart7Page() {
                                 </div>
                             </section>
 
-                            {/* Final Conclusion */}
-                            <div className="bg-accent rounded-2xl p-8 text-black mb-12 shadow-xl shadow-accent/20">
-                                <h2 className="font-display text-2xl font-bold mb-4">You&apos;ve Finished the Groups Guide!</h2>
-                                <p className="mb-6 opacity-90 leading-relaxed">
-                                    Congratulations! You have completed all 7 parts of our comprehensive Groups and Business Combinations guide. You now have the foundational knowledge and advanced tools to tackle any CTA/PGDA financial accounting paper.
+                            {/* Coming Soon Note */}
+                            <div className="bg-card border border-border rounded-xl p-6 mb-12">
+                                <p className="text-muted-foreground text-sm m-0">
+                                    <strong className="text-foreground">Coming soon:</strong> full guides with detailed worked examples and solutions. Keep an eye on this page.
                                 </p>
-                                <p className="font-bold">Good luck with your studies and upcoming exams! 🎓✨</p>
                             </div>
                         </div>
 
@@ -242,40 +241,18 @@ export default function GroupsPart7Page() {
                                     Part 6: Associates & JVs
                                 </Link>
                             </Button>
-                            <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white font-bold">
+                            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
                                 <Link href="/guides/">
-                                    Explore Other Guides
+                                    Master All Standards
+                                    <ArrowRight className="w-4 h-4 ml-2" />
                                 </Link>
                             </Button>
                         </div>
                     </article>
 
-                    {/* Final CTA */}
+                    {/* Guide Completion Card */}
                     <div className="max-w-4xl mx-auto mt-16">
-                        <div className="bg-card backdrop-blur-md rounded-2xl border border-border p-10 text-center relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-                            <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full -ml-16 -mb-16 blur-3xl"></div>
-
-                            <GraduationCap className="w-16 h-16 text-accent mx-auto mb-6" />
-                            <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4 text-balance">
-                                Ready to Ace your Exams?
-                            </h3>
-                            <p className="text-muted-foreground mb-8 max-w-xl mx-auto text-lg leading-relaxed">
-                                If you&apos;re feeling confident but want that extra edge, or if you&apos;re still struggling with specific scenarios, Priyanka is here to help you cross the finish line.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold px-8">
-                                    <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                        WhatsApp for Tutoring
-                                    </a>
-                                </Button>
-                                <Button asChild variant="outline" size="lg" className="border-border hover:bg-muted text-foreground px-8">
-                                    <Link href="/#services">
-                                        View Our Services
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
+                        <GuideCompletionCard guide="groups" />
                     </div>
                 </div>
             </main>
