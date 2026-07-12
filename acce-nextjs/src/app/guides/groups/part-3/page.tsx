@@ -58,7 +58,7 @@ export default function GroupsPart3Page() {
                                 Consolidation Mechanics (IFRS 10)
                             </h1>
                             <p className="text-muted-foreground text-lg">
-                                50 min read • Last updated January 2026
+                                Last updated January 2026
                             </p>
                         </header>
 

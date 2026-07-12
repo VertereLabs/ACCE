@@ -58,7 +58,7 @@ export default function GroupsPart2Page() {
                                 The Acquisition Method (IFRS 3)
                             </h1>
                             <p className="text-muted-foreground text-lg">
-                                60 min read • Last updated January 2026
+                                Last updated January 2026
                             </p>
                         </header>
 
@@ -129,20 +129,20 @@ export default function GroupsPart2Page() {
                                     Determining the Acquisition Date
                                 </h2>
                                 <p className="text-muted-foreground leading-relaxed mb-6">
-                                    The <strong className="text-foreground">acquisition date</strong> is the date on which the acquirer obtains control of the acquiree. This is typically the closing date when:
+                                    The <strong className="text-foreground">acquisition date</strong> is the date on which the acquirer obtains control of the acquiree. Control is what sets the date, not the legal formalities:
                                 </p>
 
                                 <div className="grid md:grid-cols-2 gap-4 mb-6">
                                     <div className="bg-card rounded-lg border border-border p-4">
-                                        <h4 className="text-foreground font-semibold mb-2">Legal transfer occurs</h4>
+                                        <h4 className="text-foreground font-semibold mb-2">The test: control is obtained</h4>
                                         <p className="text-muted-foreground text-sm m-0">
-                                            Shares are transferred, consideration is paid
+                                            Power + variable returns + ability to affect returns. This is the deciding factor.
                                         </p>
                                     </div>
                                     <div className="bg-card rounded-lg border border-border p-4">
-                                        <h4 className="text-foreground font-semibold mb-2">Control is obtained</h4>
+                                        <h4 className="text-foreground font-semibold mb-2">Usually the closing date</h4>
                                         <p className="text-muted-foreground text-sm m-0">
-                                            Power + variable returns + ability to affect returns
+                                            In most deals control passes when shares are transferred and consideration is paid, but it can pass earlier or later (e.g. by written agreement)
                                         </p>
                                     </div>
                                 </div>

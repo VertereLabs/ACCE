@@ -102,10 +102,10 @@ export default function IFRS15Part1Page() {
                                     <p className="text-xl font-display font-medium text-foreground leading-relaxed m-0 text-center italic">
                                         &quot;Recognize revenue to depict the transfer of promised goods or services to customers in an amount that reflects the consideration to which the entity expects to be entitled.&quot;
                                     </p>
+                                    <p className="text-muted-foreground text-sm italic text-center mt-4 mb-0">
+                                        (IFRS 15.2)
+                                    </p>
                                 </div>
-                                <p className="text-muted-foreground text-sm italic text-center">
-                                    (IFRS 15.2)
-                                </p>
                             </section>
 
                             {/* Scope */}

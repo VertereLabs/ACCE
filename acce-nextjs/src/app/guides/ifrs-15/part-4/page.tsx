@@ -76,23 +76,31 @@ export default function IFRS15Part4Page() {
 
                                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                                     <div className="bg-card border border-border rounded-xl p-6">
-                                        <h4 className="font-display font-semibold text-blue-400 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+                                        <h4 className="font-display font-semibold text-blue-400 mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
                                             <ShieldCheck className="w-4 h-4" />
-                                            Assurance-Type
+                                            Assurance-Type Warranty
                                         </h4>
-                                        <p className="text-xs text-muted-foreground mb-4 font-medium italic">Does it provide a service in addition to the assurance that the product complies with agreed specifications?</p>
-                                        <div className="bg-blue-500/10 rounded-lg p-3 text-xs text-muted-foreground">
-                                            <strong className="text-foreground">ACCOUNTING:</strong> Not a separate PO. Account for under <strong className="text-foreground">IAS 37</strong> (Provisions).
+                                        <div className="space-y-3 text-xs text-muted-foreground">
+                                            <p className="m-0"><strong className="text-foreground">Core Concept:</strong> Guarantees the product works as intended at the time of sale.</p>
+                                            <p className="m-0"><strong className="text-foreground">Separable?</strong> No. It is not a distinct performance obligation.</p>
+                                            <p className="m-0"><strong className="text-foreground">Accounting Standard:</strong> Covered under IAS 37 (Provisions).</p>
+                                            <div className="bg-blue-500/10 rounded-lg p-3">
+                                                <strong className="text-foreground">Accounting Entry:</strong> Expense the estimated cost and create a liability provision at the time of sale.
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="bg-card border border-border rounded-xl p-6">
-                                        <h4 className="font-display font-semibold text-green-400 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+                                        <h4 className="font-display font-semibold text-green-400 mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
                                             <CheckCircle2 className="w-4 h-4" />
-                                            Service-Type
+                                            Service-Type Warranty
                                         </h4>
-                                        <p className="text-xs text-muted-foreground mb-4 font-medium italic">If the customer has the option to purchase the warranty separately, it&apos;s a separate PO.</p>
-                                        <div className="bg-green-500/10 rounded-lg p-3 text-xs text-muted-foreground">
-                                            <strong className="text-foreground">ACCOUNTING:</strong> IS a <strong className="text-foreground">Separate PO</strong>. Allocate part of the transaction price to it.
+                                        <div className="space-y-3 text-xs text-muted-foreground">
+                                            <p className="m-0"><strong className="text-foreground">Core Concept:</strong> Provides an additional, distinct service beyond basic functionality.</p>
+                                            <p className="m-0"><strong className="text-foreground">Separable?</strong> Yes. It is a distinct performance obligation.</p>
+                                            <p className="m-0"><strong className="text-foreground">Accounting Standard:</strong> Covered under IFRS 15 (Revenue Recognition).</p>
+                                            <div className="bg-green-500/10 rounded-lg p-3">
+                                                <strong className="text-foreground">Accounting Entry:</strong> Defer a portion of the transaction price and recognize revenue over the warranty period.
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

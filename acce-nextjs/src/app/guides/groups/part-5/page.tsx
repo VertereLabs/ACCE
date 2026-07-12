@@ -58,7 +58,7 @@ export default function GroupsPart5Page() {
                                 Complex Transactions in Group Accounting
                             </h1>
                             <p className="text-muted-foreground text-lg">
-                                75 min read • Last updated January 2026
+                                Last updated January 2026
                             </p>
                         </header>
 
@@ -142,9 +142,9 @@ export default function GroupsPart5Page() {
                                     <h4 className="font-display font-bold text-foreground mb-4">The Elimination Journal (Year of Sale):</h4>
                                     <div className="bg-card rounded-lg p-4 font-mono text-sm space-y-2">
                                         <p className="text-foreground">Dr Other Income / Gain on sale (Seller)</p>
-                                        <p className="text-accent ml-4">Cr PPE (Buyer) <span className="text-muted-foreground text-xs ml-2">// Eliminate profit</span></p>
+                                        <p className="text-accent ml-4">Cr PPE (Buyer) <span className="text-muted-foreground text-xs ml-2">{"// Eliminate profit"}</span></p>
                                         <p className="text-foreground">Dr Accumulated Depr (Buyer)</p>
-                                        <p className="text-accent ml-4">Cr Depreciation Expense (Buyer) <span className="text-muted-foreground text-xs ml-2">// Reverse excess depr</span></p>
+                                        <p className="text-accent ml-4">Cr Depreciation Expense (Buyer) <span className="text-muted-foreground text-xs ml-2">{"// Reverse excess depr"}</span></p>
                                     </div>
                                 </div>
                             </section>

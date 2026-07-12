@@ -58,7 +58,7 @@ export default function GroupsPart1Page() {
                                 Foundations of Group Financial Reporting
                             </h1>
                             <p className="text-muted-foreground text-lg">
-                                45 min read • Last updated January 2026
+                                Last updated January 2026
                             </p>
                         </header>
 

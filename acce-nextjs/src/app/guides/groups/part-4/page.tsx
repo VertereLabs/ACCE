@@ -58,7 +58,7 @@ export default function GroupsPart4Page() {
                                 Analysis of Equity (AOE): The Heart of Groups
                             </h1>
                             <p className="text-muted-foreground text-lg">
-                                90 min read • Last updated January 2026
+                                Last updated January 2026
                             </p>
                         </header>
 
@@ -106,7 +106,7 @@ export default function GroupsPart4Page() {
                                     {/* At Acquisition */}
                                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
                                         <h3 className="font-display text-lg font-semibold text-blue-400 mb-4 flex items-center gap-2">
-                                            🔵 Column 1: At Acquisition
+                                            🔵 At Acquisition
                                         </h3>
                                         <p className="text-muted-foreground text-sm mb-4">
                                             Calculates the Net Asset Value (NAV) of the subsidiary on the date control was obtained. This is used to calculate Goodwill.
@@ -122,7 +122,7 @@ export default function GroupsPart4Page() {
                                     {/* Since Acquisition */}
                                     <div className="bg-accent/10 border border-accent/30 rounded-xl p-6">
                                         <h3 className="font-display text-lg font-semibold text-accent mb-4 flex items-center gap-2">
-                                            🟡 Column 2: Since Acquisition to Start of Current Year
+                                            🟡 Since Acquisition to Start of Current Year
                                         </h3>
                                         <p className="text-muted-foreground text-sm mb-4">
                                             Calculates the growth in equity from the date of acquisition until the beginning of the current reporting period.
@@ -138,7 +138,7 @@ export default function GroupsPart4Page() {
                                     {/* Current Year */}
                                     <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6">
                                         <h3 className="font-display text-lg font-semibold text-green-400 mb-4 flex items-center gap-2">
-                                            🟢 Column 3: Current Year
+                                            🟢 Current Year
                                         </h3>
                                         <p className="text-muted-foreground text-sm mb-4">
                                             Calculates the movements in equity for the current reporting year. This figure goes to the Group Income Statement and SOCI.

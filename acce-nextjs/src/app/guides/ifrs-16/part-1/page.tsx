@@ -99,7 +99,7 @@ export default function IFRS16Part1Page() {
                                     <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6">
                                         <h3 className="font-display text-lg font-semibold text-red-400 mb-2">The Liability</h3>
                                         <p className="text-xs text-muted-foreground mb-0 leading-relaxed font-bold">Lease Liability</p>
-                                        <p className="text-[10px] text-muted-foreground m-0">Representing the obligation to make lease payments.</p>
+                                        <p className="text-[10px] text-muted-foreground m-0">Representing the obligation to make future lease payments.</p>
                                     </div>
                                 </div>
                                 <div className="bg-card border border-border rounded-xl p-6">

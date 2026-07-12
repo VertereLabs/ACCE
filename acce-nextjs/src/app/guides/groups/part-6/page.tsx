@@ -58,7 +58,7 @@ export default function GroupsPart6Page() {
                                 Associates & Joint Ventures
                             </h1>
                             <p className="text-muted-foreground text-lg">
-                                45 min read • Last updated January 2026
+                                Last updated January 2026
                             </p>
                         </header>
 
@@ -157,7 +157,7 @@ export default function GroupsPart6Page() {
                                     <div className="flex items-start gap-4">
                                         <Lightbulb className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
                                         <p className="text-muted-foreground m-0 text-sm">
-                                            <strong className="text-foreground">Crucial Distinction:</strong> In consolidation, dividends from a sub are eliminated in full. In the equity method, dividends from an associate <strong className="text-foreground">reduce the carrying amount</strong> of the investment; they are not recognized as income in the group P/L.
+                                            <strong className="text-foreground">Crucial Distinction:</strong> In consolidation, dividends from a sub are eliminated in full. In the equity method, dividends from an associate <strong className="text-foreground">reduce the carrying amount</strong> of the investment; they are not recognized as income in the investor&apos;s P/L. (Remember: the associate is not part of the group, a group is only the parent and its subsidiaries.)
                                         </p>
                                     </div>
                                 </div>
@@ -189,7 +189,7 @@ export default function GroupsPart6Page() {
                                                 <td className="p-3 border-b border-border border-l border-border text-center">X</td>
                                             </tr>
                                             <tr>
-                                                <td className="p-3 border-b border-border underline italic">Less: Unrealised Profits (Group Share)</td>
+                                                <td className="p-3 border-b border-border underline italic">Less: Unrealised Profits (Investor&apos;s Share)</td>
                                                 <td className="p-3 border-b border-border border-l border-border text-center">(X)</td>
                                                 <td className="p-3 border-b border-border border-l border-border text-center">(X)</td>
                                             </tr>
@@ -199,7 +199,7 @@ export default function GroupsPart6Page() {
                                                 <td className="p-3 border-b border-border border-l border-border text-center font-bold">Total</td>
                                             </tr>
                                             <tr className="bg-accent/5">
-                                                <td className="p-3 border-b border-border font-bold text-accent">Group Share (x%)</td>
+                                                <td className="p-3 border-b border-border font-bold text-accent">Investor&apos;s Share (x%)</td>
                                                 <td className="p-3 border-b border-border border-l border-border text-center font-bold text-accent">Split</td>
                                                 <td className="p-3 border-b border-border border-l border-border text-center font-bold text-accent">Split</td>
                                             </tr>
@@ -215,7 +215,7 @@ export default function GroupsPart6Page() {
                                     Unrealised Profits with Associates
                                 </h2>
                                 <p className="text-muted-foreground leading-relaxed mb-6">
-                                    When the group sells to an associate (downstream) or vice versa (upstream), only the <strong className="text-foreground">group&apos;s share</strong> of the profit is eliminated.
+                                    When the investor sells to an associate (downstream) or vice versa (upstream), only the <strong className="text-foreground">investor&apos;s share</strong> of the profit is eliminated.
                                 </p>
 
                                 <div className="bg-accent/10 border border-accent/30 rounded-xl p-6">
@@ -228,7 +228,7 @@ export default function GroupsPart6Page() {
                                     </p>
                                     <div className="mt-4 p-3 bg-card rounded-lg font-mono text-xs">
                                         <p className="text-accent m-0">Profit to eliminate = R10,000 x 30% = R3,000</p>
-                                        <p className="mt-2 text-foreground">Dr Group Retained Earnings / COS</p>
+                                        <p className="mt-2 text-foreground">Dr Investor&apos;s Retained Earnings / COS</p>
                                         <p className="ml-4 text-accent">Cr Investment in Associate</p>
                                     </div>
                                 </div>
