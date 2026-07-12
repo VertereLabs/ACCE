@@ -3,9 +3,9 @@ import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SessionFormats from "@/components/SessionFormats";
 import ConversionCtas from "@/components/ConversionCtas";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Monitor, Award, HelpCircle, CheckCircle } from "lucide-react";
+import { BookOpen, Users, Award, HelpCircle, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "PGDA Tutor: Postgraduate Diploma in Accounting | ACCE",
@@ -141,60 +141,32 @@ export default function PgdaTutorPage() {
                         <p className="text-muted-foreground leading-relaxed mb-6">
                             I tutor all four PGDA core subjects. Each subject page goes into the specific syllabus areas, IFRS standards, and exam techniques in more detail. Click through to the subject you need help with.
                         </p>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/accounting-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Financial Accounting
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    IFRS standards, group statements, consolidations, financial instruments, and leases at honours level. This is the most technically demanding subject in the PGDA year.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/tax-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Taxation
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Income Tax Act, corporate tax, VAT, CGT and estate duty. Tax sits across every part of the PGDA and feeds directly into integrated assessments.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/financial-management-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Management Accounting and Finance (MAF)
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Costing, budgeting, investment appraisal, and financial management decisions. MAF often feels less structured than the other subjects, which makes it tricky for self-directed learners.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/auditing-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Auditing
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    ISA standards, the audit process, internal controls, assertions, and professional ethics. Auditing requires professional judgement, which develops through practise with realistic scenarios.
-                                </p>
-                            </div>
-                        </div>
+                        <ul className="space-y-3 text-muted-foreground leading-relaxed">
+                            <li>
+                                <Link href="/accounting-tutor" className="text-accent hover:underline font-medium">
+                                    Financial Accounting
+                                </Link>
+                                : IFRS, consolidations and financial instruments at honours level, the most technically demanding subject in the year.
+                            </li>
+                            <li>
+                                <Link href="/tax-tutor" className="text-accent hover:underline font-medium">
+                                    Taxation
+                                </Link>
+                                : the Income Tax Act, VAT, CGT and estate duty across the diploma year.
+                            </li>
+                            <li>
+                                <Link href="/financial-management-tutor" className="text-accent hover:underline font-medium">
+                                    Management Accounting and Finance (MAF)
+                                </Link>
+                                : costing, budgeting and corporate finance, tricky for self-directed learners.
+                            </li>
+                            <li>
+                                <Link href="/auditing-tutor" className="text-accent hover:underline font-medium">
+                                    Auditing
+                                </Link>
+                                : ISAs, the audit process, internal controls and professional ethics.
+                            </li>
+                        </ul>
                     </div>
 
                     {/* Section 3: The PGDA to CTA to CA(SA) pathway */}
@@ -225,54 +197,8 @@ export default function PgdaTutorPage() {
                         </div>
                     </div>
 
-                    {/* Section 4: How it works */}
-                    <div className="max-w-4xl mx-auto mb-16">
-                        <div className="flex items-center gap-3 mb-4">
-                            <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
-                            <h2 className="font-display text-2xl font-semibold text-foreground">
-                                How it works: 1:1, group, and online across SA
-                            </h2>
-                        </div>
-                        <div className="grid md:grid-cols-3 gap-4 mb-6">
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-base font-semibold text-foreground mb-2">
-                                    1:1 Sessions
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Personalised sessions focused on your specific problem areas. Good for working through a difficult IFRS standard, understanding where marks are being lost in internal assessments, or building confidence in a single PGDA subject.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-base font-semibold text-foreground mb-2">
-                                    Small Group Sessions
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Two to four students covering shared ground. Useful for UNISA students who want to work through a module together, or for a small cohort preparing for the same internal test.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-base font-semibold text-foreground mb-2">
-                                    Online
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    All sessions are online via video call with screen sharing. This suits UNISA distance learners and contact-university students who prefer flexible scheduling around lecture timetables.
-                                </p>
-                            </div>
-                        </div>
-                        <p className="text-muted-foreground leading-relaxed">
-                            Sessions can be booked individually or in a regular block depending on how you want to structure your study. Many students start with a diagnostic session to identify which areas need the most attention, then plan from there.
-                        </p>
-                        <div className="mt-6 bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Ready to start? Send a WhatsApp message and we can confirm a time.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    WhatsApp to Book
-                                </a>
-                            </Button>
-                        </div>
-                    </div>
+                    {/* Section 4: How it works (shared, compact) */}
+                    <SessionFormats subjectLabel="PGDA" />
 
                     {/* Section 5: Why ACCE */}
                     <div className="max-w-4xl mx-auto mb-16">
@@ -284,7 +210,7 @@ export default function PgdaTutorPage() {
                         </div>
                         <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
                             <p>
-                                I am Priyanka, and I completed the CA(SA) qualifying pathway myself, which means I understand the PGDA year from the inside. I know what it feels like to juggle four subjects at honours level, to navigate the UNISA self-study format without constant access to a lecturer, and to realise mid-year that a gap in one subject is costing marks across everything else.
+                                I am Priyanka, a CA(SA) qualified through SAICA, and I understand the PGDA year from the inside. I know what it feels like to juggle four subjects at honours level, to navigate the UNISA self-study format without constant access to a lecturer, and to realise mid-year that a gap in one subject is costing marks across everything else.
                             </p>
                             <p>
                                 The students I work with consistently say the sessions gave them a clearer structure for the year, not just answers to specific questions. Understanding the PGDA as a qualification, knowing how the four subjects connect, and building study habits that carry through to the ITC are what matter at this level. That is what I focus on.

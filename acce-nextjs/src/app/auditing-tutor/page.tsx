@@ -4,10 +4,10 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import SessionFormats from "@/components/SessionFormats";
 import ConversionCtas from "@/components/ConversionCtas";
 import { getGuidesForSubject } from "@/config/guides";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
+import { BookOpen, Users, Award, HelpCircle, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Auditing Tutor for CA(SA) Students | ACCE Tutors",
@@ -181,36 +181,8 @@ export default function AuditingTutorPage() {
                         </p>
                     </div>
 
-                    {/* Section 3: How sessions work */}
-                    <div className="max-w-4xl mx-auto mb-16">
-                        <div className="flex items-center gap-3 mb-4">
-                            <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
-                            <h2 className="font-display text-2xl font-semibold text-foreground">
-                                How sessions work: 1:1, group, and online across South Africa
-                            </h2>
-                        </div>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
-                            <p>
-                                All sessions run online via video call with screen sharing, which makes auditing tutoring available to students at any South African university regardless of campus or study mode. UNISA distance-learning students, part-time PGDA candidates, and full-time CTA students all access sessions the same way.
-                            </p>
-                            <p>
-                                Sessions are available as 1:1 personal sessions or small group sessions. In 1:1 sessions, the focus is your specific gap: the audit risk model applied to a complex scenario, the assertions you cannot distinguish under time pressure, or the modified opinion logic that keeps tripping you. In small group sessions (two to four students), working through a full ITC-style auditing question together and then comparing answer structures is an effective format for PGDA candidates preparing for internal assessments.
-                            </p>
-                            <p>
-                                The biggest challenge in auditing at ITC level is speed and precision: a complex risk assessment question in an exam requires you to identify risks, match them to assertions, design appropriately targeted procedures, and set the correct detection risk level, all under time pressure. That kind of fluency is built through practice with feedback, not from reading the ISAs alone. Sessions are structured around working through realistic scenarios, identifying the markers' scoring approach, and building the habits that produce marks in an exam.
-                            </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Ready to work on Auditing? Send a WhatsApp and we will set up a session.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    WhatsApp to Book
-                                </a>
-                            </Button>
-                        </div>
-                    </div>
+                    {/* Section 3: How sessions work (shared, compact) */}
+                    <SessionFormats subjectLabel="Auditing" />
 
                     {/* Section 4: Why ACCE */}
                     <div className="max-w-4xl mx-auto mb-16">
@@ -222,7 +194,7 @@ export default function AuditingTutorPage() {
                         </div>
                         <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
                             <p>
-                                I am Priyanka. I completed the full CA(SA) qualifying pathway through SAICA, which means I sat the ITC (where Auditing is one of the four papers) and the APC (where auditing and governance considerations thread through the integrated case study). That experience shapes how I tutor: I can tell you not just what ISA 315 says about risk identification, but what the ITC examiner expects in a risk assessment answer and what separates a response that picks up 80% of the available marks from one that picks up 40%.
+                                I am Priyanka, a CA(SA) qualified through SAICA. I sat the ITC (where Auditing is one of the four papers) and the APC (where auditing and governance considerations thread through the integrated case study). That experience shapes how I tutor: I can tell you not just what ISA 315 says about risk identification, but what the ITC examiner expects in a risk assessment answer and what separates a response that picks up 80% of the available marks from one that picks up 40%.
                             </p>
                             <p>
                                 One thing I consistently see is students treating auditing as a memorisation subject: learn the ISAs, recall definitions in the exam. That approach gets you a pass at undergraduate level but breaks down in the ITC and APC, where questions are scenario-driven. A well-designed ISA 315 question will describe a client with a newly implemented ERP system, a revenue recognition policy change, and a shortage of qualified accounting staff, and ask you to identify the risks of material misstatement and explain how you would respond under ISA 330. You cannot memorise your way to full marks on that question. You need to understand the audit risk model deeply enough to apply it to a scenario you have not seen before.
@@ -252,21 +224,15 @@ export default function AuditingTutorPage() {
                         <div className="flex items-center gap-3 mb-4">
                             <TrendingUp className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
-                                How to get started and where auditing fits in the CA(SA) pathway
+                                Where Auditing fits on the CA(SA) pathway
                             </h2>
                         </div>
                         <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
                             <p>
                                 Auditing is examined in the ITC as a standalone paper (alongside Financial Accounting, Management Accounting and Finance, and Taxation) and is woven through the APC integrated case study as a governance and assurance lens. This means auditing appears at both the technical recall level (ITC: procedures, assertions, opinion types) and the applied advisory level (APC: identifying audit implications of business decisions, evaluating internal control environments, assessing independence threats). Sessions are structured to address the right level for where you are in your studies.
                             </p>
-                            <p>
-                                Sessions are available per session or in blocks, with scheduling built around lectures, PGDA internal assessments, and the ITC exam calendar. Group sessions work well for PGDA cohorts preparing for the same internal assessment or mock-ITC paper. Per-session and block rates are confirmed directly when you reach out, matched to your frequency and level.
-                            </p>
-                            <p>
-                                If you are not sure which aspect of auditing to focus on first, send a WhatsApp describing where you are in your studies and what you are finding difficult. I will give you a candid view of what a session can address.
-                            </p>
                         </div>
-                        <div className="bg-card rounded-xl border border-border p-6 mb-6">
+                        <div className="bg-card rounded-xl border border-border p-6">
                             <p className="text-muted-foreground text-sm leading-relaxed">
                                 For context on how Auditing fits alongside the other three CTA subjects, see the{" "}
                                 <Link href="/cta-tutor" className="text-accent hover:underline">
@@ -282,16 +248,6 @@ export default function AuditingTutorPage() {
                                 </Link>
                                 .
                             </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Book a session and we will work through whichever part of the auditing syllabus is costing you marks.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book on WhatsApp
-                                </a>
-                            </Button>
                         </div>
                     </div>
 

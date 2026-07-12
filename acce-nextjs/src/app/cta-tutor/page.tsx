@@ -3,9 +3,9 @@ import JsonLd from "@/components/JsonLd";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SessionFormats from "@/components/SessionFormats";
 import ConversionCtas from "@/components/ConversionCtas";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Monitor, Award, HelpCircle, CheckCircle } from "lucide-react";
+import { BookOpen, Users, Award, HelpCircle, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "CTA Tutor: Certificate in Theory of Accounting | ACCE",
@@ -137,60 +137,32 @@ export default function CtaTutorPage() {
                         <p className="text-muted-foreground leading-relaxed mb-6">
                             The CTA year covers four core subjects. I tutor all four, and I can work across the integration those subjects demand. Click through to each subject page for more detail on what we focus on in sessions.
                         </p>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/accounting-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Financial Accounting
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    IFRS standards, group statements, financial instruments, leases, and the complex consolidation questions the ITC loves. This subject has the most technical depth at CTA level.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/tax-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Taxation
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Income tax, VAT, CGT and dividends tax for individuals, companies, and trusts. Tax integrates into virtually every ITC scenario, so shaky foundations here cost marks across the whole paper.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/financial-management-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Management Accounting and Finance (MAF)
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Costing, budgeting, investment appraisal, and financial management decisions. MAF is often where students lose the most marks in the ITC because it feels less rule-bound than Accounting or Tax.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                                    <Link
-                                        href="/auditing-tutor"
-                                        className="text-foreground hover:text-accent transition-colors"
-                                    >
-                                        Auditing
-                                    </Link>
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Risk assessment, audit procedures, internal controls, and reporting. Auditing requires you to apply professional judgement in scenarios, which is a skill that develops with practice.
-                                </p>
-                            </div>
-                        </div>
+                        <ul className="space-y-3 text-muted-foreground leading-relaxed">
+                            <li>
+                                <Link href="/accounting-tutor" className="text-accent hover:underline font-medium">
+                                    Financial Accounting
+                                </Link>
+                                : IFRS, group statements and the consolidation questions that carry the most marks in the ITC.
+                            </li>
+                            <li>
+                                <Link href="/tax-tutor" className="text-accent hover:underline font-medium">
+                                    Taxation
+                                </Link>
+                                : income tax, VAT and CGT, which thread through almost every ITC scenario.
+                            </li>
+                            <li>
+                                <Link href="/financial-management-tutor" className="text-accent hover:underline font-medium">
+                                    Management Accounting and Finance (MAF)
+                                </Link>
+                                : costing, budgeting and investment appraisal, often where ITC marks are won or lost.
+                            </li>
+                            <li>
+                                <Link href="/auditing-tutor" className="text-accent hover:underline font-medium">
+                                    Auditing
+                                </Link>
+                                : risk assessment, procedures and reporting, applied through professional judgement.
+                            </li>
+                        </ul>
                         <div className="mt-6 bg-card rounded-xl border border-border p-6">
                             <p className="text-muted-foreground text-sm">
                                 Planning to continue after the ITC? The{" "}
@@ -223,54 +195,8 @@ export default function CtaTutorPage() {
                         </div>
                     </div>
 
-                    {/* Section 4: How it works */}
-                    <div className="max-w-4xl mx-auto mb-16">
-                        <div className="flex items-center gap-3 mb-4">
-                            <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
-                            <h2 className="font-display text-2xl font-semibold text-foreground">
-                                How it works: 1:1, group, and online
-                            </h2>
-                        </div>
-                        <div className="grid md:grid-cols-3 gap-4 mb-6">
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-base font-semibold text-foreground mb-2">
-                                    1:1 Sessions
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Fully personalised. We work on your specific problem areas at your pace. Most students use this format for targeted work on a single subject or for ITC integration practice.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-base font-semibold text-foreground mb-2">
-                                    Small Group Sessions
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    Two to four students covering a shared topic. Good for covering ITC past papers together or working through a technically dense IFRS standard with peers.
-                                </p>
-                            </div>
-                            <div className="bg-card rounded-xl border border-border p-6">
-                                <h3 className="font-display text-base font-semibold text-foreground mb-2">
-                                    Online
-                                </h3>
-                                <p className="text-muted-foreground text-sm">
-                                    All sessions run online via video call with screen sharing. This works well for CTA students who are studying full-time and need flexible scheduling around lectures and deadlines.
-                                </p>
-                            </div>
-                        </div>
-                        <p className="text-muted-foreground leading-relaxed">
-                            Sessions are booked ad hoc or in blocks, depending on how you prefer to structure your study. Many CTA students book weekly sessions throughout the year and then increase frequency in the six weeks before the ITC.
-                        </p>
-                        <div className="mt-6 bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Ready to start? Send a WhatsApp message and we will sort out a time.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    WhatsApp to Book
-                                </a>
-                            </Button>
-                        </div>
-                    </div>
+                    {/* Section 4: How it works (shared, compact) */}
+                    <SessionFormats subjectLabel="CTA" />
 
                     {/* Section 5: Results and testimonials */}
                     <div className="max-w-4xl mx-auto mb-16">
@@ -282,7 +208,7 @@ export default function CtaTutorPage() {
                         </div>
                         <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
                             <p>
-                                I am Priyanka, and I have been tutoring accounting students at undergraduate and postgraduate level for several years. I completed the CA(SA) qualifying pathway myself, which means I understand the CTA and ITC from the inside, not just as a teacher.
+                                I am Priyanka, and I have been tutoring accounting students at undergraduate and postgraduate level for several years. Having qualified as a CA(SA) through SAICA, I understand the CTA and ITC from the inside, not just as a teacher.
                             </p>
                             <p>
                                 The students I work with consistently say the same things: the sessions helped them understand the structure of exam answers, not just the technical content; and working through integration questions in a guided setting was different from doing past papers alone.

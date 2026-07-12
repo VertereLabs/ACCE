@@ -4,10 +4,10 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import SessionFormats from "@/components/SessionFormats";
 import ConversionCtas from "@/components/ConversionCtas";
 import { getGuidesForSubject } from "@/config/guides";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
+import { BookOpen, Users, Award, HelpCircle, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Tax Tutor: Taxation for PGDA & CTA | ACCE Tutors",
@@ -177,36 +177,8 @@ export default function TaxTutorPage() {
                         </p>
                     </div>
 
-                    {/* Section 3: How sessions work */}
-                    <div className="max-w-4xl mx-auto mb-16">
-                        <div className="flex items-center gap-3 mb-4">
-                            <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
-                            <h2 className="font-display text-2xl font-semibold text-foreground">
-                                How sessions work: 1:1, group, and online across South Africa
-                            </h2>
-                        </div>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
-                            <p>
-                                All sessions run online via video call with screen sharing, which means taxation tutoring is available to students across South Africa regardless of campus or study mode. UNISA students, part-time PGDA students, and full-time CTA candidates all access sessions the same way.
-                            </p>
-                            <p>
-                                Sessions are available as 1:1 personal sessions or small group sessions. In 1:1 sessions, the focus is on your specific gap: the section of the general deduction formula you keep misapplying, the fringe benefit calculation you cannot get to balance with the SARS table, or the VAT input tax apportionment you have never seen explained clearly. In small group sessions (two to four students), the format works well for shared ITC preparation, such as working through a full individual tax computation together and comparing mark-earning answer structures.
-                            </p>
-                            <p>
-                                PGDA students typically benefit from regular sessions starting early in the year, because the ITC tax paper covers a wide syllabus and the areas where marks cluster (fringe benefits, the deduction formula applied to uncommon scenarios, CGT) need sustained practice. Ad hoc sessions suit students who are generally solid on tax but want to close one specific gap before a test or the ITC.
-                            </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Ready to work on Taxation? Send a WhatsApp and we will find a time.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    WhatsApp to Book
-                                </a>
-                            </Button>
-                        </div>
-                    </div>
+                    {/* Section 3: How sessions work (shared, compact) */}
+                    <SessionFormats subjectLabel="Taxation" />
 
                     {/* Section 4: Why ACCE */}
                     <div className="max-w-4xl mx-auto mb-16">
@@ -218,7 +190,7 @@ export default function TaxTutorPage() {
                         </div>
                         <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
                             <p>
-                                I am Priyanka. I completed the full CA(SA) qualifying pathway through SAICA, which means I have worked through the same taxation syllabus, sat the ITC (where Taxation appears alongside Financial Accounting, MAF, and Auditing), and navigated the APC (where tax consequences thread through the integrated business case). That firsthand experience shapes how I tutor: I can tell you not just what section 11(a) says, but where the ITC marker is looking for the formula structure and what separates a distinction answer from an average one.
+                                I am Priyanka, a CA(SA) qualified through SAICA. I have worked through the same taxation syllabus, sat the ITC (where Taxation appears alongside Financial Accounting, MAF, and Auditing), and navigated the APC (where tax consequences thread through the integrated business case). That firsthand experience shapes how I tutor: I can tell you not just what section 11(a) says, but where the ITC marker is looking for the formula structure and what separates a distinction answer from an average one.
                             </p>
                             <p>
                                 One thing I emphasise in taxation tutoring is working from the Acts. Students who learn tax as a series of rules to memorise struggle with unfamiliar fact patterns in the ITC. Students who understand why the Income Tax Act draws the line between capital and revenue in the way it does, or why the VAT Act treats zero-rated and exempt supplies differently, can reason through questions they have not seen before. That is the standard the ITC and APC require, and it is what I build towards.
@@ -243,23 +215,15 @@ export default function TaxTutorPage() {
                         </div>
                     </div>
 
-                    {/* Section 5: Pricing and how to start */}
+                    {/* Section 5: Where this subject fits on the pathway (internal links) */}
                     <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <TrendingUp className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
-                                Pricing and how to get started
+                                Where Taxation fits on the CA(SA) pathway
                             </h2>
                         </div>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
-                            <p>
-                                Sessions are available per session or in blocks, with scheduling flexibility to fit around lectures, work commitments, and exam periods. Group sessions split the cost across participants, making regular taxation tutoring accessible for PGDA students on a tighter budget. Per-session and block rates are confirmed directly when you reach out, matched to your frequency and level.
-                            </p>
-                            <p>
-                                If you are not sure whether you need individual tax, corporate tax, VAT, CGT, or a combination, send a WhatsApp describing where you are in your studies and what you are finding difficult. I will give you an honest sense of what a session can cover and whether 1:1 or group suits you better.
-                            </p>
-                        </div>
-                        <div className="bg-card rounded-xl border border-border p-6 mb-6">
+                        <div className="bg-card rounded-xl border border-border p-6">
                             <p className="text-muted-foreground text-sm leading-relaxed">
                                 For context on how Taxation fits alongside the other three CTA subjects, see the{" "}
                                 <Link href="/cta-tutor" className="text-accent hover:underline">
@@ -275,16 +239,6 @@ export default function TaxTutorPage() {
                                 </Link>
                                 .
                             </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Book a session and we will work through whichever part of the tax syllabus is costing you marks.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book on WhatsApp
-                                </a>
-                            </Button>
                         </div>
                     </div>
 

@@ -4,10 +4,10 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import SessionFormats from "@/components/SessionFormats";
 import ConversionCtas from "@/components/ConversionCtas";
 import { getGuidesForSubject } from "@/config/guides";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
+import { BookOpen, Users, Award, HelpCircle, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Financial Management & Management Accounting Tutor | ACCE",
@@ -171,36 +171,8 @@ export default function FinancialManagementTutorPage() {
                         </p>
                     </div>
 
-                    {/* Section 3: How sessions work */}
-                    <div className="max-w-4xl mx-auto mb-16">
-                        <div className="flex items-center gap-3 mb-4">
-                            <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
-                            <h2 className="font-display text-2xl font-semibold text-foreground">
-                                How sessions work: 1:1, group, and online across South Africa
-                            </h2>
-                        </div>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
-                            <p>
-                                All sessions run online via video call with screen sharing, so MAF students anywhere in South Africa can access structured support: whether you are on campus, studying through UNISA, or working full-time while completing the PGDA.
-                            </p>
-                            <p>
-                                Sessions are available as 1:1 personal sessions or small group sessions. In 1:1 sessions we go deep on your specific problem: a standard costing variance you cannot balance, an NPV question where you keep misidentifying the relevant cash flows, or an activity-based costing allocation you cannot get to reconcile. In small group sessions (two to four students) the format suits shared exam prep, such as working through ITC past-paper MAF questions together or unpacking a case-study decision scenario for APC preparation.
-                            </p>
-                            <p>
-                                Many PGDA students book regular MAF sessions from the start of the year and increase frequency approaching the ITC, because both the costing and financial management halves of MAF need sustained practice rather than a last-minute cram. Ad hoc sessions work well for students who are generally on track but want targeted help on one specific concept.
-                            </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Ready to work on MAF? Send a WhatsApp and we will sort out a time.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    WhatsApp to Book
-                                </a>
-                            </Button>
-                        </div>
-                    </div>
+                    {/* Section 3: How sessions work (shared, compact) */}
+                    <SessionFormats subjectLabel="MAF" />
 
                     {/* Section 4: Why ACCE */}
                     <div className="max-w-4xl mx-auto mb-16">
@@ -212,7 +184,7 @@ export default function FinancialManagementTutorPage() {
                         </div>
                         <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
                             <p>
-                                I am Priyanka. I completed the full CA(SA) qualifying pathway through SAICA, which means I have worked through the same MAF curriculum, sat the same ITC (where MAF appears alongside the other core subjects), and navigated the APC (where MAF thinking underpins half the decision-making scenarios in the case study). That experience shapes how I tutor: I can tell you not just how the costing method works, but where exam questions hide the traps and what a mark-earning answer looks like versus a technically correct but poorly structured one.
+                                I am Priyanka, a CA(SA) qualified through SAICA. I have worked through the same MAF curriculum, sat the ITC (where MAF appears alongside the other core subjects), and navigated the APC (where MAF thinking underpins half the decision-making scenarios in the case study). That experience shapes how I tutor: I can tell you not just how the costing method works, but where exam questions hide the traps and what a mark-earning answer looks like versus a technically correct but poorly structured one.
                             </p>
                             <p>
                                 One thing that separates MAF tutoring at ACCE from generic tutoring is the APC angle. Most tutoring for management accounting focuses on the ITC: standard costing schedules, variance analysis, NPV computations. But for APC candidates, the relevant question is how management accounting and financial management thinking applies in an integrated business context: which capital investment to recommend, whether to make or buy a component, how to assess a pricing decision given contribution margin and capacity constraints. I prepare students for both, and the approach is different for each.
@@ -237,23 +209,15 @@ export default function FinancialManagementTutorPage() {
                         </div>
                     </div>
 
-                    {/* Section 5: Pricing snapshot + CTA */}
+                    {/* Section 5: Where this subject fits on the pathway (internal links) */}
                     <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <TrendingUp className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
-                                Pricing and how to get started
+                                Where MAF fits on the CA(SA) pathway
                             </h2>
                         </div>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
-                            <p>
-                                Sessions are available per session or in blocks, with flexible scheduling to fit around lectures, work, and exam periods. Group sessions split the cost across participants, making regular MAF tutoring accessible for students on a tighter budget. Per-session and block rates are discussed directly when you reach out, matched to your frequency and situation.
-                            </p>
-                            <p>
-                                If you are not sure whether you need the management accounting side, the financial management side, or both, send a WhatsApp describing where you are in your studies and what you are finding difficult. I will give you an honest picture of what a session can cover and whether a 1:1 or group format suits you better.
-                            </p>
-                        </div>
-                        <div className="bg-card rounded-xl border border-border p-6 mb-6">
+                        <div className="bg-card rounded-xl border border-border p-6">
                             <p className="text-muted-foreground text-sm leading-relaxed">
                                 For context on the full CA(SA) pathway, including how MAF fits alongside Financial Accounting, Tax, and Auditing at CTA level, see the{" "}
                                 <Link href="/cta-tutor" className="text-accent hover:underline">
@@ -269,16 +233,6 @@ export default function FinancialManagementTutorPage() {
                                 </Link>
                                 .
                             </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Book a session and we will work out whether to start on the costing side or the financial management side.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book on WhatsApp
-                                </a>
-                            </Button>
                         </div>
                     </div>
 

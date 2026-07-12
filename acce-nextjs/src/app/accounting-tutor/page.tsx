@@ -4,10 +4,10 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SubjectGuides from "@/components/SubjectGuides";
+import SessionFormats from "@/components/SessionFormats";
 import ConversionCtas from "@/components/ConversionCtas";
 import { getGuidesForSubject } from "@/config/guides";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Monitor, Award, HelpCircle, TrendingUp } from "lucide-react";
+import { BookOpen, Users, Award, HelpCircle, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Accounting Tutor for CA(SA), PGDA & CTA | ACCE Tutors",
@@ -171,36 +171,8 @@ export default function AccountingTutorPage() {
                         </p>
                     </div>
 
-                    {/* Section 3: How sessions work */}
-                    <div className="max-w-4xl mx-auto mb-16">
-                        <div className="flex items-center gap-3 mb-4">
-                            <Monitor className="w-6 h-6 text-accent" aria-hidden="true" />
-                            <h2 className="font-display text-2xl font-semibold text-foreground">
-                                How sessions work: 1:1, group, and online across South Africa
-                            </h2>
-                        </div>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
-                            <p>
-                                All sessions run online via video call with screen sharing. This means accounting students anywhere in South Africa, whether at a campus university, studying through UNISA, or working full-time while completing their PGDA, can access structured support without travel constraints.
-                            </p>
-                            <p>
-                                Sessions are available as 1:1 personal sessions or small group sessions. In 1:1 sessions, we work exclusively on your problem areas: a specific IFRS standard you cannot get to click, a consolidation worksheet you keep getting wrong, or a deferred tax calculation that is not balancing. In small group sessions (two to four students), the format suits shared topics such as working through ITC past papers on consolidations or unpacking a complex IFRS 15 revenue question together.
-                            </p>
-                            <p>
-                                Sessions are booked per session or in blocks. Many students working toward the ITC book weekly accounting sessions from the start of the PGDA year and increase frequency as the exam approaches. Ad hoc sessions for specific problems work well for students who are generally on track but want targeted help on one area.
-                            </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Ready to get started? Send a WhatsApp and we will sort out a time.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    WhatsApp to Book
-                                </a>
-                            </Button>
-                        </div>
-                    </div>
+                    {/* Section 3: How sessions work (shared, compact) */}
+                    <SessionFormats subjectLabel="Accounting" />
 
                     {/* Section 4: Why ACCE */}
                     <div className="max-w-4xl mx-auto mb-16">
@@ -212,7 +184,7 @@ export default function AccountingTutorPage() {
                         </div>
                         <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
                             <p>
-                                I am Priyanka. I completed the CA(SA) qualifying pathway through SAICA, which means I have worked through the same financial accounting curriculum, sat the same ITC, and navigated the same IFRS standards that my students face. That background matters because I can tell you not just what the standard says, but where students consistently misapply it and what a good exam answer looks like versus a technically correct but poorly structured one.
+                                I am Priyanka, a CA(SA) who came up through the same SAICA pathway my students are on now. I have worked through the same financial accounting curriculum, sat the ITC, and navigated the same IFRS standards you are facing. That background matters because I can tell you not just what the standard says, but where students consistently misapply it and what a good exam answer looks like versus a technically correct but poorly structured one.
                             </p>
                             <p>
                                 Accounting tutoring works best when the tutor has been through the assessments they are preparing you for. The ITC Paper 1 has a specific structure and mark allocation logic. Knowing that structure shapes how I help students approach consolidation questions, revenue recognition scenarios, and deferred tax computations differently from how a textbook chapter presents them.
@@ -237,23 +209,15 @@ export default function AccountingTutorPage() {
                         </div>
                     </div>
 
-                    {/* Section 5: Pricing snapshot + CTA */}
+                    {/* Section 5: Where this subject fits on the pathway (internal links) */}
                     <div className="max-w-4xl mx-auto mb-16">
                         <div className="flex items-center gap-3 mb-4">
                             <TrendingUp className="w-6 h-6 text-accent" aria-hidden="true" />
                             <h2 className="font-display text-2xl font-semibold text-foreground">
-                                Pricing and how to get started
+                                Where Financial Accounting fits on the CA(SA) pathway
                             </h2>
                         </div>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed mb-6">
-                            <p>
-                                Sessions are available per session or in blocks, with flexible scheduling to fit around lectures, work, and exam periods. Group sessions split the cost across participants, making regular accounting tutoring accessible for students on a tighter budget. Per-session and block rates are discussed directly when you reach out, so pricing is matched to your situation and frequency.
-                            </p>
-                            <p>
-                                If you are not sure where to start, send a WhatsApp describing where you are in your studies and what you are finding difficult. I will give you an honest picture of what a session can cover and what to expect.
-                            </p>
-                        </div>
-                        <div className="bg-card rounded-xl border border-border p-6 mb-6">
+                        <div className="bg-card rounded-xl border border-border p-6">
                             <p className="text-muted-foreground text-sm leading-relaxed">
                                 For context on the full CA(SA) pathway, including how Financial Accounting fits alongside Tax, MAF and Auditing at the PGDA level, see the{" "}
                                 <Link href="/cta-tutor" className="text-accent hover:underline">
@@ -277,16 +241,6 @@ export default function AccountingTutorPage() {
                                 </Link>
                                 .
                             </p>
-                        </div>
-                        <div className="bg-accent/10 border border-accent/30 rounded-xl p-6 text-center">
-                            <p className="text-foreground font-medium mb-4">
-                                Book a session and we will work out where to focus first.
-                            </p>
-                            <Button asChild variant="hero">
-                                <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
-                                    Book on WhatsApp
-                                </a>
-                            </Button>
                         </div>
                     </div>
 
