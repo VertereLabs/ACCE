@@ -46,7 +46,7 @@ const Hero = () => {
                                 </a>
                             </Button>
                             <Button
-                                variant="outline"
+                                variant="heroOutline"
                                 size="lg"
                                 asChild
                             >

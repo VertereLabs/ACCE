@@ -401,7 +401,7 @@ export default function GroupsPart1Page() {
                                         WhatsApp: 071 325 5295
                                     </a>
                                 </Button>
-                                <Button asChild variant="outline" className="border-border text-foreground hover:bg-muted">
+                                <Button asChild variant="heroOutline">
                                     <a href="mailto:priyankamikaya21@gmail.com">
                                         priyankamikaya21@gmail.com
                                     </a>

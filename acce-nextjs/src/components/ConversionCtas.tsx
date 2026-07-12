@@ -58,7 +58,7 @@ export default function ConversionCtas({
                     {bookLabel}
                 </a>
             </Button>
-            <Button variant="outline" size={size} asChild>
+            <Button variant="heroOutline" size={size} asChild>
                 <Link href={guidesHref}>
                     <BookOpen className="w-5 h-5" />
                     {guidesLabel}

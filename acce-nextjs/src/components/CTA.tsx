@@ -39,7 +39,7 @@ const CTA = () => {
                             </Button>
                             <Button
                                 size="lg"
-                                variant="outline"
+                                variant="heroOutline"
                                 asChild
                             >
                                 <a href="mailto:priyankamikaya21@gmail.com">

@@ -196,7 +196,7 @@ export default function IFRS15Part1Page() {
                             <p className="text-muted-foreground mb-6">
                                 Revenue recognition is a high-yield topic in PGDA and CTA exams. Let&apos;s make sure you get those easy marks first.
                             </p>
-                            <Button asChild variant="outline" className="border-border hover:bg-muted text-foreground">
+                            <Button asChild variant="heroOutline">
                                 <a href="https://wa.me/27713255295" target="_blank" rel="noopener noreferrer">
                                     Help Me With Revenue
                                 </a>
