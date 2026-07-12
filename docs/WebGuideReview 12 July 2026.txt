@@ -1,0 +1,53 @@
+Applicable to all:
+Remove suggested time, these are not accurate time allocations. Like the idea of times but if we going to include it they need to be more appropriate and I don't feel like timing myself while reading them tbh
+It looks like the whole card for each part is clickable but only the Start Part button on the right had side of the card is actually clickable
+
+Groups:
+Part 2: The Acquisition Method
+The acquisition date we have there when legal transfer occurs (Shares are transferred, consideration is paid). Is this technically accurate I want to challenge this is not only when control is obtained?
+
+Part 4: Analysis of Equity (AOE) — The Heart of Groups
+2 The Structure of the AOE:
+Remove the columns in the blocks The blocks titles should just read: At Acquisition, Since Acquisition to Start of Current Year, Current Year
+
+Part 6: Associates and Joint Ventures
+We use the term "group" in sections 2, 3 and 4 which is not really appropriate since the associate is not a part of the group. Per IFRS a group is defined as the parent and subsidiaries.
+
+Part 7:
+The You've Finished block
+Add a small note/section to state that full guides with worked examples are coming soon
+
+Groups (New Updates - above has already been implemented)
+Im not a fan of the Yove finished block, I like the idea but the big organe blok doesnt site will with me - this should get included with the ready to Ace your exams at the bottom of the page (Had a check and this could be incorpate for each block on the 3 different final pages guides)
+Keep it concise: Something like: Groups Guide Complete! Good luck with your studeies and upcoming exams. If you feel you'd like addtional support reach out to me on whatsapp(Link) or you can view the services on offer (Link). Otherwise Feel free to check out our other guides (LInk). We will make sure you are ready to ACCE your Exams
+Doesnt have to be exactly that fun little play at the end is nice. IF theres a way we can sturcture this as its own card, have the 3 links and still look cool and funky so it stands out abit.
+
+IFRS 15:
+
+Part 1: Foundations and Core principles
+Section 2 - the core principle
+— IFRS 15.2 This falls outside the block and it just looks a bit odd imo
+
+Part 4: The dual nature of warranties:
+The Two Types of Warranties
+Assurance-Type Warranty:
+Core Concept -- Guarantees the product works as intended at the time of sale. 
+Separable? -- No. It is not a distinct performance obligation. 
+Accounting Standard -- Covered under IAS 37 (Provisions). 
+Accounting Entry. -- Expense the estimated cost and create a liability provision at the time of sale. 
+
+ServiceType Warranty:
+Core Concept -- Provides an additional, distinct service beyond basic functionality.
+Separable? -- Yes. It is a distinct performance obligation.
+Accounting Standard -- Covered under IFRS 15 (Revenue Recognition).
+Accounting Entry. -- Defer a portion of the transaction price and recognize revenue over the warranty period.
+
+PArt 5: Disclosures & Exam Preparation
+3 Exam Preparation Strategy
+Structure your answer by the FIVE STEPS
+Even if the question is only about Step 3, briefly reference the fact that a valid contract and POs have been identified. It shows you are able to identify the issue.
+
+General commentary:
+The End card displayed at the end of a notes section:
+1. The button style in the final card changes WhatsApp Piyanka button is its own style and view our services and explore other guides are a ifferent style.
+2. I would like to make each page have its own unique card style, or slight variations, just changing the headering feels a bit cheap
