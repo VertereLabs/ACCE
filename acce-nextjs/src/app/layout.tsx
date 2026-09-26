@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import JsonLd from "@/components/JsonLd";
 import { Playfair_Display, Inter } from "next/font/google";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import Providers from "./providers";
 import "./globals.css";
 
@@ -84,8 +82,6 @@ export default function RootLayout({
       <body>
         <Providers>
           {children}
-          <Toaster />
-          <Sonner />
         </Providers>
       </body>
     </html>
