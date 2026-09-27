@@ -1,0 +1,454 @@
+{
+  "guide": "IFRS 16: Leases",
+  "slug": "ifrs-16",
+  "source_pdf": "../ifrs-16-leases.pdf",
+  "review_pdf": "../ifrs-16-leases-REVIEW.pdf",
+  "notes_md": "REVIEW-NOTES.md",
+  "status": "live: pages public since 2026-07-25, PDF held",
+  "intro": "Technical review (2026-09-27) of all 6 markdown parts in `contentfiles/ifrs-16-leases/`, the 63-page PDF built from them (`contentfiles/ifrs-16-leases.pdf`, PDF 1.3 created 2026-01-04, byte-identical to `acce-nextjs/public/pdfs/ifrs-16-leases.pdf`), the overview page `acce-nextjs/src/app/guides/ifrs-16/page.tsx` and the 5 live web pages at `acce-nextjs/src/app/guides/ifrs-16/part-1..5`. Page gate for `ifrs-16` is `true` and PDF gate `false` in `acce-nextjs/src/config/guides.ts` and `acce-nextjs/src/middleware.ts`. The web pages are hand-written summaries, not 1:1 with the markdown: web Part 1 = markdown Part 1; web Part 2 = markdown Part 2 initial measurement; web Part 3 = markdown Part 2 subsequent measurement and reassessment; web Part 4 = markdown Part 5 (sale and leaseback); web Part 5 = markdown Part 4 classification plus the Part 6 exam roadmap. Lease modifications (markdown Part 3) and disclosures (Part 6 A to C) have no web page. The Web page column names a page only where that page carries the same content and needs a change; \"not on web pages\" means the live pages need no change for that item. Every worked example, amortisation table and journal was recomputed; paragraph references were checked against IFRS 16 as amended to 2024 (including the 2022 sale and leaseback amendment). Every item was left as written in the markdown, the web pages and the PDF. Items starting \"Check:\" are unverified leads, not verdicts. None of the five blockers appear on the live pages except the web half of #5; web-only items #14, #15, #M5 and #M9 do.",
+  "parts": {
+    "1": [3, 9],
+    "2": [10, 20],
+    "3": [21, 31],
+    "4": [32, 42],
+    "5": [43, 51],
+    "6": [52, 63]
+  },
+  "items": [
+    {
+      "id": "1",
+      "severity": "blocker",
+      "part": 2,
+      "section": "Comprehensive example: rent-free period",
+      "anchors": ["First 3 months (not reflected in R200,000)", "incremental borrowing rate: 8%"],
+      "web": "not on web pages",
+      "issue": "The facts say the 3 rent-free months are NOT reflected in the R200,000, yet the model answer discounts four full R200,000 payments, says the rent-free period 'affects the ROU asset, not the liability', then puts (0) in the ROU table because it is 'already embedded in the payment structure'. Self-contradictory and wrong: a rent-free period reduces the lease payments themselves (IFRS 16.27(a): the liability is the PV of the payments actually payable, fixed payments less incentives receivable); there is no separate ROU adjustment. Either say the R200,000 already reflects the rent-free months, or cut the year 1 payment to R150,000 (liability about R616,129, not R662,420) and flow that through the ROU asset, schedule, depreciation and Year 1 expense. The model answer is in the markdown only (the PDF drops it, see #26)."
+    },
+    {
+      "id": "2",
+      "severity": "blocker",
+      "part": 4,
+      "section": "Working example: finance lease, non-dealer lessor",
+      "anchors": ["due to rounding in PV factors", "Carrying amount of equipment: R500,000"],
+      "also": ["Gain on lease (if any)"],
+      "web": "not on web pages",
+      "issue": "Net investment at 10% is R505,222 against a fair value of R500,000. The R5,222 gap is not rounding: 10% is simply not the implicit rate (the rate that equates 5 x R130,000 plus the R20,000 unguaranteed residual to R500,000 is about 10.4%). By definition (IFRS 16 Appendix A, interest rate implicit in the lease) a non-dealer lessor's net investment equals fair value plus its initial direct costs, so no day-one gain can arise; the journal crediting a R5,222 'gain on lease' teaches a gain that does not exist. Fix the facts (fair value R505,222, or implicit rate about 10.4% with a recomputed schedule) and delete the gain line and its footnote."
+    },
+    {
+      "id": "3",
+      "severity": "blocker",
+      "part": 4,
+      "section": "Lessor: modifications to finance leases",
+      "anchors": ["If would have been operating lease originally", "Finance Lease Modifications"],
+      "web": "not on web pages",
+      "issue": "IFRS 16.80(a): if the lease would have been an operating lease had the modification been in effect at inception, the lessor accounts for it as a new lease from the effective date and measures the underlying asset at the net investment immediately before that date, so NO gain or loss arises. The table says derecognise the receivable and recognise a gain/loss, and limits the rule to 'decrease scope or change consideration'. For every other non-separate modification 80(b) applies IFRS 9 (recalculate the gross carrying amount at the original effective rate and recognise a modification gain or loss in P/L, IFRS 9.5.4.3); the 'Other modifications' row omits the P/L effect. Both cells are also cut off mid-word in the PDF (#8)."
+    },
+    {
+      "id": "4",
+      "severity": "blocker",
+      "part": 5,
+      "section": "Tip box: put and call options",
+      "anchors": ["has a put option (right to require", "If the seller"],
+      "web": "not on web pages",
+      "issue": "The option roles are reversed. A call option is a right to BUY back: if the seller-lessee holds a call (or has a forward obligation) to repurchase, the buyer-lessor never obtains control and there is no sale, however unlikely exercise is (IFRS 15.B66, applied through IFRS 16.99). A put option is held by the buyer-lessor (a right to require the seller-lessee to repurchase); it prevents a sale only if the buyer-lessor has a significant economic incentive to exercise it (IFRS 15.B70). 'Virtually certain' is not the IFRS 15 test for either. The first row of the 'no sale' table ('Repurchase option at fixed price: retains significant risks and rewards') also uses IAS 18 risks-and-rewards reasoning instead of control."
+    },
+    {
+      "id": "5",
+      "severity": "blocker",
+      "part": 5,
+      "section": "Off-market sale and leaseback: comprehensive example (and above-market example)",
+      "anchors": ["Market rent for similar property"],
+      "also": ["PV of lease payments at market rate"],
+      "web": "/guides/ifrs-16/part-4",
+      "issue": "The model answer books a lease liability of R2,985,650 (market rent R500,000 x 5.9713) PLUS a R1,000,000 financing liability (total R3,985,650), but the contractual payments (8 x R600,000 at 7%) have a PV of only R3,582,779, so the liabilities can never be settled by the cash flows. The closing claim that R100,000 a year repays the R1,000,000 is impossible (8 x R100,000 = R800,000 undiscounted; about R167,468 a year is needed at 7%). The facts give two inconsistent off-market measures (R1,000,000 on price, R597,130 on rent). Per IFRS 16.101-102 and IE Example 24: use the more readily determinable measure (price vs fair value, R1,000,000); total financial liability = PV of contractual payments R3,582,779, of which R2,582,779 relates to the lease; ROU asset = R4,000,000 x 2,582,779/6,000,000 = about R1,721,853; gain = R2,000,000 x 3,417,221/6,000,000 = about R1,139,074. Better, fix the facts so both measures agree. The earlier above-market example has the same gap: say whether R350,000 is the PV of the contractual payments (then the lease portion is R150,000) or of market rent only (then give the contractual payments). The web page's 'ROU = carrying amount x (Lease Liability / Fair Value)' needs 'lease liability excluding the additional financing'. Model answer text is in the markdown only (#26)."
+    },
+    {
+      "id": "6",
+      "severity": "correction",
+      "part": 1,
+      "section": "Scope exclusions",
+      "anchors": ["Leases of intangible assets"],
+      "web": "not on web pages",
+      "issue": "Overstated and incomplete. IFRS 16.3 excludes (a) leases to explore for OR USE minerals, oil, natural gas and similar non-regenerative resources (wider than IFRS 6, which covers exploration only), (b) biological assets within IAS 41 held by a lessee, (c) IFRIC 12 concessions, (d) licences of intellectual property granted by a lessor (IFRS 15, missing from the table) and (e) specified licences held by a lessee under IAS 38 (films, video recordings, plays, manuscripts, patents, copyrights). Other leases of intangibles are not 'completely out': a lessee MAY apply IFRS 16 to them (16.4)."
+    },
+    {
+      "id": "7",
+      "severity": "correction",
+      "part": 1,
+      "section": "Low-value assets: qualifying criteria",
+      "anchors": ["must also be assessed for characteristics", "low value when NEW"],
+      "web": "not on web pages",
+      "issue": "The qualifying criteria are missing: an asset is low value only if the lessee can benefit from its use on its own or with readily available resources AND it is not highly dependent on or highly interrelated with other assets (IFRS 16.B5); and a head lease never qualifies if the lessee subleases or expects to sublease the asset (B7). The note's reasoning on cars is also off: B6 excludes cars because a NEW car is not low value, not because of a separate 'characteristics' test applied after the monetary threshold."
+    },
+    {
+      "id": "8",
+      "severity": "correction",
+      "part": 1,
+      "section": "PDF rendering (whole document)",
+      "anchors": ["Is there a specific asset that the contract"],
+      "also_parts": {"4": ["Recalculate lease payments, adjust receivable"], "5": ["retains exposure to asset"]},
+      "web": "not on web pages",
+      "issue": "The PDF (PDF 1.3, created 2026-01-04) was not built with the current pipeline. About 100 table cells are cut off at 50 characters (for example 'Is there a specific asset that the contract relate', 'Recalculate lease payments, adjust receivable usin', 'Seller-lessee retains exposure to asset-specific r'); arrows and the not-equal sign render as '?' (about 95 places) and ticks and crosses as '[OK]' and '[X]'. Several cut cells lose the point of the row (#3 is one). Regenerate before the PDF gate is opened. See also #26."
+    },
+    {
+      "id": "9",
+      "severity": "correction",
+      "part": 2,
+      "section": "Working example: ROU asset, prepaid rent",
+      "anchors": ["rent of R8,333 paid on signing"],
+      "web": "not on web pages",
+      "issue": "The lease is R100,000 a year paid at year-end, yet the ROU example adds 'first month's rent of R8,333 paid on signing (1 month of R100,000/12)'. If it is part of year 1's rent, the year-end payment is R91,667 and the R379,078 liability (and the whole schedule) is overstated; if it is an extra payment, it is not 'the first month's rent'. Describe it as a separate upfront payment (e.g. a non-refundable premium) or restate the liability."
+    },
+    {
+      "id": "10",
+      "severity": "correction",
+      "part": 2,
+      "section": "Year 1 expense: restoration provision unwinding",
+      "anchors": ["Calculate total expense in Year 1"],
+      "also": ["Total expense over the lease term is the same"],
+      "web": "not on web pages",
+      "issue": "Both Year 1 expense totals omit the unwinding of the restoration provision (IAS 37.60, a finance cost): in the comprehensive example R36,751 x 8% = R2,940, so Year 1 expense is R238,227, not R235,287; the main example has the same gap (no rate given). The front-loading note ('total expense ... is the same (R500,000 in payments + restoration)') also ignores the prepaid rent, legal fees and incentive: depreciation R407,411 plus interest R120,922 equals R528,333, i.e. total cash cost R503,333 plus the R25,000 PV of restoration, with the unwinding taking it to the actual restoration cost."
+    },
+    {
+      "id": "11",
+      "severity": "correction",
+      "part": 2,
+      "section": "Subsequent measurement of the ROU asset: measurement models",
+      "anchors": ["Two Measurement Options"],
+      "also": ["If the underlying asset meets the definition of investment property"],
+      "web": "not on web pages",
+      "issue": "Heading says two options and lists three. The fair value model is not an option: if the lessee applies the IAS 40 fair value model to its investment property it MUST apply it to ROU assets that meet the investment property definition (IFRS 16.34), and the test is whether the ROU asset (not the underlying asset) meets that definition. The revaluation model is an election only where the lessee already revalues that class of owned PPE, and then for all ROU assets in that class (16.35), not whenever the asset 'would qualify'. The web page (part-3) words this acceptably."
+    },
+    {
+      "id": "12",
+      "severity": "correction",
+      "part": 2,
+      "section": "Pitfalls table: depreciation period",
+      "anchors": ["Using the remaining lease term to depreciate ROU"],
+      "web": "not on web pages",
+      "issue": "The 'correct approach' garbles the rule ('or useful life if shorter and ownership transfers'). Per IFRS 16.31-32: if ownership transfers or a purchase option is reasonably certain to be exercised, depreciate from commencement over the useful life of the underlying asset; otherwise over the shorter of useful life and lease term. The Part 2 depreciation table and the web page state it correctly."
+    },
+    {
+      "id": "13",
+      "severity": "correction",
+      "part": 2,
+      "section": "Reassessments (remeasurement without a modification)",
+      "anchors": ["Remeasure lease liability using revised payments and original discount rate"],
+      "web": "/guides/ifrs-16/part-3",
+      "issue": "Reassessments (IFRS 16.39-43) are only covered for an index change. The guide never covers reassessment of the lease term (significant event or change in circumstances within the lessee's control, 20-21) or of a purchase option, which use a REVISED discount rate (40-41), as against residual value guarantee and index or rate changes, which keep the unchanged rate (42-43, except changes in floating interest rates). The web page lists the four triggers and the zero-ROU rule but not the discount rate split, which is the point examiners test."
+    },
+    {
+      "id": "14",
+      "severity": "correction",
+      "part": 2,
+      "section": "ROU asset build-up (web page only)",
+      "anchors": [],
+      "web": "/guides/ifrs-16/part-2",
+      "issue": "The web page's ROU asset formula is liability + payments at or before commencement + initial direct costs + restoration costs. It omits 'less any lease incentives received' (IFRS 16.24(b)), which the markdown includes."
+    },
+    {
+      "id": "15",
+      "severity": "correction",
+      "part": 2,
+      "section": "'Reasonably certain' threshold (web pages only)",
+      "anchors": [],
+      "web": ["/guides/ifrs-16/part-3", "/guides/ifrs-16/part-5"],
+      "issue": "Web part-3 says depreciate over useful life if a purchase option is 'likely'; web part-5 defines the lease term as 'the non-cancellable period plus extension options'. Both drop the IFRS threshold: extension periods count only if the lessee is reasonably certain to exercise the option, and termination option periods only if reasonably certain NOT to exercise it (IFRS 16.18); the useful-life rule needs a purchase option that is reasonably certain (16.32). 'Likely' is a lower bar. The markdown uses the right wording."
+    },
+    {
+      "id": "16",
+      "severity": "correction",
+      "part": 3,
+      "section": "Lease extension as a 'separate lease'",
+      "anchors": ["The extension adds scope (more time)"],
+      "also": ["Treating all extensions as separate leases"],
+      "web": "not on web pages",
+      "issue": "Implies an extension priced at stand-alone price would be a separate lease. It cannot: IFRS 16.44(a) requires the modification to add the right to use one or more underlying ASSETS; extending the term of the same asset adds none, so an extension is always remeasured under 16.45 whatever the price (IE Example 16). The pitfall row ('Must be at stand-alone price AND increase scope to be separate') and the decision tree's 'Does it INCREASE scope?' carry the same error. The 'stand-alone price is R50,000 based on the original contract' reasoning is also unsupported."
+    },
+    {
+      "id": "17",
+      "severity": "correction",
+      "part": 3,
+      "section": "Working example: lease extension, opening liability",
+      "anchors": ["Lease liability: R89,286"],
+      "web": "not on web pages",
+      "issue": "Two remaining payments of R50,000 at 8% have a PV of R89,163 (R46,296 + R42,867), not R89,286 (which is R100,000 / 1.12). The increase in the liability and the ROU adjustment should be R104,388 (R193,551 - R89,163), not R104,265, and the new ROU asset R196,388."
+    },
+    {
+      "id": "18",
+      "severity": "correction",
+      "part": 3,
+      "section": "Modification type 3: rent review",
+      "anchors": ["following rent review"],
+      "web": "not on web pages",
+      "issue": "A rent review under a clause already in the lease is not a modification: payments that vary with market rental rates are variable payments that depend on a rate (IFRS 16.28), remeasured under 42(b) when the cash flows change, at the UNCHANGED discount rate (43). Using a revised 6% rate contradicts the Part 3 pitfall row that separates modifications from remeasurements. Either describe a renegotiation outside the original terms, or keep the original rate. The given R405,000 for 7 x R100,000 implies about 16%, which exaggerates the effect of the new rate (liability jumps to R614,064 on a 10% rent rise)."
+    },
+    {
+      "id": "19",
+      "severity": "correction",
+      "part": 3,
+      "section": "Comprehensive example: given carrying amounts",
+      "anchors": ["Lease liability: R1,895,394"],
+      "also": ["(net of depreciation): R1,705,855"],
+      "web": "not on web pages",
+      "issue": "The given balances do not reconcile to the stated lease (10 years from 1 January 20X1, R500,000 in arrears, 10%). At 31 December 20X4 six payments remain: liability R2,177,630 (R1,895,394 is the PV of five) and ROU asset R1,843,370 (R3,072,284 x 6/10; R1,705,855 is just 90% of the wrong liability). A student who recomputes gets a gain of about R133,704, a remeasurement adjustment of about R450,116 and a revised ROU asset of about R1,556,138, not R75,816, R619,466 and R1,642,979. The method is right; fix the numbers."
+    },
+    {
+      "id": "20",
+      "severity": "correction",
+      "part": 3,
+      "section": "Drafting notes left in worked examples (Parts 3, 4 and 6)",
+      "anchors": ["let me recalculate this more carefully"],
+      "also_parts": {"4": ["Wait, let me recalculate"]},
+      "web": "not on web pages",
+      "issue": "False starts left in the text: 'Wait - let me recalculate this more carefully' (Part 3 partial termination, followed by a 'Corrected Approach' that repeats the same numbers); 'Wait, let me recalculate' (Part 4 operating lease); and in the Part 6 model answer a table whose bold total R3,599,470 (years 6 to 8 at R1,265,650) is wrong, followed by 'Let me recalculate' and the correct R3,156,420. The Part 6 passage is in the markdown only because the PDF drops model answers (#26). Delete the false starts and keep one clean working."
+    },
+    {
+      "id": "21",
+      "severity": "correction",
+      "part": 5,
+      "section": "Finance leaseback",
+      "anchors": ["If the leaseback is a finance lease"],
+      "also": ["Leaseback is a finance lease"],
+      "web": "not on web pages",
+      "issue": "Presented as 'IFRS 16 Guidance', but IFRS 16 has no such rule: 'a finance leaseback means no sale' is US GAAP (ASC 842-40-25-2). Under IFRS 16.99 the only test is whether control passes under IFRS 15, and the seller-lessee does not classify its leaseback at all. A leaseback for most of the asset's remaining life may be evidence that control has not passed, but it is not automatic, and 'the seller-lessee cannot recognise any gain/loss' is not an IFRS consequence. The 'Leaseback is a finance lease' row of the no-sale table repeats the point."
+    },
+    {
+      "id": "22",
+      "severity": "correction",
+      "part": 5,
+      "section": "Off-market terms: adjustment table",
+      "anchors": ["Represents discount granted by buyer"],
+      "also": ["The shortfall is an advance lease payment"],
+      "web": "not on web pages",
+      "issue": "IFRS 16.101 has one rule per direction: below-market terms are a PREPAYMENT of lease payments (part of the ROU asset, not an increase in the lease liability) and above-market terms are additional FINANCING from the buyer-lessor. The table treats price and rent as four separate adjustments, and says below-market rent means 'adjust lease liability up' and below-market price means 'adjust lease liability'. Under 102 there is one adjustment, measured on the more readily determinable of (a) price vs fair value or (b) PV of contractual vs market payments. Also, 101 applies to the buyer-lessor too, so it records the asset at fair value, not at 'cost (purchase consideration)'. The web page states 101 correctly."
+    },
+    {
+      "id": "23",
+      "severity": "correction",
+      "part": 5,
+      "section": "2022 amendment: lease liability in a sale and leaseback",
+      "anchors": ["Lease liability = PV of lease payments = R588,808"],
+      "web": "/guides/ifrs-16/part-4",
+      "issue": "Missing the amendment 'Lease Liability in a Sale and Leaseback' (IFRS 16.102A, effective 1 January 2024): in subsequent measurement the seller-lessee determines lease payments (and revised lease payments) so that it recognises no gain or loss on the right of use it retains. It matters when leaseback payments are variable and not linked to an index or rate, and it is examinable for 2026 sittings. Add a short section and a line on the web page."
+    },
+    {
+      "id": "24",
+      "severity": "correction",
+      "part": 6,
+      "section": "Bear traps table: variable payments",
+      "anchors": ["fixed payments go in liability"],
+      "web": "not on web pages",
+      "issue": "Wrong as stated ('Only in-substance fixed payments go in liability'). Variable payments that depend on an index or rate ARE included (IFRS 16.27(b)); in-substance fixed payments are part of fixed payments (27(a)). Only other variable payments (sales or usage based) are excluded (38(b)). Contradicts Part 2's table; the web page is correct."
+    },
+    {
+      "id": "25",
+      "severity": "correction",
+      "part": 6,
+      "section": "Comprehensive question: commencement journal",
+      "anchors": ["Cash (lease incentive received)"],
+      "web": "not on web pages",
+      "issue": "The first commencement journal does not balance (debits R3,021,420, credits R3,381,420) and CREDITS cash for an incentive RECEIVED. The 'Simplified' entry below it is right (Dr ROU 3,021,420, Dr Cash 180,000, Cr Lease liability 3,156,420, Cr Cash 45,000). Delete the first entry rather than present the two as alternatives."
+    },
+    {
+      "id": "26",
+      "severity": "correction",
+      "part": 6,
+      "section": "Model answers missing from PDF (Parts 1, 2, 3, 5 and 6)",
+      "anchors": ["Model Answer"],
+      "also_parts": {"1": ["Model Answer"], "2": ["Model Answer"], "3": ["Model Answer"], "5": ["Model Answer"]},
+      "web": "not on web pages",
+      "issue": "Every model answer sits inside a <details> block and the PDF drops everything in it except code-block journals: the Part 1 and Part 2 answers are missing entirely, and Parts 3, 5 and 6 show only the journals, with no lease term reasoning, calculations or tables. PDF readers get five practice questions without solutions. Render the answers as normal content when regenerating (fix #1, #5, #19, #20 and #25 first)."
+    },
+    {
+      "id": "M1",
+      "severity": "minor",
+      "part": 1,
+      "section": "Low-value threshold: US$5,000",
+      "anchors": ["guidance: ~USD 5,000 or less", "low value when NEW"],
+      "web": ["/guides/ifrs-16", "/guides/ifrs-16/part-1"],
+      "issue": "The US$5,000 figure is not in the standard: it is from the Basis for Conclusions (IFRS 16.BC100, the order of magnitude the IASB 'had in mind' in 2015). Label it as BC guidance, not a threshold, and note that the assessment is absolute, based on the value of the asset when new, and unaffected by the lessee's size (B3-B4). The overview page ('typically ~$5,000 or less') and the web Part 1 ('typically < $5,000 when new') present it as the rule."
+    },
+    {
+      "id": "M2",
+      "severity": "minor",
+      "part": 1,
+      "section": "Identified asset: aircraft substitution for maintenance",
+      "anchors": ["is a protective right, not a substantive right"],
+      "web": "not on web pages",
+      "issue": "Right answer, wrong label. A supplier's right to substitute for repairs or maintenance does not stop the asset being identified because of IFRS 16.B18, not because it is a 'protective right' (a control concept, B30). Cite B18."
+    },
+    {
+      "id": "M3",
+      "severity": "minor",
+      "part": 1,
+      "section": "Portions of assets",
+      "anchors": ["is generally NOT capable of being an"],
+      "web": "not on web pages",
+      "issue": "State the exception: a capacity portion that is not physically distinct is not an identified asset unless it represents substantially all of the asset's capacity (IFRS 16.B20)."
+    },
+    {
+      "id": "M4",
+      "severity": "minor",
+      "part": 1,
+      "section": "Paragraph reference: control test",
+      "anchors": ["The Control Test (IFRS 16.B24)"],
+      "web": "not on web pages",
+      "issue": "B24 covers only the right to direct the use. The two-part control test is IFRS 16.B9; economic benefits are B21-B23."
+    },
+    {
+      "id": "M5",
+      "severity": "minor",
+      "part": 1,
+      "section": "Overview page: part cards and 'practical expedients' (web page only)",
+      "anchors": [],
+      "web": "/guides/ifrs-16",
+      "issue": "The cards do not match the pages: the Part 2 card promises 'Modifications' and 'Financial Ratios Impact' (neither is on part-2), the Part 3 card says 'Lessor Accounting' but part-3 is subsequent measurement, and the Part 5 card promises disclosures and practice questions while part-5 covers lessor classification and a roadmap and says 'Coming soon: full guides'. The exemptions box is headed 'Practical Expedients'; IFRS 16.5-8 calls them recognition exemptions (the lessee practical expedient is not separating non-lease components, 16.15)."
+    },
+    {
+      "id": "M6",
+      "severity": "minor",
+      "part": 2,
+      "section": "Pitfalls table: current portion",
+      "anchors": ["Amount payable within 12 months is current"],
+      "web": "not on web pages",
+      "issue": "Ambiguous. The current portion is the principal reduction within 12 months (R68,301 in the Part 2 example), not the R100,000 payable; students commonly classify the full payment as current."
+    },
+    {
+      "id": "M7",
+      "severity": "minor",
+      "part": 2,
+      "section": "Index-linked payments: LIBOR example",
+      "anchors": ["a rate (e.g., LIBOR)"],
+      "web": "not on web pages",
+      "issue": "LIBOR has ceased (IBOR reform). Use CPI or prime, or JIBAR (being replaced by ZARONIA) for an SA example."
+    },
+    {
+      "id": "M8",
+      "severity": "minor",
+      "part": 2,
+      "section": "Legal fees as initial direct costs",
+      "anchors": ["Legal fees to negotiate lease: R15,000"],
+      "also_parts": {"6": ["R45,000 (legal fees)"]},
+      "web": "not on web pages",
+      "issue": "Check: IFRS 16 Appendix A limits initial direct costs to incremental costs that would not have been incurred had the lease not been obtained. Legal fees for negotiating terms are usually incurred whether or not the lease is signed, so many firms exclude them (IAS 17 listed legal fees explicitly). Use a commission as the example, or state that the fees were payable only on signing. Same in the Part 2 comprehensive example (R30,000) and Part 6 (R45,000)."
+    },
+    {
+      "id": "M9",
+      "severity": "minor",
+      "part": 2,
+      "section": "Implicit rate definition (web page only)",
+      "anchors": [],
+      "web": "/guides/ifrs-16/part-2",
+      "issue": "The implicit rate card says fair value '+ direct costs'. It is the LESSOR's initial direct costs (Appendix A), which a lessee rarely knows; that is why the implicit rate is often not readily determinable for lessees."
+    },
+    {
+      "id": "M10",
+      "severity": "minor",
+      "part": 3,
+      "section": "COVID-19 rent concessions",
+      "anchors": ["No reassessment of whether the contract contains a lease"],
+      "web": "not on web pages",
+      "issue": "The expedient (IFRS 16.46A-46B) is lessee-only and relieves the lessee from assessing whether the concession is a lease MODIFICATION, not whether the contract contains a lease. It covered only reductions in payments originally due on or before 30 June 2022, so it is of historical interest for 2026 exams; say so."
+    },
+    {
+      "id": "M11",
+      "severity": "minor",
+      "part": 4,
+      "section": "75% and 90% thresholds",
+      "anchors": ["Historical practice (from IAS 17) used"],
+      "web": "not on web pages",
+      "issue": "IAS 17 never had numerical thresholds. 75% of economic life and 90% of fair value are US GAAP bright lines (former FAS 13; ASC 842-10-55-2 as 'one reasonable approach'). Attribute them correctly and keep the caution that IFRS relies on judgment."
+    },
+    {
+      "id": "M12",
+      "severity": "minor",
+      "part": 4,
+      "section": "Manufacturer/dealer example: implicit rate",
+      "anchors": ["Implicit rate: 12%"],
+      "web": "not on web pages",
+      "issue": "Check: with fair value R500,000, the rate that equates 5 x R120,000 plus the R30,000 residual to fair value is about 8.0%, not 12% (Appendix A definition). The IFRS 16.71 mechanics (revenue at the lower of fair value and PV at a market rate) are right, but the facts should say the lease carries a below-market rate (16.73), or drop 'implicit rate: 12%' and keep only the 12% market rate."
+    },
+    {
+      "id": "M13",
+      "severity": "minor",
+      "part": 5,
+      "section": "Sale at fair value: gain rounding",
+      "anchors": ["Gain recognized = R500,000"],
+      "web": "not on web pages",
+      "issue": "Step 4 shows R303,750 (using 60.75%) while the journal and the alternative presentation show R303,731. Use the unrounded proportion (60.7461%) throughout; the comprehensive example has the same pattern (R1,004,800 vs R1,004,750)."
+    },
+    {
+      "id": "M14",
+      "severity": "minor",
+      "part": 6,
+      "section": "Paragraph references: lessee disclosures",
+      "anchors": ["IFRS 16.50(b)"],
+      "web": "not on web pages",
+      "issue": "Short-term, low-value and excluded variable payments are classified in operating activities under IFRS 16.50(c), not 50(b) (50(b) is the interest portion, classified per IAS 7). In the SFP table, 'Right-of-use assets by class of underlying asset' is 53(j) with presentation in 47(a); 53(a) is the depreciation charge."
+    },
+    {
+      "id": "M15",
+      "severity": "minor",
+      "part": 6,
+      "section": "Working format: residual value guarantee",
+      "anchors": ["PV of guaranteed residual value"],
+      "web": "not on web pages",
+      "issue": "Should be the PV of amounts EXPECTED to be payable under residual value guarantees (IFRS 16.27(c)), not the guaranteed residual value (the IAS 17 measure). Part 2 and the web page have it right."
+    },
+    {
+      "id": "M16",
+      "severity": "minor",
+      "part": 6,
+      "section": "Lessor classification decision tree",
+      "anchors": ["Lessor Classification: The Decision Tree"],
+      "web": "not on web pages",
+      "issue": "The tree makes each indicator decisive, contradicting Part 4's warning: IFRS 16.65 says the 63-64 examples are not always conclusive, and the 64 indicators (cancellation losses, residual value gains or losses, secondary period at below-market rent) are missing. 'Purchase option at significantly below market' also drops the 'reasonably certain at inception' test (63(b))."
+    },
+    {
+      "id": "M17",
+      "severity": "minor",
+      "part": 6,
+      "section": "Exam time allocation",
+      "anchors": ["Exam Time Allocation Strategy"],
+      "web": "not on web pages",
+      "issue": "Check: the plan adds up to 19 to 24 minutes for a 20-mark question (about 1 to 1.2 minutes a mark). Confirm against the time per mark in the target exams, which is usually higher."
+    },
+    {
+      "id": "M18",
+      "severity": "minor",
+      "part": 6,
+      "section": "Exam levels named (CTA, PGDA, ITC)",
+      "anchors": ["PGDA, and ITC levels"],
+      "web": "/guides/ifrs-16/part-4",
+      "issue": "Check: CTA and PGDA are the same postgraduate level under different university names, and SAICA has been replacing the ITC under its new CA(SA) route; confirm the current assessment names before listing them. The PDF cover ('CTA, PGDA & ITC Students') and the web part-4 call to action ('CTA Level 2 and Initial Test of Competence (ITC)') say the same. 'High-frequency topic' and the marks-per-format table are unsourced; frame them as typical, not fact."
+    },
+    {
+      "id": "M19",
+      "severity": "minor",
+      "part": 6,
+      "section": "JSE considerations: EBITDA",
+      "anchors": ["Analysts compare"],
+      "web": "not on web pages",
+      "issue": "Muddled. Under IAS 17 operating lease rentals sat inside EBITDA; under IFRS 16 they become depreciation and interest, so EBITDA rises mechanically. Say that, rather than 'add back depreciation, but not lease payments under old IAS 17'. The covenant and valuation points are generic, not JSE-specific."
+    },
+    {
+      "id": "M20",
+      "severity": "minor",
+      "part": 6,
+      "section": "Fit-out contribution as a lease incentive",
+      "anchors": ["Lease incentive received"],
+      "also_parts": {"2": ["Reimbursement of lessee"]},
+      "web": "not on web pages",
+      "issue": "Check: in IFRS 16 IE Example 13 the lessor's reimbursement of the lessee's leasehold improvements is accounted for under other Standards, not as part of IFRS 16 (only the reimbursed commission reduces the ROU asset). A fit-out contribution for improvements the lessee owns may therefore reduce the cost of those improvements (IAS 16) rather than the ROU asset. State the treatment adopted, or describe the R180,000 as a cash incentive. Part 2's incentive list ('Reimbursement of lessee's costs (moving, fit-out)') has the same point."
+    }
+  ],
+  "release_checklist": [
+    "Pages have been public since 2026-07-25, so work blockers first, then corrections. Of the blockers only the web half of #5 is live (web part-4 formula); web-only items #14, #15, #M5 and #M9 and the web halves of #13, #23, #M1 and #M18 are also live: fix those in the TSX straight away.",
+    "Resolve the items above in the markdown in this folder, starting with blockers #1 to #5 (Parts 2, 4 and 5) and the recomputed examples (#9, #10, #17, #19).",
+    "Mirror any change that touches web content into `acce-nextjs/src/app/guides/ifrs-16/page.tsx` and `part-N/page.tsx`, using the Web page column (the pages are summaries, not 1:1 with the markdown parts). Items marked \"not on web pages\" need no TSX change.",
+    "Regenerate `contentfiles/ifrs-16-leases.pdf` with the same pipeline as the other guides (the current file is an older render with truncated table cells, '?' arrows, '[OK]' ticks and no model answers: #8, #26), then produce the reduced-size online copy for `acce-nextjs/public/pdfs/ifrs-16-leases.pdf` (currently the same 102,141-byte file) and update the 'PDF, 100KB' size label on `/guides/ifrs-16`.",
+    "Flip `\"ifrs-16\"` to `true` in `GUIDE_PDF_PUBLISH_STATUS` (config and middleware) only once the regenerated PDF is signed off, and update the matching assertions in `tests/unit/guides-config.test.ts`.",
+    "After the TSX edits, check `/guides/ifrs-16` and `/guides/ifrs-16/part-1..5` still return 200 (build or e2e smoke) before pushing."
+  ]
+}
