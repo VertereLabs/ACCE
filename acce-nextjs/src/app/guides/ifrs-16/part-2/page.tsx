@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, ArrowRight, Calculator, Coins, Landmark, Plus, Equal, Lightbulb, Info, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calculator, Coins, Landmark, Plus, Minus, Equal, Lightbulb, Info, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isGuidePdfPublished } from "@/config/guides";
 
@@ -106,7 +106,7 @@ export default function IFRS16Part2Page() {
                                             <h4 className="font-bold text-foreground m-0 text-sm uppercase">Implicit Rate</h4>
                                         </div>
                                         <p className="text-xs text-muted-foreground leading-relaxed m-0 italic">
-                                            The rate that causes the PV of (lease payments + unguaranteed residual value) to equal the Fair Value of the asset + direct costs.
+                                            The rate that causes the PV of (lease payments + unguaranteed residual value) to equal the Fair Value of the asset + the lessor&apos;s initial direct costs. A lessee rarely knows these, which is why the implicit rate is often not readily determinable.
                                         </p>
                                         <div className="mt-4 p-2 bg-accent/10 rounded text-[10px] text-accent font-bold text-center">FIRST CHOICE</div>
                                     </div>
@@ -145,6 +145,13 @@ export default function IFRS16Part2Page() {
                                                 <span className="text-muted-foreground">Payments at/before commencement</span>
                                             </div>
                                             <span className="text-foreground">X</span>
+                                        </div>
+                                        <div className="flex items-center justify-between font-mono text-sm">
+                                            <div className="flex items-center gap-2">
+                                                <Minus className="w-3 h-3 text-accent" />
+                                                <span className="text-muted-foreground">Lease incentives received</span>
+                                            </div>
+                                            <span className="text-foreground">(X)</span>
                                         </div>
                                         <div className="flex items-center justify-between font-mono text-sm">
                                             <div className="flex items-center gap-2">

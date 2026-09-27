@@ -106,10 +106,13 @@ export default function IFRS16Part4Page() {
                                         <h4 className="font-bold text-foreground mb-4 text-xs uppercase tracking-widest text-accent">Calculation Roadmap:</h4>
                                         <ol className="text-sm text-muted-foreground space-y-4 m-0 p-0 list-decimal ml-4">
                                             <li>
-                                                <strong className="text-foreground">ROU Asset:</strong> Previous carrying amount × (Lease Liability ÷ Fair Value of Asset).
+                                                <strong className="text-foreground">ROU Asset:</strong> Previous carrying amount × (Lease Liability ÷ Fair Value of Asset). If the sale price is above market, use the lease liability excluding the additional financing.
                                             </li>
                                             <li>
-                                                <strong className="text-foreground">Gain on Sale:</strong> Full Gain × ([Fair Value - Lease Liability] ÷ Fair Value).
+                                                <strong className="text-foreground">Gain on Sale:</strong> Full Gain (Fair Value - Carrying Amount) × ([Fair Value - Lease Liability] ÷ Fair Value), using the same lease liability figure as step 1.
+                                            </li>
+                                            <li>
+                                                <strong className="text-foreground">After Day 1:</strong> Set the leaseback&apos;s lease payments (and any revised lease payments) so that no gain or loss is recognised on the right of use retained (IFRS 16.102A, effective 1 January 2024). This matters when the leaseback payments are variable and not linked to an index or rate.
                                             </li>
                                         </ol>
                                     </div>
