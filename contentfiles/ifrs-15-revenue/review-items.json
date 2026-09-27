@@ -1,0 +1,419 @@
+{
+  "guide": "IFRS 15: Revenue",
+  "slug": "ifrs-15",
+  "source_pdf": "../ifrs-15-revenue.pdf",
+  "review_pdf": "../ifrs-15-revenue-REVIEW.pdf",
+  "notes_md": "REVIEW-NOTES.md",
+  "status": "live: pages public since 2026-07-25, PDF held",
+  "intro": "Technical review (2026-09-27) of all 9 markdown parts in `contentfiles/ifrs-15-revenue/`, the 100-page PDF built from them (`contentfiles/ifrs-15-revenue.pdf`, PDF 1.3 created 2026-01-04, byte-identical to `acce-nextjs/public/pdfs/ifrs-15-revenue.pdf`) and the 5 live web pages at `acce-nextjs/src/app/guides/ifrs-15/part-1..5`. Page gate for `ifrs-15` is `true` and PDF gate `false` in `acce-nextjs/src/config/guides.ts` and `acce-nextjs/src/middleware.ts`. The web pages are hand-written summaries, not 1:1 with the markdown: web Part 1 = markdown Part 1; web Part 2 = five-step overview of markdown Parts 1 to 6; web Part 3 = markdown Part 4; web Part 4 = warranties, principal vs agent and repurchases (markdown Parts 3, 6, 7); web Part 5 = markdown Part 9; markdown Part 8 has no web page. The Web page column names a page only where that page carries the same content; \"not on web pages\" means the live pages need no change for that item. Every worked example and journal was recomputed; paragraph references were checked against IFRS 15 as amended by the 2016 Clarifications. Every item was left as written in the markdown, the web pages and the PDF. Items starting \"Check:\" are unverified leads, not verdicts. None of the three blockers appear on the live pages; web-only item #12 does.",
+  "parts": {
+    "1": [3, 11],
+    "2": [12, 21],
+    "3": [22, 32],
+    "4": [33, 44],
+    "5": [45, 55],
+    "6": [56, 67],
+    "7": [68, 79],
+    "8": [80, 88],
+    "9": [89, 100]
+  },
+  "items": [
+    {
+      "id": "1",
+      "severity": "blocker",
+      "part": 4,
+      "section": "Working example: significant financing component",
+      "anchors": [
+        "Implicit interest rate: 8%",
+        "Customer elects to pay in 3 annual instalments"
+      ],
+      "also": [
+        "due to rounding in implicit rate",
+        "Financing component: R1,140,000"
+      ],
+      "web": "not on web pages",
+      "issue": "Internally inconsistent. The rate that discounts 3 x R380,000 to the R1,000,000 cash price is about 6.85%, not 8%, so the R20,740 gap is not 'rounding in implicit rate'. The example then books revenue of R979,260 (below the stated cash price) and unearned interest of R160,740, while Step 1 says the financing component is R140,000. Under IFRS 15.61 and 15.64 either use the cash selling price (revenue R1,000,000, interest R140,000 at about 6.85%), or state that 8% is the rate for a separate financing transaction with this customer and drop the R1m cash price and the rounding note (revenue R979,297 at exact 8% factors; R979,260 with the 4-decimal factors shown)."
+    },
+    {
+      "id": "2",
+      "severity": "blocker",
+      "part": 4,
+      "section": "Exam technique: example format (performance bonus)",
+      "anchors": [
+        "Performance bonus (expected value)",
+        "Less: Constraint"
+      ],
+      "also": [
+        "then subject to constraint below"
+      ],
+      "web": "not on web pages",
+      "issue": "A single R100,000 bonus with an 80% chance is a two-outcome case. This part's own Method 2 example (identical facts) and its pitfall table say to use the most likely amount, R100,000 (IFRS 15.53(b)). The model format instead uses expected value (R80,000, which is not a possible outcome), then an unexplained R30,000 'constraint' to reach R50,000. For a binary bonus the constraint (15.56-57) normally gives R100,000 or R0; a partial amount would need a magnitude argument the table does not give. Students copying this format lose the method marks."
+    },
+    {
+      "id": "3",
+      "severity": "blocker",
+      "part": 4,
+      "section": "The constraint: 'The Two-Part Test'",
+      "anchors": [
+        "Variable consideration should NOT be included if",
+        "The Two-Part Test"
+      ],
+      "web": "not on web pages",
+      "issue": "States variable consideration should NOT be included if it is susceptible to factors outside the entity's influence OR the uncertainty is long-dated. Wrong: IFRS 15.57(a)-(e) lists these as factors that could increase the likelihood or magnitude of a reversal, to be weighed with judgement; they do not bar inclusion. The constraint's actual two elements are the likelihood and the magnitude of a significant reversal of cumulative revenue (15.56-57). It also contradicts the table directly below and the worked example, which still includes R50,000 of a bonus exposed to both factors. The web page (part 3) states the constraint correctly."
+    },
+    {
+      "id": "4",
+      "severity": "correction",
+      "part": 2,
+      "section": "Working example: failed collectability",
+      "anchors": [
+        "Contract asset / Receivable (at amount recoverable)",
+        "no entry for revenue. The equipment"
+      ],
+      "also": [
+        "Contract liability (deposit received)",
+        "May recognise cash received as a liability"
+      ],
+      "web": "not on web pages",
+      "issue": "Draft text left in: a journal with '???' placeholders, followed by 'Actually, no entry for revenue'. Replace with a clean statement of the treatment. The R200,000 deposit is credited to 'Contract liability', but no IFRS 15 contract exists; IFRS 15.16 requires a liability (a deposit or refund liability), not a contract liability. 15.16 also says the entity SHALL recognise the consideration as a liability, not 'may' (see 'When Contract Criteria Are NOT Met')."
+    },
+    {
+      "id": "5",
+      "severity": "correction",
+      "part": 3,
+      "section": "Exam technique: example answer structure",
+      "anchors": [
+        "the equipment is not significantly customised",
+        "Total performance obligations: ONE"
+      ],
+      "also": [
+        "Total performance obligations: ONE"
+      ],
+      "web": "not on web pages",
+      "issue": "The model answer says the equipment IS separately identifiable and concludes 'Distinct: separate performance obligation', then says the installation is NOT separately identifiable because it is highly interdependent with the equipment, and ends with ONE performance obligation. The IFRS 15.29 assessment is of the promises together: if the installation significantly modifies, or is highly interdependent with, the equipment, neither promise is separately identifiable (IE Example 10; IE Example 11 Case B). Rewrite so both promises fail 15.27(b); as written the first conclusion contradicts the final answer."
+    },
+    {
+      "id": "6",
+      "severity": "correction",
+      "part": 4,
+      "section": "Right of return: journal at sale",
+      "anchors": [
+        "Cost of Sales (contra entry for return asset)",
+        "Or alternatively presented"
+      ],
+      "web": "not on web pages",
+      "issue": "The first journal never derecognises the R60,000 inventory and credits cost of sales R3,000 with no matching debit, so cost of sales would show a credit and inventory stays overstated. It only works if Dr Cost of sales 60,000 / Cr Inventory 60,000 was already posted, which is not stated. The 'alternatively presented' entry (cost of sales R57,000, right of return asset R3,000, inventory R60,000) is the correct one (IFRS 15.B21, B25); present it as the answer, or state the assumption. They are not equivalent alternatives as written."
+    },
+    {
+      "id": "7",
+      "severity": "correction",
+      "part": 4,
+      "section": "Significant financing: adjusting the transaction price",
+      "anchors": [
+        "Customer pays in advance: Transaction price",
+        "discount the liability"
+      ],
+      "web": "not on web pages",
+      "issue": "'Customer pays in advance: Transaction price = PV of consideration (discount the liability)' is wrong and contradicts the example below it. For an advance payment the contract liability is accreted with interest expense and revenue is the higher accreted amount (R900,000 grows to R1,011,240), per IFRS 15.61, 15.65 and IE Example 29. Only the arrears case discounts the consideration."
+    },
+    {
+      "id": "8",
+      "severity": "correction",
+      "part": 5,
+      "section": "Working example: variable consideration allocation",
+      "anchors": [
+        "Phase 1: Foundation (SSP R2m)",
+        "Phase 2: Superstructure (SSP R5m)"
+      ],
+      "also_parts": {
+        "3": [
+          "Entity provides significant integration service"
+        ]
+      },
+      "web": "not on web pages",
+      "issue": "Treats the foundation and the superstructure of one construction contract as two separate performance obligations. Part 3 Example 2 concludes that foundation and structure are integrated into a single performance obligation (IFRS 15.29(a)), so the parts contradict each other. Either add facts that make the phases distinct (for example two separate buildings) or use a different example to illustrate 15.85."
+    },
+    {
+      "id": "9",
+      "severity": "correction",
+      "part": 6,
+      "section": "Equipment sale with installation",
+      "anchors": [
+        "Installation revenue: recognised on completion",
+        "Installation: On completion of installation"
+      ],
+      "web": "not on web pages",
+      "issue": "Once the equipment is delivered and controlled by the customer, a distinct installation service enhances an asset the customer controls, so it is typically satisfied over time under IFRS 15.35(b) (often 35(a) too), not 'on completion'. Point in time recognition for the installation needs a stated reason. For a short installation the difference may be immaterial, but an exam answer is expected to apply 15.35."
+    },
+    {
+      "id": "10",
+      "severity": "correction",
+      "part": 7,
+      "section": "Customer acceptance: equipment with trial period",
+      "anchors": [
+        "customer can return for full refund",
+        "Customer has 30-day trial period"
+      ],
+      "also": [
+        "Control has NOT transferred during trial period"
+      ],
+      "web": "not on web pages",
+      "issue": "The facts ('if unsatisfied, customer can return for full refund') describe a sale with a right of return (IFRS 15.B20-B27): revenue on delivery net of expected returns, with a refund liability and a return asset, as in Part 4. B86 (no revenue until acceptance or lapse of the trial) applies only when the customer is not committed to pay until the trial period ends. Add that fact, or change the conclusion."
+    },
+    {
+      "id": "11",
+      "severity": "correction",
+      "part": 8,
+      "section": "Costs to fulfil: costs that relate directly",
+      "anchors": [
+        "Examples of costs that may relate directly",
+        "Costs That Relate Directly"
+      ],
+      "web": "not on web pages",
+      "issue": "The 'Capitalise? Yes' column for direct labour, direct materials, allocations, chargeable costs and subcontractors is misleading. These items only meet IFRS 15.95(a) (relate directly, listed in 15.97). Costs incurred in satisfying, or partially satisfying, a performance obligation are expensed (15.98(c)): the labour and materials in the Part 6 cost-to-cost example go straight to cost of sales. Materials held for use are usually inventory under IAS 2 (15.96). Relabel the column 'Relates directly?' and add that 15.95(b) and (c) must also be met."
+    },
+    {
+      "id": "12",
+      "severity": "correction",
+      "part": 3,
+      "section": "Principal vs agent: indicators you are the agent (web page only)",
+      "anchors": [],
+      "web": "/guides/ifrs-15/part-4",
+      "issue": "The web page lists 'The entity's consideration is in the form of a commission' as an agent indicator. That indicator (and the credit risk indicator) was removed from IFRS 15.B37 by the 2016 Clarifications to IFRS 15; B37 now has three indicators (primary responsibility, inventory risk, pricing discretion) that support the control assessment in B34-B36. The markdown (Parts 3 and 7) correctly lists three. Remove the fourth bullet."
+    },
+    {
+      "id": "13",
+      "severity": "correction",
+      "part": 1,
+      "section": "PDF rendering (whole document)",
+      "anchors": [
+        "Interest, dividends, and fair value changes"
+      ],
+      "also_parts": {
+        "6": [
+          "If installation is straightforward"
+        ],
+        "8": [
+          "Allocations of directly related costs"
+        ]
+      },
+      "web": "not on web pages",
+      "issue": "The PDF (PDF 1.3, created 2026-01-04) was not built with the current pipeline. About 139 table cells are cut off at 50 characters (for example 'Interest, dividends, and fair value changes have s', 'Allocations of directly related costs (depreciatio', 'Right to consideration for goods/services transfer'), with text overflowing into the next column; arrows render as '?' (61 places) and ticks and crosses as '[OK]' and '[X]'. Several cut cells lose the point of the row. Regenerate before the PDF gate is opened. See also #14."
+    },
+    {
+      "id": "14",
+      "severity": "correction",
+      "part": 9,
+      "section": "Comprehensive exam-style question: model answer missing from PDF",
+      "anchors": [
+        "Model Answer"
+      ],
+      "web": "not on web pages",
+      "issue": "The markdown's model answer sits inside a <details> block and the PDF drops it: page 99 shows the 'Model Answer' heading followed directly by the Success Checklist. PDF readers get the 21-mark question with no solution. Render the answer as normal content when regenerating (fix #M12 first)."
+    },
+    {
+      "id": "M1",
+      "severity": "minor",
+      "part": 1,
+      "section": "Scope exclusions table",
+      "anchors": [
+        "income taxes (IAS 12)"
+      ],
+      "web": "not on web pages",
+      "issue": "The last row gives income taxes (IAS 12) as its example. IFRS 15.5(c) actually excludes contractual rights or obligations within the scope of IFRS 9, IFRS 10, IFRS 11, IAS 27 and IAS 28; income taxes are not contracts with customers. The non-monetary exchange exclusion (15.5(d)) is for exchanges 'to facilitate sales to customers or potential customers'."
+    },
+    {
+      "id": "M2",
+      "severity": "minor",
+      "part": 1,
+      "section": "Practical example: property sale with leaseback",
+      "anchors": [
+        "Apply IFRS 16 to determine if a sale occurred"
+      ],
+      "also": [
+        "IFRS 16 modifies the IFRS 15 outcome"
+      ],
+      "web": "not on web pages",
+      "issue": "IFRS 16.99 requires the seller-lessee to apply the IFRS 15 requirements for satisfying a performance obligation to decide whether the transfer is a sale; any gain is then measured under IFRS 16.100 (rights transferred only). The order 'IFRS 16 to determine the sale, then IFRS 15' reverses the roles, and for a seller that is not a property dealer the result is a gain, not revenue."
+    },
+    {
+      "id": "M3",
+      "severity": "minor",
+      "part": 4,
+      "section": "Expected value example: volume rebate",
+      "anchors": [
+        "rebate if annual sales exceed",
+        "Example: Volume Rebate"
+      ],
+      "web": "not on web pages",
+      "issue": "A single-threshold rebate for one customer has two outcomes, which the part's own tip assigns to the most likely amount (IFRS 15.53(b)): a R50,000 rebate at 70%, not R35,000. Expected value fits if this is a portfolio of many similar customers; say so. The R50,000 also assumes sales land exactly on R1,000,000; a 5% rebate on actual sales above the threshold would be larger."
+    },
+    {
+      "id": "M4",
+      "severity": "minor",
+      "part": 4,
+      "section": "Consideration payable: slotting fee journal",
+      "anchors": [
+        "Contract asset (prepaid fee)"
+      ],
+      "web": "not on web pages",
+      "issue": "'Contract asset' is a defined term (Appendix A: a conditional right to consideration for goods or services transferred). A prepaid slotting fee is not a contract asset; if an asset is recognised it is a prepayment, and the timing in IFRS 15.72 (later of recognising the related revenue and paying or promising to pay) drives the revenue reduction."
+    },
+    {
+      "id": "M5",
+      "severity": "minor",
+      "part": 5,
+      "section": "Changes in transaction price after allocation",
+      "anchors": [
+        "the transaction price may change due to"
+      ],
+      "also": [
+        "Additional R20,000 becomes unconstraint"
+      ],
+      "web": "not on web pages",
+      "issue": "Lists contract modifications among changes allocated 'on the same basis as the original allocation'. IFRS 15.90 says a change in transaction price arising from a modification is accounted for under 15.18-21, not 15.88. Typo: 'unconstraint' should be 'unconstrained'."
+    },
+    {
+      "id": "M6",
+      "severity": "minor",
+      "part": 6,
+      "section": "Repurchase agreements: put options",
+      "anchors": [
+        "significant economic incentive to exercise"
+      ],
+      "web": "/guides/ifrs-15/part-4",
+      "issue": "Oversimplified. The significant economic incentive test (B70) applies when the repurchase price is below the original selling price (incentive means lease under IFRS 16). Where the repurchase price is equal to or above the original selling price, B74-B75 compare it with the expected market value of the asset: above it is financing, otherwise a sale with a right of return. The web page has the same one-line simplification."
+    },
+    {
+      "id": "M7",
+      "severity": "minor",
+      "part": 7,
+      "section": "Licensing examples table: SaaS",
+      "anchors": [
+        "Software (SaaS/cloud)"
+      ],
+      "web": "not on web pages",
+      "issue": "SaaS is normally not a licence of IP at all: the customer cannot take possession of the software, so it is a service satisfied over time under IFRS 15.35(a) (consistent with the IFRIC's March 2019 agenda decision on cloud computing arrangements). The over-time answer is right, but the 'right to access licence' reasoning is not."
+    },
+    {
+      "id": "M8",
+      "severity": "minor",
+      "part": 7,
+      "section": "Franchise licence example: revenue pattern",
+      "anchors": [
+        "Consider if over time criteria met"
+      ],
+      "web": "not on web pages",
+      "issue": "'Consider if over time criteria met (typically yes)' is unnecessary: a right to access licence is by definition a performance obligation satisfied over time (IFRS 15.B60-B61), measured with a suitable progress method."
+    },
+    {
+      "id": "M9",
+      "severity": "minor",
+      "part": 7,
+      "section": "Service-type warranty example",
+      "anchors": [
+        "less provision for standard warranty"
+      ],
+      "web": "not on web pages",
+      "issue": "'R10,000 revenue for product (point of sale, less provision for standard warranty)' reads as revenue net of the provision. The assurance warranty provision is an expense (Dr Warranty expense / Cr Provision, as the journal above shows), not a reduction of revenue."
+    },
+    {
+      "id": "M10",
+      "severity": "minor",
+      "part": 7,
+      "section": "Material rights table: buy one get one 50% off",
+      "anchors": [
+        "Buy one get one 50% off"
+      ],
+      "web": "not on web pages",
+      "issue": "Check: this is a material right only if the discount is on a future purchase and is incremental to discounts available to customers who did not enter the contract (IFRS 15.B40). A BOGO applied at the till to items bought together is simply a discount allocated across that sale."
+    },
+    {
+      "id": "M11",
+      "severity": "minor",
+      "part": 8,
+      "section": "Costs to obtain a contract: paragraph reference",
+      "anchors": [
+        "IFRS 15.91: Incremental costs"
+      ],
+      "web": "not on web pages",
+      "issue": "The quoted definition of incremental costs is IFRS 15.92; 15.91 is the requirement to recognise an asset for incremental costs the entity expects to recover."
+    },
+    {
+      "id": "M12",
+      "severity": "minor",
+      "part": 9,
+      "section": "Comprehensive question, model answer (a): bundle allocation",
+      "anchors": [
+        "The bundle is sold for R15,500"
+      ],
+      "web": "not on web pages",
+      "issue": "R15,500 x 15,000/17,000 = R13,676.47 and R15,500 x 2,000/17,000 = R1,823.53, so the rounded split is R13,676 and R1,824 (the answer shows R13,677 and R1,823), and the 20X2 total is R14,588, not R14,589. The R912 of warranty revenue in 20X2 also assumes a sale on 1 January 20X2 with cover starting at sale; the question gives neither, and extended warranties often start when the manufacturer's warranty ends. State the sale date and cover period. (Parts (b) and (c) reconcile.)"
+    },
+    {
+      "id": "M13",
+      "severity": "minor",
+      "part": 9,
+      "section": "Contract balances: contract asset description",
+      "anchors": [
+        "Right to consideration for goods/services transfer"
+      ],
+      "web": "not on web pages",
+      "issue": "'Right to consideration for goods/services transferred (but not yet billed)' is shorthand that misleads. Under IFRS 15 Appendix A and 15.105-108 the test is conditional (contract asset) versus unconditional apart from the passage of time (receivable), regardless of invoicing; an unbilled amount can be a receivable. The web page (part 5) gives the correct definition. The PDF also cuts this cell short (#13)."
+    },
+    {
+      "id": "M14",
+      "severity": "minor",
+      "part": 9,
+      "section": "JSE and regulatory focus",
+      "anchors": [
+        "SEC and IRBA have flagged revenue"
+      ],
+      "also": [
+        "King IV emphasises transparent reporting"
+      ],
+      "web": "not on web pages",
+      "issue": "Check: 'SEC' is the US regulator; for South Africa the usual sources are the JSE's proactive monitoring reports and IRBA inspection findings. Check also whether to refer to King V, which the IoDSA issued in late 2025 to replace King IV."
+    },
+    {
+      "id": "M15",
+      "severity": "minor",
+      "part": 9,
+      "section": "Exam strategy: marks and time per mark",
+      "anchors": [
+        "Typical Exam Question Types"
+      ],
+      "also": [
+        "Recommended Time per Mark"
+      ],
+      "web": "/guides/ifrs-15/part-5",
+      "issue": "The markdown gives calculation questions 10-20 marks and mixed questions 15-25 marks; the live page says revenue questions are 'often worth 25-35 marks'. Align them. Check: the 'ITC 1.8 minutes' per mark figure is unsourced and gives more time per mark than CTA; confirm against current SAICA papers."
+    },
+    {
+      "id": "M16",
+      "severity": "minor",
+      "part": 6,
+      "section": "Step 5 point in time indicators (web page only)",
+      "anchors": [],
+      "web": "/guides/ifrs-15/part-2",
+      "issue": "The web page lists four control indicators and omits 'present right to payment' (IFRS 15.38(a)), which the markdown includes."
+    },
+    {
+      "id": "M17",
+      "severity": "minor",
+      "part": 4,
+      "section": "Step 3 significant financing bullet (web page only)",
+      "anchors": [],
+      "web": "/guides/ifrs-15/part-2",
+      "issue": "'Significant Financing: If payment is delayed by >1 year' omits advance payments (covered on web Part 3) and implies a delay of over a year automatically creates a significant financing component. IFRS 15.62 lists cases with none even beyond a year; the one-year rule is only the 15.63 practical expedient."
+    }
+  ],
+  "release_checklist": [
+    "Pages have been public since 2026-07-25, so work blockers first, then corrections. None of the blockers (#1 to #3, all Part 4) are on the live pages, but web-only items #12, #M16 and #M17 and the web halves of #M6 and #M15 are: fix those in the TSX straight away.",
+    "Resolve the items above in the markdown in this folder.",
+    "Mirror any change that touches web content into `acce-nextjs/src/app/guides/ifrs-15/part-N/page.tsx`, using the Web page column (the pages are summaries, not 1:1 with the markdown parts). Items marked \"not on web pages\" need no TSX change.",
+    "Regenerate `contentfiles/ifrs-15-revenue.pdf` with the same pipeline as the other guides (the current file is an older render with truncated table cells, '?' arrows, '[OK]' ticks and no model answer: #13, #14), then produce the reduced-size online copy for `acce-nextjs/public/pdfs/ifrs-15-revenue.pdf` (currently the same 158,829-byte file) and update the 'PDF, 155KB' size label on `/guides/ifrs-15`.",
+    "Flip `\"ifrs-15\"` to `true` in `GUIDE_PDF_PUBLISH_STATUS` (config and middleware) only once the regenerated PDF is signed off, and update the matching assertions in `tests/unit/guides-config.test.ts`.",
+    "After the TSX edits, check `/guides/ifrs-15/part-1..5` still return 200 (build or e2e smoke) before pushing."
+  ]
+}
