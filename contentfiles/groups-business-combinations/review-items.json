@@ -1,0 +1,469 @@
+{
+  "guide": "Groups & Business Combinations",
+  "slug": "groups",
+  "source_pdf": "../groups-business-combinations.pdf",
+  "review_pdf": "../groups-business-combinations-REVIEW.pdf",
+  "notes_md": "REVIEW-NOTES.md",
+  "status": "live: pages public since 2026-07-25, PDF held",
+  "intro": "Technical review of the 11 markdown parts in `contentfiles/groups-business-combinations/`, the 124-page PDF rendered from them, and the seven live web pages at `acce-nextjs/src/app/guides/groups/part-1..7` (page gate `groups: true`, PDF gate `groups: false` in `acce-nextjs/src/config/guides.ts` and `src/middleware.ts`). The web pages are hand-written summaries and do not map 1:1 to the markdown parts, so each item names the web page that carries the same content, or says it is not on the web pages. Every worked example and journal was recomputed. Every item was left as written in the markdown, the web pages and the PDF. Items starting 'Check:' are points to confirm, not settled errors. Web-only items (errors introduced by the TSX summaries) appear here but not in the PDF. None of the seven blockers is on the live pages; the live-page errors are #21 to #23 and M19 to M24. The PDF also has two build defects of its own (#11 and #19) that affect the copy in `acce-nextjs/public/pdfs/` as well.",
+  "parts": {
+    "1": [3, 13],
+    "2": [14, 27],
+    "3": [28, 39],
+    "4": [40, 50],
+    "5": [51, 62],
+    "6": [63, 72],
+    "7": [73, 84],
+    "8": [85, 93],
+    "9": [94, 103],
+    "10": [104, 113],
+    "11": [114, 124]
+  },
+  "items": [
+    {
+      "id": "1",
+      "severity": "blocker",
+      "part": 3,
+      "section": "Worked example: partial goodwill impairment",
+      "anchors": ["Amount recognised: R500,000", "Other assets: R400,000"],
+      "also": ["Total: R1,200,000"],
+      "issue": "Recognises only 80% of the R500,000 impairment left after goodwill, giving a total of R1,200,000. The gross-up and the 80% restriction apply to goodwill only (IAS 36.C4, C8). The identifiable assets are consolidated at 100%, so the full R500,000 is recognised against them and then shared 80/20 in the profit attribution. Correct total: R800,000 goodwill + R500,000 other assets = R1,300,000 (IAS 36 IE Example 7A).",
+      "web": "/guides/groups/part-5 (states the goodwill rule only; the example is not shown)"
+    },
+    {
+      "id": "2",
+      "severity": "blocker",
+      "part": 6,
+      "section": "Changes in ownership: the mechanics table",
+      "anchors": ["NCI (10% of net assets)", "Parent buys more shares"],
+      "issue": "When the parent BUYS more shares the table puts NCI in the Credit column, next to Cash. Buying out NCI reduces NCI: Dr NCI, Cr Cash, balancing figure to parent's equity (IFRS 10.23, B96). The worked example directly below debits NCI correctly, so the table contradicts it.",
+      "web": "/guides/groups/part-5 (worded correctly there: 'adjust carrying amount of NCI')"
+    },
+    {
+      "id": "3",
+      "severity": "blocker",
+      "part": 7,
+      "section": "Worked example: loss of significant influence",
+      "anchors": ["Reclassification of OCI", "Share of associate"],
+      "also": ["Revaluation reserve (OCI)"],
+      "issue": "Recycles the R150,000 share of the associate's revaluation reserve to P/L, giving a R550,000 gain. IAS 28.22(c) and 28.23 reclassify OCI only where the associate would have done so on disposing of the related assets directly; a revaluation surplus (IAS 16.41) is never recycled. The P/L gain is R400,000; the R150,000 may be transferred to retained earnings within equity. It also contradicts the guide's own step 3 ('if required by the related standard').",
+      "web": "not on web pages"
+    },
+    {
+      "id": "4",
+      "severity": "blocker",
+      "part": 9,
+      "section": "Step acquisitions: OCI reclassification",
+      "anchors": ["Accumulated OCI is reclassified to P/L", "If the previously held interest was a FVOCI investment"],
+      "issue": "Says accumulated OCI on a FVOCI previously held interest is reclassified to P/L (or retained earnings). Amounts in OCI on FVOCI equity investments are never recycled to P/L (IFRS 9.5.7.5, B5.7.1). IFRS 3.42 also sends the remeasurement gain itself to OCI in that case. The only option is a transfer within equity; delete 'P/L'.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "5",
+      "severity": "blocker",
+      "part": 9,
+      "section": "Worked example: deemed disposal retaining control",
+      "anchors": ["But parent received no cash", "Increase in parent"],
+      "also": ["Exact entries depend on the specific circumstances"],
+      "issue": "Journal Dr NCI 133,333 / Cr Equity reserve 133,333 has NCI going the wrong way. On a dilution NCI INCREASES: from 20% x R4,000,000 = R800,000 to 33.33% x R5,000,000 = R1,666,667 (up R866,667), funded by the R1,000,000 the subsidiary received. Consolidation entry: Dr Share capital (Sub, new issue) 1,000,000 / Cr NCI 866,667 / Cr Equity reserve (parent) 133,333. The R133,333 figure is right; the entry is not.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "6",
+      "severity": "blocker",
+      "part": 10,
+      "section": "Partial disposal of a foreign operation: FCTR table",
+      "anchors": ["Dispose reducing to associate"],
+      "also": ["Proportionate FCTR reclassified to P/L"],
+      "issue": "Reducing a SUBSIDIARY to an associate is a loss of control, which IAS 21.48A(a) treats as a disposal even if an interest is retained: the parent's whole cumulative FCTR is reclassified to P/L, not a proportion. Proportionate reclassification is for a partial disposal of an associate or JV that remains one (IAS 21.48C). The row also contradicts the Part 9 loss-of-control example (80% to a 20% associate, full R200,000 FCTR reclassified).",
+      "web": "not on web pages"
+    },
+    {
+      "id": "7",
+      "severity": "blocker",
+      "part": 11,
+      "section": "Comprehensive question, model answer (c): consolidated retained earnings",
+      "anchors": ["Sub declared dividends of R200,000", "Consolidated retained earnings (6 marks)"],
+      "issue": "The model answer deducts R160,000 'dividend income from Sub eliminated' from Holdings' retained earnings AND takes 80% of Sub's post-acquisition movement, which is already measured after the R200,000 dividend. The intragroup dividend is eliminated twice. Consolidated RE = 8,500,000 + 369,920 - 80,000 - 37,500 = R8,752,420 (R8,762,920 with the deferred tax in #18), not R8,592,420. The model answer is in the markdown only; it does not render in the PDF (see #19).",
+      "web": "not on web pages"
+    },
+    {
+      "id": "8",
+      "severity": "correction",
+      "part": 1,
+      "section": "Working example: basic business combination",
+      "anchors": ["Carrying amount of net assets in Sub", "Transaction costs incurred: R200,000"],
+      "also_parts": {"7": ["Fair value adjustment on PPE: R1,000,000"]},
+      "issue": "Gives the book value (R3,500,000) but takes the R700,000 fair value uplift with no deferred tax, contradicting Parts 2 and 11 (deferred tax on every FV adjustment, IAS 12.19 and 66). At the guide's 28% the DTL is R196,000 and goodwill R996,000, not R800,000. State that the fair values are after tax or that tax is ignored, or add the DTL. The Part 7 associate example (R1,000,000 PPE uplift) has the same gap.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "9",
+      "severity": "correction",
+      "part": 2,
+      "section": "Measurement period: after the measurement period",
+      "anchors": ["Changes in estimates (prospective)", "After Measurement Period"],
+      "issue": "Says changes after the measurement period are error corrections OR changes in estimates (prospective). IFRS 3.50: after the measurement period the acquisition accounting is revised ONLY to correct an error under IAS 8. (Remeasuring a contingent consideration liability through P/L under IFRS 3.58 is subsequent measurement, not a revision of the acquisition accounting.)",
+      "web": "not on web pages"
+    },
+    {
+      "id": "10",
+      "severity": "correction",
+      "part": 2,
+      "section": "Tax rate used throughout (28%)",
+      "anchors": ["Tax rate: 28%"],
+      "also_parts": {"5": ["Tax rate: 28%"], "11": ["Tax rate: 28%"]},
+      "issue": "The markdown uses 28% everywhere (Part 2 example, Part 5 DTA, Part 11 question). The SA corporate rate is 27% for years of assessment ending on or after 31 March 2023, and the live web pages already teach 27% and 21.6%. Update the rate and the dependent figures (R1,204,000 DT, R14,196,000 net assets, R1,304,000 goodwill, R33,600 DTA, the Part 11 model answer), or state that the examples use an older year of assessment.",
+      "web": ["/guides/groups/part-1", "/guides/groups/part-4"]
+    },
+    {
+      "id": "11",
+      "severity": "correction",
+      "part": 2,
+      "section": "PDF build: symbols rendered as '?'",
+      "anchors": ["Fair value of previously held equity interest"],
+      "also_parts": {"3": ["Remaining impairment: R2,500,000"]},
+      "issue": "The PDF build replaced every non-ASCII symbol with a literal '?' (about 140 times): minus signs in the goodwill formulas and sums ('? Fair value of identifiable net assets', 'R2,500,000 ? R2,000,000 = R500,000'), arrows ('Investors can remove easily ? AGENT', every Previous/Next link), plus-or-minus signs in the Part 6 NCI table, and the box-drawing trees in Parts 3, 8 and 11 (shown as '???'). Formulas read ambiguously. The copy in acce-nextjs/public/pdfs/ has the same defect. Fix the character mapping or font before regenerating.",
+      "web": "not on web pages (PDF only)"
+    },
+    {
+      "id": "12",
+      "severity": "correction",
+      "part": 3,
+      "section": "Worked example: goodwill impairment allocation",
+      "anchors": ["Allocation basis: Pro-rata to carrying amounts"],
+      "also": ["Allowance for receivables"],
+      "issue": "Spreads the R500,000 remainder over property, plant, inventory and receivables, and credits an 'allowance for receivables'. Inventory (IAS 2) and financial assets (IFRS 9) are outside IAS 36 (IAS 36.2) and stay on their own measurement bases; the CGU loss is allocated to the in-scope assets, here property and plant pro rata: R312,500 and R187,500 (IAS 36.104), subject to the floor in IAS 36.105.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "13",
+      "severity": "correction",
+      "part": 3,
+      "section": "Contingent consideration: when changes adjust goodwill",
+      "anchors": ["Changes in contingent consideration do NOT adjust goodwill"],
+      "also": ["Changes go to P/L after measurement period"],
+      "also_parts": {"11": ["Changes go to P/L after measurement period"]},
+      "issue": "States the rule as 'changes do NOT adjust goodwill AFTER the measurement period' (also in the pitfalls, the summary and Part 11's top-10 #7), which implies changes WITHIN 12 months do. IFRS 3.58: changes from events after the acquisition date (an EBITDA target met, a milestone reached) always go to P/L, whenever they occur. Only new information about facts that existed at the acquisition date, obtained within the measurement period, adjusts goodwill (IFRS 3.45-49). The example (target met at 31 December 20X1, inside the first year) is right, but the headline rule would lead a student to adjust goodwill.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "14",
+      "severity": "correction",
+      "part": 4,
+      "section": "Potential voting rights",
+      "anchors": ["Currently exercisable or convertible"],
+      "issue": "'Currently exercisable or convertible' is the old IAS 27 / SIC-12 test. Under IFRS 10.B22-B24 and B47, potential voting rights count when they are SUBSTANTIVE: exercisable when decisions about the relevant activities need to be made, which can include rights that are not currently exercisable (see the B24 examples).",
+      "web": "not on web pages"
+    },
+    {
+      "id": "15",
+      "severity": "correction",
+      "part": 6,
+      "section": "Changes in ownership: measuring the NCI adjustment",
+      "anchors": ["NCI transferred (10%", "NCI before: 20%"],
+      "also_parts": {"9": ["Increase in NCI (10%"], "11": ["adjustment to NCI"]},
+      "issue": "The NCI adjustment is always measured as 10% x the subsidiary's net assets (also in Part 9 and the Part 11 discussion answer). IFRS 10.B96 adjusts the CARRYING AMOUNT of NCI for the change in relative interests. Under the full goodwill (fair value) method that carrying amount includes NCI's share of goodwill, so a 20% to 10% buy-out transfers half of NCI's carrying amount, not 10% of net assets. State that the examples assume the partial method, or add the full-method version.",
+      "web": "/guides/groups/part-5 (worded correctly there: 'adjust carrying amount of NCI')"
+    },
+    {
+      "id": "16",
+      "severity": "correction",
+      "part": 7,
+      "section": "Rebutting significant influence",
+      "anchors": ["Another party has control"],
+      "issue": "Lists 'another party has control' as a ground for rebutting significant influence. IAS 28.5: a substantial or majority ownership by another investor does NOT necessarily preclude significant influence. A 30% holder with board seats next to a 70% parent can still have an associate. Common exam trap; reword to 'another party's control may be evidence, but does not by itself rebut the presumption'.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "17",
+      "severity": "correction",
+      "part": 11,
+      "section": "Comprehensive question: deferred tax on the land uplift",
+      "anchors": ["Land undervalued by R400,000"],
+      "issue": "The model answer applies 28% to the R400,000 land uplift. Land is recovered through sale (IAS 12.51B), so the SA rate is the CGT effective rate (80% inclusion: 22.4% at 28%, 21.6% at 27%), which the live web pages teach for land. At 22.4% the at-acquisition DT falls by R22,400 and goodwill to R379,600. Give the CGT facts in the question or state the assumption; as written, a student who follows the web guidance loses marks against this memo.",
+      "web": ["/guides/groups/part-1", "/guides/groups/part-4"]
+    },
+    {
+      "id": "18",
+      "severity": "correction",
+      "part": 11,
+      "section": "Comprehensive question: deferred tax on unrealised profit",
+      "anchors": ["At year-end, 25% remains in Sub"],
+      "issue": "The model answer eliminates the R37,500 downstream unrealised profit gross, although the question gives a tax rate and Part 5 teaches a DTA on unrealised profit (and the final checklist asks for deferred tax). Net effect on consolidated RE should be R27,000 (R37,500 less a R10,500 DTA at 28%).",
+      "web": "not on web pages"
+    },
+    {
+      "id": "19",
+      "severity": "correction",
+      "part": 11,
+      "section": "PDF build: model answer missing",
+      "anchors": ["Model Answer"],
+      "also": ["Total: 16 marks"],
+      "issue": "The model answer sits in a collapsible details block in the markdown and does not render in the PDF: after 'Model Answer' the PDF shows only the W1 group diagram, then jumps to the Final Checklist. W2 to W5 and all three answers are missing, so the 16-mark question has no solution in the PDF (same in the public/pdfs copy). Render it as normal content.",
+      "web": "not on web pages (PDF only)"
+    },
+    {
+      "id": "20",
+      "severity": "correction",
+      "part": 11,
+      "section": "Time management: 30-mark question",
+      "anchors": ["~35 minutes", "For a 30-Mark Group Question"],
+      "issue": "Check: budgets about 35 minutes for a 30-mark question (roughly 1.2 minutes per mark; the rows themselves add to 34 to 35 minutes). That is well below the time most SA university and professional papers allow per mark, so the table would push students to rush. Confirm against the target exam and restate as minutes per mark.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "21",
+      "severity": "correction",
+      "part": 6,
+      "section": "Negative NCI (web page only)",
+      "anchors": [],
+      "issue": "Web page says NCI keeps sharing losses beyond equity 'unless the parent has a contractual obligation to cover them'. IFRS 10.B94 has no such exception: total comprehensive income is attributed to NCI even if this results in a deficit balance. A parent guarantee is accounted for separately and does not change the attribution. The markdown (Part 6) states the rule correctly.",
+      "web": "/guides/groups/part-4"
+    },
+    {
+      "id": "22",
+      "severity": "correction",
+      "part": 2,
+      "section": "AOE deferred tax: FV adjustment formula (web page only)",
+      "anchors": [],
+      "issue": "Web page gives 'FV Adj (PPE) = FV - Cost'. The fair value adjustment is fair value less the subsidiary's CARRYING AMOUNT (cost less accumulated depreciation); using cost understates the adjustment and its deferred tax for any depreciated asset. The markdown (Part 2) uses carrying amount correctly.",
+      "web": "/guides/groups/part-4"
+    },
+    {
+      "id": "23",
+      "severity": "correction",
+      "part": 7,
+      "section": "Investment in associate working (web page only)",
+      "anchors": [],
+      "issue": "The working deducts 'Unrealised Profits (Investor's Share)' from the associate's profit and THEN multiplies by the investor's %, so the percentage is applied twice (on the page's own figures, R10,000 x 30% x 30% = R900 instead of R3,000). Deduct the full unrealised profit before taking x%, or the investor's share after. The markdown (Part 7) deducts it after applying x%, correctly, and the downstream example on the same web page gets R3,000.",
+      "web": "/guides/groups/part-6"
+    },
+    {
+      "id": "M1",
+      "severity": "minor",
+      "part": 1,
+      "section": "Items not recognised separately",
+      "anchors": ["Not recognised (contingent asset)", "Potential contracts"],
+      "issue": "Potential contracts under negotiation are not assets at the acquisition date and are subsumed into goodwill (IFRS 3.B38); labelling them 'contingent assets' mixes two concepts.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M2",
+      "severity": "minor",
+      "part": 1,
+      "section": "Business vs asset acquisition table: contingent consideration",
+      "anchors": ["No remeasurement (fixed at acquisition)"],
+      "issue": "Check: stated as settled. IFRS is silent on variable or contingent payments in an asset acquisition (the IFRIC/IASB work on this was never finalised) and practice varies (cost-based under IAS 16/38 vs an IFRS 9 liability). Suggest 'policy choice; state your approach'.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M3",
+      "severity": "minor",
+      "part": 2,
+      "section": "Contingent liabilities: paragraph reference",
+      "anchors": ["IFRS 3.22"],
+      "issue": "The recognition requirement for contingent liabilities is IFRS 3.23; 3.22 only carries the IAS 37 definition.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M4",
+      "severity": "minor",
+      "part": 2,
+      "section": "Employee benefit plans",
+      "anchors": ["unrecognised past service cost"],
+      "issue": "'No separate recognition of unrecognised past service cost' is pre-2011 IAS 19 wording; under revised IAS 19 past service cost is recognised immediately, so the point is obsolete. IFRS 3.26 simply requires IAS 19 measurement.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M5",
+      "severity": "minor",
+      "part": 2,
+      "section": "Financial instruments: fair value hierarchy",
+      "anchors": ["IFRS 9 hierarchy applies"],
+      "issue": "The fair value hierarchy is in IFRS 13, not IFRS 9.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M6",
+      "severity": "minor",
+      "part": 2,
+      "section": "Pitfalls: measuring NCI",
+      "anchors": ["Choose full or partial goodwill method"],
+      "also": ["Choice is made per transaction"],
+      "issue": "'Choose full or partial goodwill method and apply consistently' reads as a policy choice, while the section above (correctly) says the choice is made per transaction (IFRS 3.19). Reword to 'per acquisition; state which you used'.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M7",
+      "severity": "minor",
+      "part": 3,
+      "section": "Paragraph references",
+      "anchors": ["IFRS 3.32"],
+      "also": ["IFRS 3.34"],
+      "issue": "The goodwill definition is in IFRS 3 Appendix A (3.32 is the measurement paragraph). The reassessment before recognising a bargain purchase gain is IFRS 3.36 (3.34 is recognition of the gain).",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M8",
+      "severity": "minor",
+      "part": 3,
+      "section": "Impairment test: terminology",
+      "anchors": ["fair value less costs to sell"],
+      "issue": "'Fair value less costs to sell' is the pre-2013 IAS 36 term; the standard (and this part's own disclosure table and exam technique) uses fair value less costs of disposal.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M9",
+      "severity": "minor",
+      "part": 3,
+      "section": "Bargain purchase: causes",
+      "anchors": ["Synergies not reflected in price"],
+      "issue": "Buyer-specific synergies are not part of the identifiable net assets, so they cannot cause a bargain purchase (if anything they explain goodwill). IFRS 3.35's example is a forced sale by a seller acting under compulsion.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M10",
+      "severity": "minor",
+      "part": 4,
+      "section": "Protective rights list",
+      "anchors": ["Requiring supermajority for major decisions"],
+      "issue": "Check: a supermajority requirement over RELEVANT activities (budgets, operating decisions) can deny a majority holder power or create joint control (IFRS 10.B26-B28, IFRS 11.7); only supermajorities over fundamental changes are protective. Qualify the row.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M11",
+      "severity": "minor",
+      "part": 5,
+      "section": "Consolidation requirements: references",
+      "anchors": ["IFRS 10.B86(a)"],
+      "issue": "Eliminating the parent's investment is IFRS 10.B86(b); B86(a) is combining like items.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M12",
+      "severity": "minor",
+      "part": 6,
+      "section": "Loss absorption: quoted text",
+      "anchors": ["A subsidiary may have cumulative losses"],
+      "issue": "The block quoted as IFRS 10.B94 is not the standard's text (it echoes the withdrawn IAS 27 (2003) wording). B94 says total comprehensive income is attributed to the owners of the parent and to NCI even if this results in NCI having a deficit balance. The conclusion is right; present it as a paraphrase or quote B94.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M13",
+      "severity": "minor",
+      "part": 6,
+      "section": "NCI and goodwill impairment example",
+      "anchors": ["parent R480,000"],
+      "issue": "Uses R600,000 full goodwill split R480,000/R120,000, while the comparison example earlier in this part has the same R600,000 split R400,000/R200,000. Use different figures or reconcile, and note that IAS 36.C6 allocates the impairment on the profit-sharing basis (80/20) whatever the goodwill split.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M14",
+      "severity": "minor",
+      "part": 7,
+      "section": "Impairment indicators for associates",
+      "anchors": ["Dividend distributions exceeding"],
+      "issue": "'Dividend distributions exceeding total comprehensive income' is the IAS 36.12(h) indicator for investments in SEPARATE financial statements. For equity-accounted investments the loss events are in IAS 28.41A-41C (financial difficulty, breach of contract, significant or prolonged decline in fair value below cost, and so on).",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M15",
+      "severity": "minor",
+      "part": 7,
+      "section": "Equity method key features: uniform policies",
+      "anchors": ["Required where practicable"],
+      "issue": "IAS 28.35-36 require uniform accounting policies with no practicability relief; the 'impracticable' relief in IAS 28.33-34 is for reporting dates.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M16",
+      "severity": "minor",
+      "part": 8,
+      "section": "Separate financial statements: options",
+      "anchors": ["Fair value through P/L"],
+      "issue": "IAS 27.10 allows cost, IFRS 9, or the equity method. 'In accordance with IFRS 9' includes the FVOCI election for equity instruments, not only FVTPL.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M17",
+      "severity": "minor",
+      "part": 9,
+      "section": "Loss of control: paragraph reference",
+      "anchors": ["IFRS 10.25"],
+      "issue": "The six-step list is IFRS 10.25 plus B97-B99; derecognising NCI and reclassifying OCI are in B98-B99.",
+      "web": "not on web pages"
+    },
+    {
+      "id": "M18",
+      "severity": "minor",
+      "part": 11,
+      "section": "What loses marks: arithmetic errors",
+      "anchors": ["Cascade through all workings"],
+      "issue": "'Arithmetic errors cascade through all workings' contradicts the live web page, which correctly tells students that own-figure (follow-through) marks are awarded. Reword: with workings shown, a slip usually costs only the mark for that figure.",
+      "web": "/guides/groups/part-7"
+    },
+    {
+      "id": "M19",
+      "severity": "minor",
+      "part": 2,
+      "section": "Tax rates box: 21.3% (web page only)",
+      "anchors": [],
+      "issue": "Web page says '21.6% is the exact figure; many students use 21.3% from lecture material'. 21.3% does not come from any SA rate combination (27% x 80% = 21.6%; 28% x 80% = 22.4%). Drop the unsupported claim.",
+      "web": "/guides/groups/part-1"
+    },
+    {
+      "id": "M20",
+      "severity": "minor",
+      "part": 4,
+      "section": "Control decision tree (web page only)",
+      "anchors": [],
+      "issue": "'Does the parent have control? No: significant influence, equity account (associate)'. No control does not mean significant influence: it may be joint control (IFRS 11 joint operation or joint venture) or a plain IFRS 9 investment. Add those branches.",
+      "web": "/guides/groups/part-1"
+    },
+    {
+      "id": "M21",
+      "severity": "minor",
+      "part": 2,
+      "section": "Assets and liabilities recognised at fair value (web page only)",
+      "anchors": [],
+      "issue": "Lists 'Contingent assets (not recognized, see note)' under assets to recognise at fair value, with no note on the page, and lists deferred tax as a liability at fair value while the exceptions table beside it (correctly) says IAS 12. Move both out of the fair value lists.",
+      "web": "/guides/groups/part-2"
+    },
+    {
+      "id": "M22",
+      "severity": "minor",
+      "part": 5,
+      "section": "AOE since-acquisition column: dividends (web page only)",
+      "anchors": [],
+      "issue": "Lists 'Dividends paid from pre-acquisition profits (if any)'. Since the 2008 IAS 27 amendment there is no pre/post-acquisition split of dividends; all dividends declared since acquisition go in the since-acquisition (or current year) column.",
+      "web": "/guides/groups/part-4"
+    },
+    {
+      "id": "M23",
+      "severity": "minor",
+      "part": 6,
+      "section": "Control maintained: reserve name (web page only)",
+      "anchors": [],
+      "issue": "Sends the difference to 'Retained Earnings/Common Control Reserve'. A common control reserve belongs to common control transactions (outside IFRS 3). For IFRS 10.23 changes use retained earnings or a 'changes in ownership' / transactions with NCI reserve, as the markdown does.",
+      "web": "/guides/groups/part-5"
+    },
+    {
+      "id": "M24",
+      "severity": "minor",
+      "part": 5,
+      "section": "Dividends from a subsidiary (web page only)",
+      "anchors": [],
+      "issue": "'In consolidation, dividends from a sub are eliminated in full' conflicts with /part-3 (and markdown Part 5), which correctly say only the parent's share is eliminated; the NCI share reduces NCI.",
+      "web": "/guides/groups/part-6"
+    }
+  ],
+  "release_checklist": [
+    "Fix the live-page items first, because the pages are public: #21, #22, #23 and M19 to M24 exist only in the TSX, and #10, #15, #17 and M18 involve a live page. Then fix blockers #1 to #7 in the markdown (none is on the web pages today, but re-read /part-5 after fixing #1, #2 and #6).",
+    "Resolve the remaining items in the markdown in this folder, and settle one SA tax rate (27% normal, 21.6% CGT) across the markdown and the web pages.",
+    "Mirror the changes into `acce-nextjs/src/app/guides/groups/part-N/page.tsx` using the Web page column; the 7 web parts do not map 1:1 to the 11 markdown parts.",
+    "Fix the PDF build before regenerating: non-ASCII symbols rendered as '?' (#11) and the collapsed model answer (#19). Then regenerate `contentfiles/groups-business-combinations.pdf` and the reduced-size online copy for `acce-nextjs/public/pdfs/groups-business-combinations.pdf` (currently 188KB with the same defects).",
+    "Keep `groups` false in `GUIDE_PDF_PUBLISH_STATUS` (config and middleware) until the regenerated PDF is signed off; when flipping it, update `tests/unit/guides-config.test.ts` and the 'PDF, 183KB' size text on `/guides/groups`.",
+    "Refresh the 'Last updated January 2026' line on each web page you change."
+  ]
+}
