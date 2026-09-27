@@ -19,12 +19,15 @@ export const GUIDE_PUBLISH_STATUS: Record<string, boolean> = {
     groups: true,
     "ifrs-15": true,
     "ifrs-16": true,
+    // Held until the IFRS 9 content review is complete.
+    "ifrs-9": false,
 };
 
 export const GUIDE_PDF_PUBLISH_STATUS: Record<string, boolean> = {
     groups: false,
     "ifrs-15": false,
     "ifrs-16": false,
+    "ifrs-9": false,
 };
 
 export const isDev = process.env.NODE_ENV === "development";
@@ -105,6 +108,17 @@ export const GUIDES: GuideMeta[] = [
         parts: 5,
         difficulty: "Intermediate",
         href: "/guides/ifrs-16",
+    },
+    {
+        id: "ifrs-9",
+        title: "IFRS 9: Financial Instruments",
+        description:
+            "Classify, measure and impair financial instruments under IFRS 9, with IAS 39 comparisons and hedge accounting under both frameworks.",
+        subject: "accounting",
+        topics: ["Business Model & SPPI", "Amortised Cost & FVOCI", "Expected Credit Losses", "Hedge Accounting"],
+        parts: 9,
+        difficulty: "Advanced",
+        href: "/guides/ifrs-9",
     },
 ];
 

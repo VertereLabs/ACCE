@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { FileText, Building2, Receipt, ArrowRight, BookOpen, Users } from "lucide-react";
+import { FileText, Building2, Receipt, Landmark, ArrowRight, BookOpen, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GUIDES, isGuidePublished } from "@/config/guides";
@@ -21,6 +21,7 @@ const GUIDE_ICONS: Record<string, LucideIcon> = {
     groups: Building2,
     "ifrs-15": Receipt,
     "ifrs-16": FileText,
+    "ifrs-9": Landmark,
 };
 
 // Derive status + icon from the shared catalog — dev mode sees everything as available
@@ -29,6 +30,8 @@ const guides = GUIDES.map((g) => ({
     icon: GUIDE_ICONS[g.id] ?? FileText,
     status: isGuidePublished(g.id) ? "available" : "coming-soon",
 }));
+
+const totalParts = GUIDES.reduce((sum, g) => sum + g.parts, 0);
 
 const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -77,7 +80,7 @@ export default function GuidesPage() {
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-2 text-accent mb-2">
                                 <BookOpen className="w-5 h-5" />
-                                <span className="font-display text-2xl font-bold">17</span>
+                                <span className="font-display text-2xl font-bold">{totalParts}</span>
                             </div>
                             <span className="text-muted-foreground text-sm">Parts Total</span>
                         </div>

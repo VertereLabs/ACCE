@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, Receipt, FileText, MessageCircle, Sparkles, BookOpen } from "lucide-react";
+import { Building2, Receipt, FileText, Landmark, MessageCircle, Sparkles, BookOpen } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GUIDES } from "@/config/guides";
@@ -7,14 +7,14 @@ import { cn } from "@/lib/utils";
 
 const WHATSAPP_URL = "https://wa.me/27713255295";
 
-type GuideId = "groups" | "ifrs-15" | "ifrs-16";
+type GuideId = "groups" | "ifrs-15" | "ifrs-16" | "ifrs-9";
 
 /**
  * Per-guide card theme. Icons mirror GUIDE_ICONS on the guides index; tints
  * reuse each guide's established badge colour (gold for Groups, blue for
- * IFRS 16 part badges) with green assigned to IFRS 15 so the two gold guides
- * don't render identically. Buttons and copy stay on the shared conversion
- * convention and do not vary.
+ * IFRS 16 part badges, purple for IFRS 9 part badges) with green assigned to
+ * IFRS 15 so the two gold guides don't render identically. Buttons and copy
+ * stay on the shared conversion convention and do not vary.
  */
 const THEMES: Record<GuideId, {
     name: string;
@@ -46,6 +46,14 @@ const THEMES: Record<GuideId, {
         pill: "bg-blue-500/20 text-blue-400",
         border: "border-blue-500/40",
         blobA: "bg-blue-500/15",
+        blobB: "bg-accent/10",
+    },
+    "ifrs-9": {
+        name: "IFRS 9",
+        icon: Landmark,
+        pill: "bg-purple-500/20 text-purple-400",
+        border: "border-purple-500/40",
+        blobA: "bg-purple-500/15",
         blobB: "bg-accent/10",
     },
 };

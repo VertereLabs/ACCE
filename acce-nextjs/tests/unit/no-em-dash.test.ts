@@ -41,6 +41,7 @@ const IN_SCOPE_FILES = [
     "src/app/guides/groups/page.tsx",
     "src/app/guides/ifrs-15/page.tsx",
     "src/app/guides/ifrs-16/page.tsx",
+    "src/app/guides/ifrs-9/page.tsx",
 
     // Guide part pages
     "src/app/guides/groups/part-1/page.tsx",
@@ -52,6 +53,7 @@ const IN_SCOPE_FILES = [
     "src/app/guides/ifrs-15/part-5/page.tsx",
     "src/app/guides/ifrs-16/part-1/page.tsx",
     "src/app/guides/ifrs-16/part-5/page.tsx",
+    ...Array.from({ length: 9 }, (_, i) => `src/app/guides/ifrs-9/part-${i + 1}/page.tsx`),
 
     // Tutor / hub pages (title metadata)
     "src/app/cta-tutor/page.tsx",

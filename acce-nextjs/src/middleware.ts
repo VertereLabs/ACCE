@@ -10,6 +10,7 @@ const GUIDE_PUBLISH_STATUS: Record<string, boolean> = {
     groups: true,
     "ifrs-15": true,
     "ifrs-16": true,
+    "ifrs-9": false,
 };
 
 /**
@@ -21,6 +22,7 @@ const GUIDE_PDF_PUBLISH_STATUS: Record<string, boolean> = {
     groups: false,
     "ifrs-15": false,
     "ifrs-16": false,
+    "ifrs-9": false,
 };
 
 /** Maps a downloadable PDF filename to its guide id (kept private until live). */
@@ -28,6 +30,7 @@ const PDF_TO_GUIDE: Record<string, string> = {
     "groups-business-combinations.pdf": "groups",
     "ifrs-15-revenue.pdf": "ifrs-15",
     "ifrs-16-leases.pdf": "ifrs-16",
+    "ifrs-9-financial-instruments.pdf": "ifrs-9",
 };
 
 /**

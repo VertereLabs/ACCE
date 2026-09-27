@@ -22,14 +22,20 @@ describe("isGuidePublished — production behavior (NODE_ENV != development)", (
     GUIDE_PUBLISH_STATUS.groups = false;
     GUIDE_PUBLISH_STATUS["ifrs-15"] = false;
     GUIDE_PUBLISH_STATUS["ifrs-16"] = false;
+    GUIDE_PUBLISH_STATUS["ifrs-9"] = false;
   });
 
-  it("knows about exactly the three guide series", () => {
+  it("knows about exactly the four guide series", () => {
     expect(Object.keys(GUIDE_PUBLISH_STATUS).sort()).toEqual([
       "groups",
       "ifrs-15",
       "ifrs-16",
+      "ifrs-9",
     ]);
+  });
+
+  it("holds the IFRS 9 page until its content review is complete", () => {
+    expect(isGuidePublished("ifrs-9")).toBe(false);
   });
 
   it("publishes the three reviewed guides (released state)", () => {
@@ -78,20 +84,23 @@ describe("isGuidePdfPublished: production behavior (NODE_ENV != development)", (
     GUIDE_PDF_PUBLISH_STATUS.groups = false;
     GUIDE_PDF_PUBLISH_STATUS["ifrs-15"] = false;
     GUIDE_PDF_PUBLISH_STATUS["ifrs-16"] = false;
+    GUIDE_PDF_PUBLISH_STATUS["ifrs-9"] = false;
   });
 
-  it("covers exactly the three guide series in the PDF map", () => {
+  it("covers exactly the four guide series in the PDF map", () => {
     expect(Object.keys(GUIDE_PDF_PUBLISH_STATUS).sort()).toEqual([
       "groups",
       "ifrs-15",
       "ifrs-16",
+      "ifrs-9",
     ]);
   });
 
-  it("blocks all three PDFs in the current shipped/production state", () => {
+  it("blocks all four PDFs in the current shipped/production state", () => {
     expect(isGuidePdfPublished("groups")).toBe(false);
     expect(isGuidePdfPublished("ifrs-15")).toBe(false);
     expect(isGuidePdfPublished("ifrs-16")).toBe(false);
+    expect(isGuidePdfPublished("ifrs-9")).toBe(false);
   });
 
   it("treats unknown and empty guide ids as unpublished (safe default)", () => {

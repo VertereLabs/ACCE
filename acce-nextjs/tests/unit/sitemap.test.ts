@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import sitemap from "@/app/sitemap";
+import { isGuidePublished } from "@/config/guides";
 
 /**
  * The sitemap is a hand-maintained list of routes (src/app/sitemap.ts). It's easy to add
@@ -46,12 +47,16 @@ describe("sitemap integrity", () => {
     expect(routeSet.has("/guides")).toBe(true);
   });
 
-  it("registers all three guide series and their expected part counts", () => {
+  it("registers all three published guide series and their expected part counts", () => {
     const parts = (prefix: string) =>
       routePaths.filter((r) => r.startsWith(`${prefix}/part-`)).length;
     expect(parts("/guides/ifrs-16")).toBe(5);
     expect(parts("/guides/ifrs-15")).toBe(5);
     expect(parts("/guides/groups")).toBe(7);
+  });
+
+  it("keeps the unpublished IFRS 9 guide out of the sitemap", () => {
+    expect(routePaths.filter((r) => r.startsWith("/guides/ifrs-9"))).toEqual([]);
   });
 
   it("assigns valid, depth-decreasing priorities", () => {
@@ -72,8 +77,13 @@ describe("sitemap ↔ filesystem consistency", () => {
 
   it("every content page.tsx on disk is registered in the sitemap", () => {
     const pageRoutes = collectPageRoutes(APP_DIR);
-    // not-found renders 404 and is intentionally excluded from the sitemap.
-    const contentRoutes = pageRoutes.filter((r) => r !== "/not-found");
+    // not-found renders 404 and is intentionally excluded from the sitemap, as are
+    // pages of guides that aren't published yet (the sitemap filters them out).
+    const contentRoutes = pageRoutes.filter((r) => {
+      if (r === "/not-found") return false;
+      const guide = r.match(/^\/guides\/([^/]+)/);
+      return !guide || isGuidePublished(guide[1]);
+    });
     const unregistered = contentRoutes.filter((r) => !routeSet.has(r));
     expect(
       unregistered,

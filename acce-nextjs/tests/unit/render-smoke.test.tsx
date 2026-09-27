@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import HomePage from "@/app/page";
 import GuidesPage from "@/app/guides/page";
 import IFRS16Part1Page from "@/app/guides/ifrs-16/part-1/page";
+import IFRS9GuidePage from "@/app/guides/ifrs-9/page";
 import CtaTutorPage from "@/app/cta-tutor/page";
 import AccountingTutorPage from "@/app/accounting-tutor/page";
 import FinancialManagementTutorPage from "@/app/financial-management-tutor/page";
@@ -49,11 +50,30 @@ describe("HomePage renders", () => {
 });
 
 describe("GuidesPage renders", () => {
-  it("lists all three guide series", () => {
+  it("lists all four guide series", () => {
     render(<GuidesPage />);
     expect(screen.getByText("IFRS 16: Leases")).toBeInTheDocument();
     expect(screen.getByText("IFRS 15: Revenue")).toBeInTheDocument();
     expect(screen.getByText("Groups & Business Combinations")).toBeInTheDocument();
+    expect(screen.getByText("IFRS 9: Financial Instruments")).toBeInTheDocument();
+  });
+
+  it("shows IFRS 9 as Coming Soon without a deep link while it is under review", () => {
+    const { container } = render(<GuidesPage />);
+    expect(container.querySelector('a[href="/guides/ifrs-9"]')).toBeNull();
+  });
+});
+
+describe("IFRS 9 guide overview renders", () => {
+  it("mounts with its heading, all nine parts, and no PDF link (PDF held in prod)", () => {
+    const { container } = render(<IFRS9GuidePage />);
+    expect(
+      screen.getByRole("heading", { level: 1, name: /IFRS 9: Financial Instruments/i }),
+    ).toBeInTheDocument();
+    for (let n = 1; n <= 9; n++) {
+      expect(container.querySelector(`a[href="/guides/ifrs-9/part-${n}"]`)).not.toBeNull();
+    }
+    expect(container.querySelector('a[href="/pdfs/ifrs-9-financial-instruments.pdf"]')).toBeNull();
   });
 });
 
