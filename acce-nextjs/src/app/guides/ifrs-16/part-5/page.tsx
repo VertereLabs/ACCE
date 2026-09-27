@@ -135,7 +135,7 @@ export default function IFRS16Part5Page() {
                                     <div className="relative pl-10 border-l border-accent/30 ml-4 pb-8">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">1</div>
                                         <h4 className="font-bold text-foreground mb-1 text-sm">Define the Lease & Term</h4>
-                                        <p className="text-xs text-muted-foreground m-0">What is the identified asset? What is the non-cancellable period plus extension options?</p>
+                                        <p className="text-xs text-muted-foreground m-0">What is the identified asset? What is the non-cancellable period, plus periods covered by extension options the lessee is reasonably certain to exercise and termination options it is reasonably certain not to exercise (IFRS 16.18)?</p>
                                     </div>
                                     <div className="relative pl-10 border-l border-accent/30 ml-4 pb-8">
                                         <div className="absolute -left-4 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20">2</div>

@@ -157,7 +157,7 @@ export default function IFRS16Part1Page() {
                                         <AlertCircle className="w-5 h-5 text-accent mt-1 flex-shrink-0" />
                                         <div>
                                             <h4 className="font-bold text-foreground text-xs uppercase m-0">Low-Value Assets</h4>
-                                            <p className="text-[10px] text-muted-foreground m-0 mt-1">Think tablets, office furniture, or small IT equipment (typically &lt; $5,000 when new).</p>
+                                            <p className="text-[10px] text-muted-foreground m-0 mt-1">Think tablets, personal computers, telephones or small items of office furniture. Judged on the asset&apos;s value when new, regardless of the lessee&apos;s size. The IASB indicated roughly US$5,000 or less (BC100), but that is guidance, not a limit in the standard.</p>
                                         </div>
                                     </div>
                                 </div>

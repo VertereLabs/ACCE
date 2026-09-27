@@ -156,7 +156,7 @@ export default function IFRS15Part2Page() {
                                     </div>
                                     <div className="flex gap-3 p-4 bg-card rounded-xl border border-border">
                                         <Calculator className="w-5 h-5 text-accent flex-shrink-0" />
-                                        <span><strong className="text-foreground">Significant Financing:</strong> If payment is delayed by &gt;1 year.</span>
+                                        <span><strong className="text-foreground">Significant Financing:</strong> If the timing of payment (in advance or in arrears) gives a significant benefit of financing. May be ignored if the gap is 1 year or less.</span>
                                     </div>
                                     <div className="flex gap-3 p-4 bg-card rounded-xl border border-border">
                                         <Split className="w-5 h-5 text-accent flex-shrink-0" />
@@ -247,6 +247,7 @@ export default function IFRS15Part2Page() {
                                         </h3>
                                         <p className="text-sm text-muted-foreground mb-4">If it doesn&apos;t meet &apos;Over Time&apos; criteria. Look for indicators of control transfer:</p>
                                         <ul className="text-xs text-muted-foreground space-y-2 list-disc ml-4">
+                                            <li>Entity has a present right to payment</li>
                                             <li>Legal title transferred</li>
                                             <li>Physical possession transferred</li>
                                             <li>Customer has significant risks and rewards of ownership</li>

@@ -109,11 +109,12 @@ export default function GroupsPart1Page() {
                                             <div className="bg-accent/10 border border-accent/30 rounded-lg p-4">
                                                 <div className="flex items-center gap-2 text-accent font-semibold mb-2">
                                                     <AlertCircle className="w-4 h-4" />
-                                                    No → Significant Influence
+                                                    No → Not a Subsidiary
                                                 </div>
                                                 <p className="text-muted-foreground text-sm m-0">
-                                                    <strong>Equity Account</strong> (Associate)<br />
-                                                    Apply IAS 28 equity method
+                                                    <strong>Significant influence:</strong> equity account (Associate, IAS 28)<br />
+                                                    <strong>Joint control:</strong> IFRS 11 (joint venture equity accounted; joint operation recognises its share of assets and liabilities)<br />
+                                                    <strong>Neither:</strong> IFRS 9 investment
                                                 </p>
                                             </div>
                                         </div>
@@ -185,7 +186,7 @@ export default function GroupsPart1Page() {
                                                 </div>
                                             </div>
                                             <p className="text-muted-foreground text-xs mt-3 m-0">
-                                                Note: 21.6% is the exact figure; many students use 21.3% from lecture material.
+                                                Note: companies include 80% of a capital gain in taxable income, so the effective CGT rate is 27% × 80% = 21.6%.
                                             </p>
                                         </div>
 

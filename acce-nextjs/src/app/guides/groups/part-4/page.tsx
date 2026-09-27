@@ -130,7 +130,7 @@ export default function GroupsPart4Page() {
                                         <ul className="space-y-2 text-sm text-muted-foreground list-none p-0 m-0">
                                             <li>• Total profits made since acquisition (pre-current year)</li>
                                             <li>• Depreciation on FV adjustments (pre-current year)</li>
-                                            <li>• Dividends paid from pre-acquisition profits (if any)</li>
+                                            <li>• Dividends declared since acquisition (pre-current year)</li>
                                             <li>• Impairment of goodwill (if fair value method used)</li>
                                         </ul>
                                     </div>
@@ -302,7 +302,7 @@ export default function GroupsPart4Page() {
                                         Calculations to show in AOE:
                                     </h3>
                                     <div className="bg-card rounded-lg p-4 font-mono text-xs space-y-2">
-                                        <p className="text-foreground">FV Adj (PPE) = FV - Cost</p>
+                                        <p className="text-foreground">FV Adj (PPE) = FV - Carrying Amount</p>
                                         <p className="text-foreground font-bold">Deferred Tax = FV Adj x 27%</p>
                                         <p className="text-accent">Net FV Adj = FV Adj - Deferred Tax</p>
                                     </div>
@@ -347,7 +347,7 @@ export default function GroupsPart4Page() {
                                         <div>
                                             <h4 className="font-display font-semibold text-foreground mb-1">Important: Negative NCI</h4>
                                             <p className="text-muted-foreground text-sm m-0">
-                                                Under IFRS 10, NCI can be negative. If the subsidiary makes losses that exceed its equity, NCI continues to share in those losses unless the parent has a contractual obligation to cover them.
+                                                Under IFRS 10, NCI can be negative. If the subsidiary makes losses that exceed its equity, NCI continues to share in those losses even if this results in a deficit balance (IFRS 10.B94). A parent guarantee is accounted for separately and does not change this attribution.
                                             </p>
                                         </div>
                                     </div>

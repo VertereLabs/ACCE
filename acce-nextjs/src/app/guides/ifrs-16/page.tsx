@@ -25,31 +25,31 @@ const parts = [
     },
     {
         id: 2,
-        title: "Lessee Accounting (The Big Change!)",
-        description: "Master ROU assets and lease liabilities: initial recognition, subsequent measurement, and modifications.",
+        title: "Lessee Initial Measurement",
+        description: "Measure the lease liability and ROU asset on Day 1: what counts as a lease payment, choosing the discount rate, and building up the ROU asset.",
         status: "available",
-        topics: ["ROU Asset", "Lease Liability", "Modifications", "Financial Ratios Impact"],
+        topics: ["Lease Payments", "Discount Rate", "Lease Liability", "ROU Asset"],
     },
     {
         id: 3,
-        title: "Lessor Accounting",
-        description: "Classify leases as finance or operating, and apply the correct accounting treatment for each.",
+        title: "Subsequent Measurement & Remeasurement",
+        description: "Carry the lease liability at amortised cost, depreciate the ROU asset, and remeasure when lease payments or key assessments change.",
         status: "available",
-        topics: ["Classification", "Finance Lease", "Operating Lease", "Manufacturer Lessors"],
+        topics: ["Amortised Cost", "ROU Depreciation", "Remeasurement", "Discount Rate on Reassessment"],
     },
     {
         id: 4,
         title: "Sale and Leaseback Transactions",
         description: "Learn how to account for complex sale and leaseback deals, including restricted gain recognition.",
         status: "available",
-        topics: ["IFRS 15 Sales Criteria", "Restricted Gain", "ROU Asset Calculation"],
+        topics: ["IFRS 15 Sales Criteria", "Restricted Gain", "ROU Asset Calculation", "Off-Market Terms"],
     },
     {
         id: 5,
-        title: "Disclosures & Exam Preparation",
-        description: "Disclosure requirements, common exam mistakes, and practice questions with worked solutions.",
+        title: "Lessor Accounting & Exam Strategy",
+        description: "Classify leases as finance or operating from the lessor's side, and follow a step-by-step roadmap for lease exam questions.",
         status: "available",
-        topics: ["Lessee Disclosures", "Lessor Disclosures", "Exam Tips", "Practice Questions"],
+        topics: ["Lessor Classification", "Finance Lease", "Operating Lease", "Exam Roadmap"],
     },
 ];
 
@@ -217,11 +217,11 @@ export default function IFRS16GuidePage() {
                         </div>
                     </div>
 
-                    {/* Practical Expedients Preview */}
+                    {/* Recognition Exemptions Preview */}
                     <div className="max-w-4xl mx-auto mt-12">
                         <div className="bg-card rounded-2xl border border-border p-8">
                             <h3 className="font-display text-xl font-semibold text-foreground mb-4">
-                                Key Exemptions (Practical Expedients)
+                                Key Exemptions (Recognition Exemptions)
                             </h3>
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="bg-card rounded-lg p-4">
@@ -233,7 +233,7 @@ export default function IFRS16GuidePage() {
                                 <div className="bg-card rounded-lg p-4">
                                     <h4 className="text-foreground font-medium mb-2">Low-value Assets</h4>
                                     <p className="text-muted-foreground text-sm">
-                                        Assets with a low value when new (typically ~$5,000 or less). Elected on a lease-by-lease basis.
+                                        Assets with a low value when new, judged in absolute terms regardless of the lessee&apos;s size. The IASB indicated roughly US$5,000 or less (Basis for Conclusions, BC100), not a limit in the standard. Elected on a lease-by-lease basis.
                                     </p>
                                 </div>
                             </div>

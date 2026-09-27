@@ -171,7 +171,7 @@ export default function GroupsPart5Page() {
                                         </p>
                                         <ul className="space-y-2 text-sm text-muted-foreground list-none p-0 m-0">
                                             <li>• Adjust carrying amount of NCI</li>
-                                            <li>• Any difference between consideration paid/received and NCI adjustment goes directly to <strong className="text-foreground">Equity</strong> (Retained Earnings/Common Control Reserve).</li>
+                                            <li>• Any difference between consideration paid/received and NCI adjustment goes directly to <strong className="text-foreground">Equity</strong> (Retained Earnings or a separate reserve for transactions with NCI), attributed to the owners of the parent.</li>
                                         </ul>
                                     </div>
 

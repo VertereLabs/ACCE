@@ -111,7 +111,7 @@ export default function IFRS16Part3Page() {
                                         <li className="flex items-start gap-3">
                                             <div className="w-2 h-2 rounded-full bg-blue-400 mt-1.5 flex-shrink-0" />
                                             <div>
-                                                <p className="text-sm font-bold m-0 text-foreground">If ownership transfers / purchase option is likely:</p>
+                                                <p className="text-sm font-bold m-0 text-foreground">If ownership transfers / purchase option is reasonably certain to be exercised:</p>
                                                 <p className="text-xs text-muted-foreground m-0">Depreciate over the <strong className="text-foreground">Useful Life</strong> of the asset.</p>
                                             </div>
                                         </li>
@@ -142,10 +142,10 @@ export default function IFRS16Part3Page() {
                                         <div>
                                             <h4 className="font-bold text-foreground mb-1 text-sm">When to remeasure?</h4>
                                             <ul className="text-xs text-muted-foreground space-y-1 list-disc ml-4">
-                                                <li>Change in the lease term (e.g., you now expect to extend).</li>
-                                                <li>Change in the assessment of a purchase option.</li>
-                                                <li>Change in the amounts expected to be payable under residual value guarantees.</li>
-                                                <li>Change in future lease payments resulting from a change in an index or rate.</li>
+                                                <li>Change in the lease term (e.g., you now expect to extend): use a <strong className="text-foreground">revised</strong> discount rate (IFRS 16.40).</li>
+                                                <li>Change in the assessment of a purchase option: use a <strong className="text-foreground">revised</strong> discount rate (IFRS 16.40).</li>
+                                                <li>Change in the amounts expected to be payable under residual value guarantees: keep the <strong className="text-foreground">original</strong> discount rate (IFRS 16.42-43).</li>
+                                                <li>Change in future lease payments resulting from a change in an index or rate: keep the <strong className="text-foreground">original</strong> discount rate, unless the change comes from floating interest rates (IFRS 16.42-43).</li>
                                             </ul>
                                         </div>
                                     </div>

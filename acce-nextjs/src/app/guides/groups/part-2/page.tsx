@@ -178,7 +178,6 @@ export default function GroupsPart2Page() {
                                             <li>• Investment property</li>
                                             <li>• Financial instruments</li>
                                             <li>• Inventories</li>
-                                            <li>• Contingent assets (not recognized, see note)</li>
                                         </ul>
                                     </div>
 
@@ -189,7 +188,6 @@ export default function GroupsPart2Page() {
                                         <ul className="space-y-2 m-0 p-0 list-none text-muted-foreground">
                                             <li>• Financial liabilities</li>
                                             <li>• Provisions and contingent liabilities (if FV can be measured reliably)</li>
-                                            <li>• Deferred tax (arising from FV adjustments)</li>
                                             <li>• Employee benefit obligations</li>
                                         </ul>
                                     </div>

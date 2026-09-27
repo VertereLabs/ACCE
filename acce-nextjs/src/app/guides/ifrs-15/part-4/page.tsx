@@ -125,8 +125,7 @@ export default function IFRS15Part4Page() {
                                         {[
                                             "Another party is primarily responsible for fulfilling the contract.",
                                             "The entity does not have inventory risk.",
-                                            "The entity does not have discretion in establishing prices.",
-                                            "The entity's consideration is in the form of a commission."
+                                            "The entity does not have discretion in establishing prices."
                                         ].map((text, i) => (
                                             <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />
@@ -162,7 +161,7 @@ export default function IFRS15Part4Page() {
                                         <div>
                                             <h4 className="font-bold text-foreground mb-1 text-sm uppercase">Put Option</h4>
                                             <p className="text-xs text-muted-foreground m-0 leading-relaxed">
-                                                Entity repurchases at customer&apos;s request. Assessment depends on whether the customer has a <strong className="text-foreground">significant economic incentive</strong> to exercise the option.
+                                                Entity repurchases at customer&apos;s request. If the repurchase price is below the original selling price, ask whether the customer has a <strong className="text-foreground">significant economic incentive</strong> to exercise the option: if yes, it is a <strong className="text-foreground">Lease</strong>; if no, a sale with a right of return. If the repurchase price is at or above the original selling price, compare it with the expected market value of the asset: above it is a <strong className="text-foreground">Financing Arrangement</strong>, otherwise a sale with a right of return.
                                             </p>
                                         </div>
                                     </div>
